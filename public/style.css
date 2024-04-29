@@ -1,0 +1,56 @@
+/* Apply a general left alignment and margin to all elements */
+body {
+    margin-left: 10px;
+}
+
+h1, h2, h3 {
+    text-align: left;
+    font-family: fantasy;
+}
+
+.twoElements {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; /* Changed to flex-start for left alignment */
+    font-family: cursive;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-start; /* Changed to flex-start for left alignment */
+    margin-top: 20px; /* Optional vertical spacing */
+}
+
+.button1 {
+    font-family: fantasy;
+    padding: 10px;
+    border-radius: 10px;
+    transition-duration: 1s;
+}
+
+.button-container :hover {
+    background-color: blanchedalmond;
+    transition-duration: 1s;
+}
+
+.category-list, .amount-list {
+    list-style-type: none; /* This removes the bullets */
+    padding: 0; /* This removes the default padding */
+}
+
+.category-item, .amount-list, .amount-item, .category-total, .grand-total {
+    text-align: left; /* Changed to left to align text to the left */
+    margin-top: 5px; /* Consistent margin for spacing */
+}
+
+.FetchPart, .update {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Changed to flex-start for left alignment */
+    width: fit-content;
+    margin-left: 10px; /* Ensure consistent left margin */
+}
+
+label {
+    font-family: fantasy;
+}

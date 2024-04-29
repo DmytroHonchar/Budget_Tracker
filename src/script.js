@@ -22,13 +22,17 @@ function sumTotal() {
 }
 
 function displayOutcome() {
-    let htmlOutput = "<ul>";
+    let htmlOutput = "<ul class='category-list'>";
     for (let cat in outcome) {
         let categoryTotal = sumAmount(cat);
-        htmlOutput += `<li>${cat.charAt(0).toUpperCase() + cat.slice(1)}: ` +
-                       `${outcome[cat].join(", ")} (Total: ${categoryTotal.toFixed(2)})</li>`;
+        htmlOutput += `<li class='category-item'><span class='category-title'>${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>`;
+        htmlOutput += "<ul class='amount-list'>"; // Start a new list for the amounts
+        for (let amount of outcome[cat]) {
+            htmlOutput += `<li class='amount-item'>${amount.toFixed(2)}</li>`; // List each amount as a list item
+        }
+        htmlOutput += `</ul> <span class='category-total'>(Total: ${categoryTotal.toFixed(2)})</span></li>`;
     }
-    htmlOutput += `<li><strong>Grand Total: ${sumTotal().toFixed(2)}</strong></li>`;
+    htmlOutput += `<li class='grand-total'><strong>Grand Total: ${sumTotal().toFixed(2)}</strong></li>`;
     htmlOutput += "</ul>";
 
     document.getElementById('output').innerHTML = htmlOutput;
@@ -104,3 +108,5 @@ document.getElementById('deleteAmount').addEventListener('click', function(event
     outcome[category].splice(amountIndex, 1);
     displayOutcome();
 });
+
+

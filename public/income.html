@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income</title>
+</head>
+<body>
+    <h1>Your income</h1>
+
+    <h3>Card money</h3>
+    <p>Enter your amount:</p>
+    <form id="cardForm" method="POST">
+        <label for="amount£">Amount (£):</label>
+        <input type="number" id="amount£" name="amount£" step="0.01">
+        <label for="amount€">Amount (€):</label>
+        <input type="number" id="amount€" name="amount€" step="0.01">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="outputCard£"></div>
+    <div id="outputCard€"></div>
+
+    <h3>Cash money</h3>
+    <p>Enter your amount:</p>
+    <form id="cashForm" method="POST">
+        <label for="amountCash£">Amount (£):</label>
+        <input type="number" id="amountCash£" name="amountCash£" step="0.01">
+        <label for="amountCash€">Amount (€):</label>
+        <input type="number" id="amountCash€" name="amountCash€" step="0.01">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="outputCash£"></div>
+    <div id="outputCash€"></div>
+
+    <h2>Total money</h2>
+    <div id="outputTotal"></div>  
+
+    <script src="/src/income.js"></script>
+</body>
+</html>

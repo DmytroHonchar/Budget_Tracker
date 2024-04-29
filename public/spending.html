@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="/public/style.css">
     <title>Budget Tracker</title>
 </head>
 <body>
+
+    <h1> Your spending tracker </h1>
+    <div class="twoElements">
+    <div>
+    <p>Choose your category:</p>
     <form id="dataForm" method="POST">
         <label for="category">Category:</label>
         <select id="category" name="category">
@@ -13,19 +19,27 @@
             <option value="entertainment">Entertainment</option>
             <option value="traveling">Traveling</option>
         </select>
-        
+    </div>
+    <div>
+    <p>Enter your amount:</p>
         <label for="amount">Amount (£):</label>
         <input type="number" id="amount" name="amount" step="0.01">
         
-        <button type="submit">Submit</button>
+    </div>
+    </div>
+    <div class="button-container">
+        <button class="button1" type="submit">Submit</button>
+    </div>
+    
     </form>
     
     <h2>Spending:</h2>
     <div id="output"></div>    
 
     <h3>Update amount</h3>
-    <label for="updateCategory">Category:</label>
-    <select id="updateCategory" name="updateCategory">
+<div class="FetchPart">
+    <label for="updateCategory">Choose your category fo updating:</label>
+    <select style="margin-bottom: 10px;" id="updateCategory" name="updateCategory">
         <option value="grocery">Grocery</option>
         <option value="bills">Bills</option>
         <option value="rent">Rent</option>
@@ -33,14 +47,17 @@
         <option value="traveling">Traveling</option>
     </select>
 
-    <button type="button" id="fetchAmount">Fetch Amount</button>
+    <button class="button1" type="button" id="fetchAmount">Submit</button>
+</div>
 
-    <h3>Amount Details</h3>
+    <h3>Update or delete it</h3>
+    <div class="update">
     <select id="amountOptions"></select>
     <input type="number" id="newAmount" step="0.01">
     <button type="button" id="updateAmount">Update Amount</button>
     <button type="button" id="deleteAmount">Delete Amount</button>
+    </div>
 
-    <script src="script.js"></script>
+    <script src="/src/script.js"></script>
 </body>
 </html>
