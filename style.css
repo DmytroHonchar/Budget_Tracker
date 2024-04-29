@@ -1,0 +1,99 @@
+/* Reset some default styles */
+body, h1, h2, h3, form, section {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set base font properties */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    background: #f4f4f4;
+}
+
+/* Center the form on the page */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the fieldset and legend */
+fieldset {
+    border: none;
+    padding: 0;
+}
+
+legend {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+/* Style the labels and inputs */
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Style buttons */
+button {
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 5px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button:hover {
+    background: #555;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #333;
+}
+
+/* Sections */
+section {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Output styles */
+#output {
+    background: #e9ecef;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
