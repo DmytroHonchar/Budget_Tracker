@@ -66,30 +66,18 @@ function updateTotal(category) {
     const total = income[category].reduce((acc, val) => acc + val, 0);
     document.getElementById(`total${category}`).textContent = `Total: ${income[category].currency}${total.toFixed(2)}`;
 
-    if (income[category].currency === '£') {
-        totalPound += total;
-    } else if (income[category].currency === '€') {
-        totalEuro += total;
-    }
-
-    // Update the overall total display
     updateOverallTotal();
 }
 
 // Function to update the overall totals in the display
 function updateOverallTotal() {
-    const cardTotalPound = parseTotal('totalcard£', '£');
-    const cashTotalPound = parseTotal('totalcash£', '£');
-    const totalMoneyPound = cardTotalPound + cashTotalPound;
-
-    const cardTotalEuro = parseTotal('totalcard€', '€');
-    const cashTotalEuro = parseTotal('totalcash€', '€');
-    const totalMoneyEuro = cardTotalEuro + cashTotalEuro;
+    totalPound = parseTotal('totalcard£', '£') + parseTotal('totalcash£', '£');
+    totalEuro = parseTotal('totalcard€', '€') + parseTotal('totalcash€', '€');
 
     document.getElementById('outputTotal').innerHTML = `
         Total money:<br>
-        Total (£): £${totalMoneyPound.toFixed(2)}<br>
-        Total (€): €${totalMoneyEuro.toFixed(2)}<br>
+        Total (£): £${totalPound.toFixed(2)}<br>
+        Total (€): €${totalEuro.toFixed(2)}<br>
         Ground Total Pounds: £${groundTotalPound.toFixed(2)}<br>
         Ground Total Euros: €${groundTotalEuro.toFixed(2)}<br>
         Exchange Rate: <input type="number" id="exchangeRate" value="${exchangeRate}" step="0.01">
@@ -108,4 +96,15 @@ function parseTotal(id, currencySymbol) {
 function isValidPositiveNumber(input) {
     const number = parseFloat(input);
     return !isNaN(number) && number >= 0;
+}
+
+// Currency conversion functions
+function convertToPounds() {
+    groundTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRate').value));
+    updateOverallTotal();
+}
+
+function convertToEuros() {
+    groundTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRate').value));
+    updateOverallTotal();
 }
