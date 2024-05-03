@@ -31,6 +31,7 @@
         <input type="number" id="amountCash€" name="amountCash€" step="0.01">
         <button type="submit">Submit</button>
     </form>
+    
     <div id="outputCash£"></div>
     <div id="outputCash€"></div>
     <div id="totalcash£">Total: £0.00</div>
@@ -45,13 +46,13 @@
     </div>
     
     <h2>Exchange Rates</h2>
-    <p>Exchange Rate for Pounds (£):</p>
+    <p>Exchange Rate of Pound to Euro(£):</p>
     <input type="number" id="exchangeRatePounds" value="1.15" step="0.01">
-    <button onclick="convertToPounds()">Convert to Pounds</button>
+    <button onclick="convertToPounds()">Convert to Euros, make grand total </button>
     
-    <p>Exchange Rate for Euros (€):</p>
+    <p>Exchange Rate of Euro to Pound(€):</p>
     <input type="number" id="exchangeRateEuros" value="0.87" step="0.01">
-    <button onclick="convertToEuros()">Convert to Euros</button>
+    <button onclick="convertToEuros()">Convert to Pounds, make grand total</button>
     
     <script src="/src/income.js"></script>
 </body>
