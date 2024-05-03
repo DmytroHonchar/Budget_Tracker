@@ -78,11 +78,9 @@ function updateOverallTotal() {
         Total money:<br>
         Total (£): £${totalPound.toFixed(2)}<br>
         Total (€): €${totalEuro.toFixed(2)}<br>
-        Ground Total Pounds: £${groundTotalPound.toFixed(2)}<br>
-        Ground Total Euros: €${groundTotalEuro.toFixed(2)}<br>
-        Exchange Rate: <input type="number" id="exchangeRate" value="${exchangeRate}" step="0.01">
-        <button onclick="convertToPounds()">Convert to Pounds</button> 
-        <button onclick="convertToEuros()">Convert to Euros</button>
+        Ground Total Pounds: £${groundTotalEuro.toFixed(2)}<br> 
+        Ground Total Euros: €${groundTotalPound.toFixed(2)}<br> 
+      
     `;
 }
 
@@ -100,11 +98,12 @@ function isValidPositiveNumber(input) {
 
 // Currency conversion functions
 function convertToPounds() {
-    groundTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRate').value));
+    groundTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRatePounds').value));
     updateOverallTotal();
 }
 
+
 function convertToEuros() {
-    groundTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRate').value));
+    groundTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRateEuros').value));
     updateOverallTotal();
 }

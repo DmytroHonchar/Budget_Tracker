@@ -36,18 +36,23 @@
     <div id="totalcash£">Total: £0.00</div>
     <div id="totalcash€">Total: €0.00</div>
 
-    <h2>Total money</h2>
     <div id="outputTotal">
         Total money:<br>
         Total (£): £0.00<br>
         Total (€): €0.00<br>
         Ground Total Pounds: £0.00<br>
         Ground Total Euros: €0.00<br>
-        Exchange Rate: <input type="number" id="exchangeRate" value="1.15" step="0.01">
-        <button onclick="convertToPounds()">Convert to Pounds</button> 
-        <button onclick="convertToEuros()">Convert to Euros</button>
-    </div>  
-
+    </div>
+    
+    <h2>Exchange Rates</h2>
+    <p>Exchange Rate for Pounds (£):</p>
+    <input type="number" id="exchangeRatePounds" value="1.15" step="0.01">
+    <button onclick="convertToPounds()">Convert to Pounds</button>
+    
+    <p>Exchange Rate for Euros (€):</p>
+    <input type="number" id="exchangeRateEuros" value="0.87" step="0.01">
+    <button onclick="convertToEuros()">Convert to Euros</button>
+    
     <script src="/src/income.js"></script>
 </body>
 </html>
