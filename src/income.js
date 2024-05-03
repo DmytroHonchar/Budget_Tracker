@@ -56,7 +56,7 @@ document.getElementById('cashForm').addEventListener('submit', function(event) {
 // Function to display income
 function displayIncome(category, outputId) {
     const outputElement = document.getElementById(outputId);
-    const amountsText = income[category].map(val => `${income[category].currency}${val}`).join(', ');
+    const amountsText = income[category].map(val => val.toString()).join(', ');
     outputElement.textContent = `${category}: ${amountsText}`;
     updateTotal(category);
 }
@@ -93,7 +93,7 @@ function parseTotal(id, currencySymbol) {
 // Function to check if input is a valid positive number
 function isValidPositiveNumber(input) {
     const number = parseFloat(input);
-    return !isNaN(number) && number >= 0;
+    return !isNaN(number) && number > 0;
 }
 
 // Currency conversion functions

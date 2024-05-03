@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="income.css">
     <title>Income</title>
 </head>
 <body>
@@ -19,8 +20,9 @@
     </form>
     <div id="outputCard£"></div>
     <div id="outputCard€"></div>
-    <div id="totalcard£">Total: £0.00</div>
-    <div id="totalcard€">Total: €0.00</div>
+    <div id="totalcard£">Total card: £0.00</div>
+    <br>
+    <div id="totalcard€">Total card: €0.00</div>
 
     <h3>Cash money</h3>
     <p>Enter your amount:</p>
@@ -34,13 +36,15 @@
     
     <div id="outputCash£"></div>
     <div id="outputCash€"></div>
-    <div id="totalcash£">Total: £0.00</div>
-    <div id="totalcash€">Total: €0.00</div>
+    <div id="totalcash£">Total cash: £0.00</div>
+    <br>
+    <div id="totalcash€">Total cash: €0.00</div>
 
     <div id="outputTotal">
         Total money:<br>
         Total (£): £0.00<br>
         Total (€): €0.00<br>
+        <br><br>
         Ground Total Pounds: £0.00<br>
         Ground Total Euros: €0.00<br>
     </div>
@@ -48,11 +52,11 @@
     <h2>Exchange Rates</h2>
     <p>Exchange Rate of Pound to Euro(£):</p>
     <input type="number" id="exchangeRatePounds" value="1.15" step="0.01">
-    <button onclick="convertToPounds()">Convert to Euros, make grand total </button>
+    <button class="button1" onclick="convertToPounds()">Convert to Euros, make grand total </button>
     
     <p>Exchange Rate of Euro to Pound(€):</p>
     <input type="number" id="exchangeRateEuros" value="0.87" step="0.01">
-    <button onclick="convertToEuros()">Convert to Pounds, make grand total</button>
+    <button class="button1" onclick="convertToEuros()">Convert to Pounds, make grand total</button>
     
     <script src="/src/income.js"></script>
 </body>
