@@ -8,10 +8,10 @@ body {
 }
 
 h1, h2, h3 {
-    color: #4a67a1; /* Soft blue tone */
+    color: #4a67a1;
 }
 
-/* Styling for form containers */
+/* Styling form elements */
 form {
     background: #fff;
     padding: 20px;
@@ -20,55 +20,64 @@ form {
     margin-bottom: 20px;
 }
 
-/* Flexbox layout for form groups */
-.twoElements {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.twoElements > div {
-    flex: 1;
+input[type=number] {
     padding: 10px;
-}
-
-/* Input styling */
-input[type="number"], select {
-    width: 90%; /* Consistent with your preference */
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+    margin: 8px 0;
     border: 2px solid #ddd;
     border-radius: 4px;
     display: block;
+    width: 90%; /* Adjusted width for better form filling */
     font-size: large;
 }
 
-/* Button styling */
-button.button1 {
-    background-color: #4a67a1; /* Consistent with your primary button color */
+button {
+    background-color: #4a67a1; /* Main button color */
     color: white;
     border: none;
-    padding: 10px 20px;
     cursor: pointer;
-    border-radius: 15px;
+    padding: 8px 16px; /* Adjusted padding for a more proportional appearance */
     font-size: 1em;
     transition: background-color 0.3s;
-    width: auto; /* Allows for better control over button width */
+    width: auto; /* Prevents the button from stretching too much */
+    border-radius: 15px;
 }
 
-button.button1:hover {
+/* Hover effect for buttons */
+button:hover {
     background-color: #5679c1; /* Brighter shade on hover */
+}
+
+/* Class styling for specific form structures */
+.two {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pound {
+    flex: 1;
+    padding: 0 10px;
+    margin-bottom: 10px; /* Added margin for better spacing */
+}
+
+/* Output and total display styling */
+#outputTotal, #totalcard£, #totalcard€, #totalcash£, #totalcash€ {
+    background: #e7ebf0;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+/* Styling specific buttons with class 'button1' */
+.button1 {
+    background-color: #4a67a1; /* Main button color */
+    width: auto;
+    padding: 10px 20px;
+    display: inline-block;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-    .twoElements {
+    .two {
         flex-direction: column;
-    }
-
-    input[type="number"], select {
-        width: 100%; /* Full-width for better mobile usability */
     }
 }
