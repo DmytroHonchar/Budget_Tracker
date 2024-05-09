@@ -107,3 +107,4 @@ function convertToEuros() {
     groundTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRateEuros').value));
     updateOverallTotal();
 }
+

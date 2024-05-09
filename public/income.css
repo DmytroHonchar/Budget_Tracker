@@ -75,6 +75,20 @@ button:hover {
     display: inline-block;
 }
 
+.nav-link {
+    background-color: #4a67a1; /* Consistent with your primary button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    width: auto; /* Allows for better control over button width */
+    text-decoration: none;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .two {
