@@ -6,6 +6,7 @@ let grandTotalEuro = 0;
 let exchangeRatePoundToEuro = 1.15; // Default exchange rate
 let exchangeRateEuroToPound = 0.87; // Default exchange rate
 
+
 // Function to add amount to income object
 function addAmount(category, amount, currency) {
     amount = parseFloat(amount);
