@@ -6,77 +6,157 @@ let grandTotalEuro = 0;
 let exchangeRatePoundToEuro = 1.15; // Default exchange rate
 let exchangeRateEuroToPound = 0.87; // Default exchange rate
 
-
-// Function to add amount to income object
-function addAmount(category, amount, currency) {
+// Function to add amount to income object and database
+async function addAmount(category, amount) {
     amount = parseFloat(amount);
     if (!income[category]) {
         income[category] = [];
     }
     income[category].push(amount);
-    income[category].currency = currency;
+
+    try {
+        const response = await fetch('http://localhost:3000/addAmount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ category, amount }),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Amount added successfully:', { category, amount });
+    } catch (error) {
+        console.error('Error adding amount:', error);
+    }
+
+    displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
 }
 
-// Function to subtract amount from income object
-function subtractAmount(category, amount) {
+// Function to subtract amount from income object and database
+async function subtractAmount(category, amount) {
     amount = parseFloat(amount);
     if (income[category] && income[category].length > 0) {
-        // Add the negative amount to the category
         income[category].push(-amount);
+
+        try {
+            const response = await fetch('http://localhost:3000/addAmount', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ category, amount: -amount }),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            console.log('Amount subtracted successfully:', { category, amount });
+        } catch (error) {
+            console.error('Error subtracting amount:', error);
+        }
+
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
     }
 }
 
 // Event listener for card form submission
-document.getElementById('cardForm').addEventListener('submit', function(event) {
+document.getElementById('cardForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-    var amountPound = document.getElementById('amount£').value;
-    var amountEuro = document.getElementById('amount€').value;
+    const amountPound = document.getElementById('amount£').value;
+    const amountEuro = document.getElementById('amount€').value;
 
     if (isValidPositiveNumber(amountPound)) {
-        addAmount('card£', amountPound, '£');
-        displayIncome('card£', 'outputCard£');
+        await addAmount('card£', amountPound);
     }
-
     if (isValidPositiveNumber(amountEuro)) {
-        addAmount('card€', amountEuro, '€');
-        displayIncome('card€', 'outputCard€');
+        await addAmount('card€', amountEuro);
     }
 
     document.getElementById('cardForm').reset();
+    updateTotals();
 });
 
 // Event listener for cash form submission
-document.getElementById('cashForm').addEventListener('submit', function(event) {
+document.getElementById('cashForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-    var amountPound = document.getElementById('amountCash£').value;
-    var amountEuro = document.getElementById('amountCash€').value;
+    const amountPound = document.getElementById('amountCash£').value;
+    const amountEuro = document.getElementById('amountCash€').value;
 
     if (isValidPositiveNumber(amountPound)) {
-        addAmount('cash£', amountPound, '£');
-        displayIncome('cash£', 'outputCash£');
+        await addAmount('cash£', amountPound);
     }
-
     if (isValidPositiveNumber(amountEuro)) {
-        addAmount('cash€', amountEuro, '€');
-        displayIncome('cash€', 'outputCash€');
+        await addAmount('cash€', amountEuro);
     }
 
     document.getElementById('cashForm').reset();
+    updateTotals();
 });
 
 // Event listener for subtract form submission
-document.getElementById('subtractForm').addEventListener('submit', function(event) {
+document.getElementById('subtractForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-    var category = document.getElementById('subtractCategory').value;
-    var amount = document.getElementById('subtractAmount').value;
+    const category = document.getElementById('subtractCategory').value;
+    const amount = document.getElementById('subtractAmount').value;
 
     if (isValidPositiveNumber(amount)) {
-        subtractAmount(category, amount);
+        await subtractAmount(category, amount);
     }
 
     document.getElementById('subtractForm').reset();
+    updateTotals();
 });
+
+// Function to fetch and update totals from the database
+async function updateTotals() {
+    try {
+        const response = await fetch('http://localhost:3000/totals');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const totals = await response.json();
+
+        // Ensure the values are parsed as numbers
+        const total_card_pounds = parseFloat(totals.total_card_pounds) || 0;
+        const total_card_euro = parseFloat(totals.total_card_euro) || 0;
+        const total_cash_pounds = parseFloat(totals.total_cash_pounds) || 0;
+        const total_cash_euro = parseFloat(totals.total_cash_euro) || 0;
+
+        document.getElementById('totalcard£').textContent = `Total card: £${total_card_pounds.toFixed(2)}`;
+        document.getElementById('totalcard€').textContent = `Total card: €${total_card_euro.toFixed(2)}`;
+        document.getElementById('totalcash£').textContent = `Total cash: £${total_cash_pounds.toFixed(2)}`;
+        document.getElementById('totalcash€').textContent = `Total cash: €${total_cash_euro.toFixed(2)}`;
+        document.getElementById('outputTotal').innerHTML = `
+            Total money:<br>
+            Total (£): £${(total_card_pounds + total_cash_pounds).toFixed(2)}<br>
+            Total (€): €${(total_card_euro + total_cash_euro).toFixed(2)}<br>
+            Grand Total Pounds: £${grandTotalPound.toFixed(2)}<br>
+            Grand Total Euros: €${grandTotalEuro.toFixed(2)}<br>
+        `;
+    } catch (error) {
+        console.error('Error fetching totals:', error.message);
+    }
+}
+
+// Event listener to fetch and display totals on page load
+document.addEventListener('DOMContentLoaded', updateTotals);
+
+// Functions for currency conversion
+function convertToPounds() {
+    grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
+    updateTotals();
+}
+
+function convertToEuros() {
+    grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
+    updateTotals();
+}
+
+// Function to check if input is a valid positive number
+function isValidPositiveNumber(input) {
+    const number = parseFloat(input);
+    return !isNaN(number) && number > 0;
+}
 
 // Function to display income
 function displayIncome(category, outputId) {
@@ -88,7 +168,6 @@ function displayIncome(category, outputId) {
         outputElement.textContent = ''; // Keep it empty if no data
     }
 
-    // Update total display for the category
     updateTotal(category);
 }
 
@@ -99,8 +178,6 @@ function updateTotal(category) {
         total = income[category].reduce((acc, val) => acc + val, 0);
     }
     document.getElementById(`total${category}`).textContent = `Total ${income[category].currency || ''}${total.toFixed(2)}`;
-
-    // Refresh overall totals as well
     updateOverallTotal();
 }
 
@@ -124,14 +201,8 @@ function parseTotal(id, currencySymbol) {
     return isNaN(total) ? 0 : total;
 }
 
-// Function to check if input is a valid positive number
-function isValidPositiveNumber(input) {
-    const number = parseFloat(input);
-    return !isNaN(number) && number > 0;
-}
-
 // Event listener for fetching amounts
-document.getElementById('fetchAmount').addEventListener('click', function(event) {
+document.getElementById('fetchAmount').addEventListener('click', function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
     var selectElement = document.getElementById('amountOptions');
@@ -143,7 +214,7 @@ document.getElementById('fetchAmount').addEventListener('click', function(event)
     selectElement.appendChild(defaultOption);
 
     if (income[category] && income[category].length > 0) {
-        income[category].forEach(function(amount, index) {
+        income[category].forEach(function (amount, index) {
             var option = document.createElement('option');
             option.textContent = amount;
             option.value = index;
@@ -152,7 +223,7 @@ document.getElementById('fetchAmount').addEventListener('click', function(event)
     }
 });
 
-document.getElementById('updateAmount').addEventListener('click', function(event) {
+document.getElementById('updateAmount').addEventListener('click', function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
     var amountIndex = document.getElementById('amountOptions').value;
@@ -165,12 +236,11 @@ document.getElementById('updateAmount').addEventListener('click', function(event
 
     income[category][amountIndex] = parseFloat(newAmount);
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-
-    refreshDropdown(category); // Refresh the dropdown to reflect changes
-    document.getElementById('amountOptions').value = ""; // Reset selection
+    refreshDropdown(category);
+    document.getElementById('amountOptions').value = "";
 });
 
-document.getElementById('deleteAmount').addEventListener('click', function(event) {
+document.getElementById('deleteAmount').addEventListener('click', function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
     var amountIndex = document.getElementById('amountOptions').value;
@@ -182,13 +252,11 @@ document.getElementById('deleteAmount').addEventListener('click', function(event
 
     income[category].splice(amountIndex, 1);
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-
-    refreshDropdown(category); // Refresh the dropdown to reflect changes
-    document.getElementById('amountOptions').value = ""; // Reset selection
+    refreshDropdown(category);
+    document.getElementById('amountOptions').value = "";
 });
 
-// Event listener to fetch total amount for a category
-document.getElementById('fetchTotalAmount').addEventListener('click', function(event) {
+document.getElementById('fetchTotalAmount').addEventListener('click', function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
 
@@ -200,42 +268,26 @@ document.getElementById('fetchTotalAmount').addEventListener('click', function(e
     }
 });
 
-// Event listener to delete total amount for a category
-document.getElementById('deleteTotalAmount').addEventListener('click', function(event) {
+document.getElementById('deleteTotalAmount').addEventListener('click', function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
 
     if (confirm(`Are you sure you want to delete all amounts for ${category}?`)) {
         income[category] = [];
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-
-        // Refresh the overall totals
         updateOverallTotal();
-
-        // Refresh the dropdown to reflect changes
         refreshDropdown(category);
     }
 });
 
-// Currency conversion functions
-function convertToPounds() {
-    grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
-    updateOverallTotal();
-}
-
-function convertToEuros() {
-    grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
-    updateOverallTotal();
-}
-
 function refreshDropdown(category) {
     var selectElement = document.getElementById('amountOptions');
-    selectElement.innerHTML = '<option value="">Select an amount</option>'; // Clear and set default option
+    selectElement.innerHTML = '<option value="">Select an amount</option>';
 
     if (income[category] && income[category].length > 0) {
-        income[category].forEach(function(amount, index) {
+        income[category].forEach(function (amount, index) {
             var option = document.createElement('option');
-            option.textContent = `${amount.toFixed(2)} ${income[category].currency}`; // Display amount with currency
+            option.textContent = `${amount.toFixed(2)} ${income[category].currency}`;
             option.value = index;
             selectElement.appendChild(option);
         });
