@@ -37,16 +37,24 @@ async function addAmount(category, amount) {
 // Function to subtract amount from income object and database
 async function subtractAmount(category, amount) {
     amount = parseFloat(amount);
-    if (income[category] && income[category].length > 0) {
+    
+    // Check if there is a total amount even if there are no individual amounts
+    const totalElementId = `total${category}`;
+    const currentTotal = parseTotal(totalElementId, category.includes('£') ? '£' : '€');
+
+    if (currentTotal >= amount) {
+        if (!income[category]) {
+            income[category] = [];
+        }
         income[category].push(-amount);
 
         try {
-            const response = await fetch('http://localhost:3000/addAmount', {
+            const response = await fetch('http://localhost:3000/deleteAmount', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ category, amount: -amount }),
+                body: JSON.stringify({ category, amount }),
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -58,6 +66,8 @@ async function subtractAmount(category, amount) {
 
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
         updateTotals();  // Update totals after subtracting amount
+    } else {
+        alert(`Insufficient total in ${category} to subtract ${amount}`);
     }
 }
 
@@ -160,7 +170,7 @@ function parseTotal(id, currencySymbol) {
 // Function to check if input is a valid positive number
 function isValidPositiveNumber(input) {
     const number = parseFloat(input);
-    return !isNaN(number) && number > 0;
+    return !isNaN(number) && number > 0 && input.replace('.', '').length <= 15;
 }
 
 // Function to display income
@@ -170,7 +180,7 @@ function displayIncome(category, outputId) {
         const amountsText = income[category].map(val => val >= 0 ? `${val.toFixed(2)}` : `-${Math.abs(val).toFixed(2)}`).join(', ');
         outputElement.textContent = `${category}: ${amountsText}`;
     } else {
-        outputElement.textContent = ''; // Keep it empty if no data
+        outputElement.textContent = ''; 
     }
 
     updateTotal(category);
@@ -182,7 +192,9 @@ function updateTotal(category) {
     if (income[category] && income[category].length > 0) {
         total = income[category].reduce((acc, val) => acc + val, 0);
     }
-    document.getElementById(`total${category}`).textContent = `Total ${total.toFixed(2)}`;
+    const categoryText = category.includes('card') ? 'card' : 'cash';
+    const currencySymbol = category.includes('£') ? '£' : '€';
+    document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${total.toFixed(2)}`;
     updateOverallTotal();
 }
 
@@ -245,8 +257,7 @@ document.getElementById('updateAmount').addEventListener('click', async function
     document.getElementById('amountOptions').value = "";
 });
 
-
-document.getElementById('deleteAmount').addEventListener('click', function (event) {
+document.getElementById('deleteAmount').addEventListener('click', async function (event) {
     event.preventDefault();
     var category = document.getElementById('updateCategory').value;
     var amountIndex = document.getElementById('amountOptions').value;
@@ -256,8 +267,28 @@ document.getElementById('deleteAmount').addEventListener('click', function (even
         return;
     }
 
+    const amountToDelete = income[category][amountIndex];
     income[category].splice(amountIndex, 1);
+    
+    try {
+        // Subtract the deleted amount from the total in the database
+        const response = await fetch('http://localhost:3000/deleteAmount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ category, amount: amountToDelete }),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Amount deleted successfully:', { category, amount: amountToDelete });
+    } catch (error) {
+        console.error('Error deleting amount:', error);
+    }
+
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
+    updateTotals(); // Ensure totals are updated correctly
     refreshDropdown(category);
     document.getElementById('amountOptions').value = "";
 });
@@ -295,6 +326,12 @@ document.getElementById('deleteTotalAmount').addEventListener('click', async fun
         } catch (error) {
             console.error('Error deleting total amount:', error);
         }
+
+        // Reset display to the correct format
+        const categoryText = category.includes('card') ? 'card' : 'cash';
+        const currencySymbol = category.includes('£') ? '£' : '€';
+        document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}0.00`;
+
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
         updateOverallTotal();
         refreshDropdown(category);
@@ -328,4 +365,5 @@ function convertToEuros() {
     grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
     updateOverallTotal();
 }
+
 

@@ -78,6 +78,7 @@ app.post('/deleteTotalAmount', async (req, res) => {
     }
 
     try {
+        // Update the totals table to set the category total to zero
         const query = `UPDATE totals SET ${column} = 0 WHERE id = 1`;
         await pool.query(query);
         res.status(200).send('Total amount deleted successfully');
@@ -128,6 +129,37 @@ app.post('/updateAmount', async (req, res) => {
         const updateQuery = `UPDATE totals SET ${column} = ${column} - $1 + $2 WHERE id = 1`;
         await pool.query(updateQuery, [oldAmount, newAmount]);
         res.status(200).send('Amount updated successfully');
+    } catch (error) {
+        console.error('Error updating database:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/deleteAmount', async (req, res) => {
+    const { category, amount } = req.body;
+    let column;
+
+    switch (category) {
+        case 'card£':
+            column = 'total_card_pounds';
+            break;
+        case 'card€':
+            column = 'total_card_euro';
+            break;
+        case 'cash£':
+            column = 'total_cash_pounds';
+            break;
+        case 'cash€':
+            column = 'total_cash_euro';
+            break;
+        default:
+            return res.status(400).send('Invalid category');
+    }
+
+    try {
+        const updateQuery = `UPDATE totals SET ${column} = ${column} - $1 WHERE id = 1`;
+        await pool.query(updateQuery, [amount]);
+        res.status(200).send('Amount deleted successfully and total updated');
     } catch (error) {
         console.error('Error updating database:', error.message);
         res.status(500).send('Internal Server Error');
