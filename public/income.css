@@ -1,97 +1,36 @@
-/* General body styling */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
+h1{
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.card, .cash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
     padding: 20px;
-    color: #333;
+    border-radius: 5px;
+    width: 40%;
 }
 
-h1, h2, h3 {
-    color: #4a67a1;
-}
-
-/* Styling form elements */
-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-input[type=number] {
-    padding: 10px;
-    margin: 8px 0;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    display: block;
-    width: 90%; /* Adjusted width for better form filling */
-    font-size: large;
-}
-
-button {
-    background-color: #4a67a1; /* Main button color */
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 8px 16px; /* Adjusted padding for a more proportional appearance */
-    font-size: 1em;
-    transition: background-color 0.3s;
-    width: auto; /* Prevents the button from stretching too much */
-    border-radius: 15px;
-}
-
-/* Hover effect for buttons */
-button:hover {
-    background-color: #5679c1; /* Brighter shade on hover */
-}
-
-/* Class styling for specific form structures */
 .two {
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 
 .pound {
-    flex: 1;
-    padding: 0 10px;
-    margin-bottom: 10px; /* Added margin for better spacing */
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
 }
 
-/* Output and total display styling */
-#outputTotal, #totalcard£, #totalcard€, #totalcash£, #totalcash€ {
-    background: #e7ebf0;
-    padding: 10px;
-    border-radius: 4px;
+button {
+    align-self: center;
     margin-top: 10px;
-}
-
-/* Styling specific buttons with class 'button1' */
-.button1 {
-    background-color: #4a67a1; /* Main button color */
-    width: auto;
-    padding: 10px 20px;
-    display: inline-block;
-}
-
-.nav-link {
-    background-color: #4a67a1; /* Consistent with your primary button color */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 15px;
-    font-size: 1em;
-    transition: background-color 0.3s;
-    width: auto; /* Allows for better control over button width */
-    text-decoration: none;
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .two {
-        flex-direction: column;
-    }
 }
