@@ -1,36 +1,127 @@
-h1{
+body {
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+h1, h2, h3 {
     text-align: center;
+    margin-bottom: 5px;
 }
 
-.row {
+.bigholder {
     display: flex;
-    justify-content: space-around;
-    margin: 20px;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 10px;
 }
 
-.card, .cash {
+.cardholder {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 5px;
-    width: 40%;
-}
-
-.two {
-    display: flex;
-    justify-content: space-between;
+    margin: 10px;
     width: 100%;
+    max-width: 400px;
 }
 
 .pound {
+    margin: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 100px;
+}
+
+
+
+form {
     display: flex;
     flex-direction: column;
-    margin-right: 10px;
+    align-items: center; 
 }
 
 button {
-    align-self: center;
+    margin-top: 5px; 
+    border-radius: 5px;
+    border: solid 1px black;
+    padding: 4px;
+    width: 26%;
+}
+
+.totalcontainer {
+    text-align: center;
     margin-top: 10px;
+}
+
+#outputTotal, #outputTotal2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.exchangeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.exchangeholder p {
+    margin-bottom: 8px; /* Adjust the bottom margin to reduce space */
+}
+
+.bigholder2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.Amountinput {
+    border-radius: 5px;
+    padding: 5px;
+    width: 60%; /* Adjusted width for number input */
+    border: solid 1px gray;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.exchange {
+    border-radius: 5px;
+    padding: 5px;
+    width: 40%; /* Adjusted width for regular input */
+    border: solid 1px gray;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+
+.Amountinput, .exchange :hover {
+    box-shadow: 5px 5px 12px rgba(95, 93, 93, 0.7);
+}
+
+/* Adjusted media queries for responsiveness */
+@media (max-width: 768px) {
+    .cardholder, .exchangeholder {
+        width: 100%;
+    }
+    
+    button {
+        width: 30%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardholder, .exchangeholder {
+        width: 100%;
+    }
+    
+    button {
+        width: 30%;
+    }
 }

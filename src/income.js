@@ -151,12 +151,16 @@ function updateOverallTotal() {
     totalPound = parseTotal('totalcard£', '£') + parseTotal('totalcash£', '£');
     totalEuro = parseTotal('totalcard€', '€') + parseTotal('totalcash€', '€');
     document.getElementById('outputTotal').innerHTML = `
-        Total money:<br>
-        Total (£): £${totalPound.toFixed(2)}<br>
-        Total (€): €${totalEuro.toFixed(2)}<br>
-        Grand Total Pounds: £${grandTotalPound.toFixed(2)}<br>
-        Grand Total Euros: €${grandTotalEuro.toFixed(2)}<br>
+        Overall Totals:<br>
+        Combined Total: £${totalPound.toFixed(2)}<br>
+        Combined Total: €${totalEuro.toFixed(2)}<br><br>
     `;
+
+    document.getElementById('outputTotal2').innerHTML = `
+    Grand Totals:<br>
+    Grand Total: £${grandTotalPound.toFixed(2)}<br>
+    Grand Total: €${grandTotalEuro.toFixed(2)}<br>
+`;
     console.log('Overall totals updated:', { totalPound, totalEuro, grandTotalPound, grandTotalEuro });
 }
 
@@ -365,5 +369,8 @@ function convertToEuros() {
     grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
     updateOverallTotal();
 }
+
+document.getElementById('convertToPounds').addEventListener('click', convertToPounds);
+document.getElementById('convertToEuros').addEventListener('click', convertToEuros);
 
 
