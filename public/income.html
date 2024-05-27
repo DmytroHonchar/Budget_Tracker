@@ -85,41 +85,44 @@
 </div>
 
 <h3>Update/Delete Amounts</h3>
-<select id="updateCategory">
-    <option value="card£">Card (£)</option>
-    <option value="card€">Card (€)</option>
-    <option value="cash£">Cash (£)</option>
-    <option value="cash€">Cash (€)</option>
-</select>
-<select id="amountOptions">
-    <option value="">Select an amount</option>
-</select>
-<label for="newAmount">New Amount:</label>
-<input type="number" id="newAmount" step="0.01">
-<button id="fetchAmount">Fetch Amount</button>
-<button id="updateAmount">Update Amount</button>
-<button id="deleteAmount">Delete Amount</button>
-<br><br>
-<button id="fetchTotalAmount">Fetch Total Amount</button>
-<button id="deleteTotalAmount">Delete Total Amount</button>
+<div class="UpdateHolder">
+   
+        <select id="updateCategory">
+            <option value="card£">Card (£)</option>
+            <option value="card€">Card (€)</option>
+            <option value="cash£">Cash (£)</option>
+            <option value="cash€">Cash (€)</option>
+        </select>
+
+        <select id="amountOptions">
+            <option value="">Select an amount</option>
+        </select>
+
+        <button class="updateButton" id="fetchAmount">Fetch Amount</button>
+    
+
+    
+        <input class="adjustInput" type="number" id="newAmount" step="0.01" placeholder="New Amount">
+        <button class="updateButton" id="updateAmount">Update Amount</button>
+        <button class="updateButton" id="deleteAmount">Delete Amount</button>
+    
+
+        <button id="deleteTotalAmount">Delete Total Amount</button>
+    
+</div>
 
 <h3>Subtract Amount</h3>
-<div class="SubtractCard"></div>
-<form id="subtractForm" method="POST">
-    <div class="two">
+
+    <form id="subtractForm" method="POST">
         <select id="subtractCategory">
             <option value="card£">Card (£)</option>
             <option value="card€">Card (€)</option>
             <option value="cash£">Cash (£)</option>
             <option value="cash€">Cash (€)</option>
         </select>
-        <div class="pound">
-            <label for="subtractAmount">Amount to subtract:</label>
-            <input type="number" id="subtractAmount" name="subtractAmount" step="0.01">
-        </div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+        <input type="number" id="subtractAmount" name="subtractAmount" step="0.01" placeholder="Amount to subtract">
+        <button class="subtractButton" type="submit">Submit</button>
+    </form>
 
 <script src="/src/income.js"></script>
 </body>

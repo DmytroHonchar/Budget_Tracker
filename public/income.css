@@ -34,8 +34,6 @@ h1, h2, h3 {
     margin-right: 100px;
 }
 
-
-
 form {
     display: flex;
     flex-direction: column;
@@ -100,28 +98,212 @@ button {
     transition: box-shadow 0.3s ease-in-out;
 }
 
-
-.Amountinput, .exchange :hover {
+.Amountinput, .exchange, .adjustInput :hover {
     box-shadow: 5px 5px 12px rgba(95, 93, 93, 0.7);
+}
+
+.UpdateHolder {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center; /* Ensure items are centered in their cells */
+    justify-items: stretch; /* Ensure items stretch to fill their cells */
+}
+
+#updateCategory{
+    grid-row: 1/2;
+    grid-column: 2/3;
+    width: 100%; /* Ensure items take the full width of their grid cell */
+}
+
+#amountOptions{
+    grid-row: 2/3;
+    grid-column: 2/3;
+    width: 100%;
+}
+
+#fetchAmount{
+    grid-row: 1/2;
+    grid-column: 4/5;
+    width: 100%;
+}
+/*  */
+#newAmount{
+    grid-row: 3/4;
+    grid-column: 2/3;
+    width: 90%;
+}
+
+#updateAmount{
+    grid-row: 2/3;
+    grid-column: 4/5;
+    width: 100%;
+}
+
+#deleteAmount{
+    grid-row: 3/4;
+    grid-column: 4/5;
+    width: 100%;
+}
+
+/*  */
+
+#deleteTotalAmount{
+    grid-row: 1/2;
+    grid-column: 6/7;
+    padding: 12px;
+    width: 100%;
+    border: solid 1px black;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+/*  */
+
+.updateButton, .adjustInput, .AmountSelector select {
+    padding: 10px; /* Adjust padding for better size */
+    border-radius: 5px;
+    border: solid 1px black;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.updateButton {
+    width: auto; /* Adjust width to fit content */
+    cursor: pointer; /* Add cursor pointer for better UX */
+}
+
+.adjustInput, .AmountSelector select {
+    width: 200px; /* Set consistent width */
+}
+
+
+#subtractForm{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    align-items: center; /* Ensure items are centered in their cells */
+    justify-items: stretch; /* Ensure items stretch to fill their cells */
+}
+
+#subtractCategory{
+    grid-row: 1/2;
+    grid-column: 2/3;
+    width: 100%;
+}
+
+#subtractAmount{
+    grid-row: 2/3;
+    grid-column: 2/3;
+    width: 90%;
+    border-radius: 5px;
+    padding: 8px;
+    border: solid 1px gray;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.subtractButton{
+    grid-row: 1/2;
+    grid-column: 4/5;
+    width: 100%;
+    padding: 10px; /* Adjust padding for better size */
+    border-radius: 5px;
+    border: solid 1px black;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+select {
+    width: 200px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid #ccc;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    border-color: #5f6469;
+    box-shadow: 0 0 5px rgba(41, 43, 46, 0.5);
+    outline: none;
+}
+
+option {
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    color: #333;
+}
+
+.updateButton {
+    border-radius: 5px;
+    border: solid 1px black;
+    padding: 12px 40px;
+}
+
+.adjustInput {
+    border-radius: 5px;
+    padding: 8px;
+    border: solid 1px gray;
+    box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 /* Adjusted media queries for responsiveness */
 @media (max-width: 768px) {
-    .cardholder, .exchangeholder {
+    .cardholder, .exchangeholder, .SubtractCard {
         width: 100%;
+    }
+
+    .SubtractCard {
+        flex-direction: column;
+    }
+
+    .SubtractCard select,
+    .SubtractCard input,
+    .SubtractCard button {
+        width: 80%;
+        margin: 5px 0; /* Add margin to ensure some spacing between elements */
     }
     
     button {
-        width: 30%;
+        width: 50%;
     }
 }
 
 @media (max-width: 480px) {
-    .cardholder, .exchangeholder {
+    .cardholder, .exchangeholder, .SubtractCard {
         width: 100%;
     }
-    
+
+    .SubtractCard {
+        flex-direction: column;
+    }
+
+    .SubtractCard select,
+    .SubtractCard input,
+    .SubtractCard button {
+        width: 90%;
+        margin: 5px 0; /* Add margin to ensure some spacing between elements */
+    }
+
     button {
-        width: 30%;
+        width: 20%;
     }
 }
+
+@media (max-width: 768px) {
+    .UpdateHolder {
+        grid-template-columns: 1fr;
+    }
+}
+

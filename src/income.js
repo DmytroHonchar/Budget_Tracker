@@ -134,10 +134,10 @@ async function updateTotals() {
         const total_cash_pounds = parseFloat(totals.total_cash_pounds) || 0;
         const total_cash_euro = parseFloat(totals.total_cash_euro) || 0;
 
-        document.getElementById('totalcard£').textContent = `Total card: £${total_card_pounds.toFixed(2)}`;
-        document.getElementById('totalcard€').textContent = `Total card: €${total_card_euro.toFixed(2)}`;
-        document.getElementById('totalcash£').textContent = `Total cash: £${total_cash_pounds.toFixed(2)}`;
-        document.getElementById('totalcash€').textContent = `Total cash: €${total_cash_euro.toFixed(2)}`;
+        document.getElementById('totalcard£').textContent = `Total on Card: £${total_card_pounds.toFixed(2)}`;
+        document.getElementById('totalcard€').textContent = `Total on Card: €${total_card_euro.toFixed(2)}`;
+        document.getElementById('totalcash£').textContent = `Total in Cash: £${total_cash_pounds.toFixed(2)}`;
+        document.getElementById('totalcash€').textContent = `Total in Cash: €${total_cash_euro.toFixed(2)}`;
         console.log('Totals updated:', { total_card_pounds, total_card_euro, total_cash_pounds, total_cash_euro });
 
         updateOverallTotal();
