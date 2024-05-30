@@ -259,51 +259,130 @@ option {
 }
 
 /* Adjusted media queries for responsiveness */
+/* Adjusted media queries for responsiveness */
+/* Adjusted media queries for responsiveness */
+
 @media (max-width: 768px) {
-    .cardholder, .exchangeholder, .SubtractCard {
-        width: 100%;
-    }
-
-    .SubtractCard {
+    .bigholder, .bigholder2 {
         flex-direction: column;
+        align-items: center;
     }
 
-    .SubtractCard select,
-    .SubtractCard input,
-    .SubtractCard button {
-        width: 80%;
-        margin: 5px 0; /* Add margin to ensure some spacing between elements */
+    .cardholder, .exchangeholder {
+        width: 90%;
+        max-width: none;
     }
-    
+
+    .UpdateHolder {
+        grid-template-columns: 0.2fr 4fr 0.2fr 0.3fr 0.2fr 1fr 0.2fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    #subtractForm {
+        grid-template-columns: 1fr 4fr 1fr 3fr 1fr 2fr 1fr;
+        grid-template-rows: auto auto;
+    }
+
     button {
-        width: 50%;
+        width: 30%; /* Set button width to 30% */
+        padding: 8px; /* Adjust padding for better size on smaller screens */
+    }
+
+    .updateButton, .subtractButton {
+        width: 60%; /* Match width for consistency */
+        padding: 8px; /* Ensure consistent padding */
+        border-radius: 5px;
+        border: solid 1px black;
+        box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+        transition: box-shadow 0.3s ease-in-out;
+        text-align: center;
+    }
+
+    #fetchAmount, #updateAmount, #deleteAmount, #deleteTotalAmount {
+        width: 100%; /* Match width for consistency */
+        padding: 8px; /* Ensure consistent padding */
+    }
+
+    #newAmount{
+        width: 75%; /* Set width to 80% for these specific inputs */
+    }
+
+    #subtractAmount {
+        width: 80%; /* Set width to 80% for these specific inputs */
+    }
+
+    #updateCategory {
+        width: 80%; /* Set width to 80% for the select input */
+    }
+
+    #amountOptions {
+        width: 80%;
     }
 }
 
 @media (max-width: 480px) {
-    .cardholder, .exchangeholder, .SubtractCard {
+    .cardholder, .exchangeholder, .UpdateHolder, #subtractForm {
         width: 100%;
+        padding: 10px;
     }
 
-    .SubtractCard {
-        flex-direction: column;
+    .UpdateHolder {
+        grid-template-columns: 0.2fr 4fr 0.2fr 0.3fr 0.2fr 1fr 0.2fr;
+        grid-template-rows: auto auto auto; 
     }
 
-    .SubtractCard select,
-    .SubtractCard input,
-    .SubtractCard button {
-        width: 90%;
-        margin: 5px 0; /* Add margin to ensure some spacing between elements */
+    #subtractForm {
+        grid-template-columns: 1fr 4fr 1fr 3fr 1fr 2fr 1fr;
+        grid-template-rows: auto auto;
     }
 
     button {
-        width: 20%;
+        width: 30%;
+        padding: 8px; /* Adjust padding for better size on smaller screens */
+    }
+
+    .updateButton, .subtractButton {
+        width: 100%; /* Match width for consistency */
+        padding: 8px; /* Ensure consistent padding */
+        border-radius: 5px;
+        border: solid 1px black;
+        box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
+        transition: box-shadow 0.3s ease-in-out;
+        text-align: center;
+    }
+
+    #fetchAmount, #updateAmount, #deleteAmount {
+        width: 100%;
+        padding: 5px;
+        padding-top: 10px;
+        text-align: center; /* Align text to the center */
+    }
+
+    #deleteTotalAmount {
+        width: 100%;
+        padding: 5px;
+        text-align: center; /* Align text to the center */
+    }
+
+    #newAmount {
+        width: 70%; /* Set width to 100% for these specific inputs */
+    }
+
+    #subtractAmount{
+        width: 80%;
+        padding:8px;
+    }
+
+    #updateCategory {
+        width: 80%; /* Set width to 100% for the select input */
+        padding: 5px;
+        padding-top: 10px;
+        text-align: center; /* Align text to the center */
     }
 }
 
-@media (max-width: 768px) {
-    .UpdateHolder {
-        grid-template-columns: 1fr;
-    }
-}
+
+
+
+
 
