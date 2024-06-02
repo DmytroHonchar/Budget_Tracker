@@ -1,8 +1,12 @@
 body {
-    font-family: Arial, sans-serif; 
+    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+button, input, select {
+    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
 }
 
 h1, h2, h3 {
@@ -221,6 +225,7 @@ button {
 }
 
 select {
+    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
     width: 200px;
     padding: 10px;
     border-radius: 15px;
@@ -238,11 +243,13 @@ select:focus {
 }
 
 option {
+    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
     padding: 10px;
     border-radius: 15px;
     background-color: #fff;
     color: #333;
 }
+
 
 .updateButton {
     border-radius: 5px;
@@ -259,8 +266,12 @@ option {
 }
 
 /* Adjusted media queries for responsiveness */
-/* Adjusted media queries for responsiveness */
-/* Adjusted media queries for responsiveness */
+
+@media (max-width: 600px) {
+    option {
+        font-size: 10px; /* Adjust font size for smaller screens */
+    }
+}
 
 @media (max-width: 768px) {
     .bigholder, .bigholder2 {
@@ -382,7 +393,51 @@ option {
 }
 
 
+/* -----------------------------Font Styles -------------------------------------*/
+@font-face {
+    font-family: 'Agbalumo';
+    src: url('font-family/Agbalumo-Regular.ttf') format('truetype');
+}
 
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('font-family/PlayfairDisplay-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Bebas Neue';
+    src: url('font-family/BebasNeue-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Caveat';
+    src: url('font-family/Caveat-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'KdamThmor';
+    src: url('font-family/KdamThmorPro-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cinzel';
+    src: url('font-family/Cinzel-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'SpecialElite';
+    src: url('font-family/SpecialElite-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'AkayaKanadaka';
+    src: url('font-family/AkayaKanadaka-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LuckiestGuy';
+    src: url('font-family/LuckiestGuy-Regular.ttf') format('truetype');
+}
 
 
 
