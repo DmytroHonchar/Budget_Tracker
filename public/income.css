@@ -1,18 +1,141 @@
 body {
-    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0; 
     padding: 0; 
-    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    box-sizing: border-box;
+    background-color: black;
+    color: #E0E0E0;
 }
 
 button, input, select {
-    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #E0E0E0;
+    color: black;
+    border: solid 1px #cccccc;
+    transition: all 0.3s ease;
 }
 
-h1, h2, h3 {
+button:hover, #fetchAmount:hover, #deleteAmount:hover, #updateAmount:hover, #deleteTotalAmount:hover, .submit:hover, .subtractButton:hover {
+    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d);
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1, h2, h3, .footer_holder a {
+    font-family: 'Cinzel', serif;
     text-align: center;
     margin-bottom: 5px;
+    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d); /* Gradient background */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent; /* Make the text color transparent */
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
+
+.footer_holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.footer_holder a {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d); /* Gradient background */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent; /* Make the text color transparent */
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.headrimgs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.header-img {
+    width: 300px;
+    margin-top: 5px;
+}
+
+.header-img2 {
+    width: 150px;
+    margin-top: 5px;
+}
+
+.textlogo {
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.section-img {
+    max-width: 100px;
+    height: auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.section {
+   display: flex;
+   flex-direction: column;
+   text-align: center;
+   align-items: center;
+}
+
+.section h3 {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.section p {
+    width: 70%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.section-img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Side pics */
+
+.side-image {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 8%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.side-image.left {
+    left: 0;
+}
+
+.side-image.right {
+    right: 0;
+}
+
+.side-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+}
+
+/* end of side pics */
 
 .bigholder {
     display: flex;
@@ -33,7 +156,7 @@ h1, h2, h3 {
 .pound {
     margin: 8px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     margin-right: 100px;
 }
@@ -41,25 +164,35 @@ h1, h2, h3 {
 form {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: right;
+    color: #E0E0E0;
 }
 
 button {
+    align-self: center;
     margin-top: 5px; 
     border-radius: 5px;
     border: solid 1px black;
     padding: 4px;
     width: 26%;
+    background-color: #E0E0E0;
+    color: black;
+}
+
+#fetchAmount, #updateAmount, #deleteAmount, .submit {
+    border: none;
 }
 
 .totalcontainer {
     text-align: center;
     margin-top: 10px;
+    color: #E0E0E0;
 }
 
 #outputTotal, #outputTotal2 {
     text-align: center;
     margin-top: 20px;
+    color: #E0E0E0;
 }
 
 .exchangeholder {
@@ -70,10 +203,11 @@ button {
     width: 100%;
     max-width: 400px;
     text-align: center;
+    color: #E0E0E0;
 }
 
 .exchangeholder p {
-    margin-bottom: 8px; /* Adjust the bottom margin to reduce space */
+    margin-bottom: 8px;
 }
 
 .bigholder2 {
@@ -87,8 +221,10 @@ button {
 .Amountinput {
     border-radius: 5px;
     padding: 5px;
-    width: 60%; /* Adjusted width for number input */
-    border: solid 1px gray;
+    width: 60%;
+    border: solid 1px #cccccc;
+    background-color: #E0E0E0;
+    color: black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
     transition: box-shadow 0.3s ease-in-out;
 }
@@ -96,13 +232,15 @@ button {
 .exchange {
     border-radius: 5px;
     padding: 5px;
-    width: 40%; /* Adjusted width for regular input */
-    border: solid 1px gray;
+    width: 40%;
+    border: solid 1px #cccccc;
+    background-color: #E0E0E0;
+    color: black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
     transition: box-shadow 0.3s ease-in-out;
 }
 
-.Amountinput, .exchange, .adjustInput :hover {
+.Amountinput:hover, .exchange:hover, .adjustInput:hover {
     box-shadow: 5px 5px 12px rgba(95, 93, 93, 0.7);
 }
 
@@ -112,126 +250,141 @@ button {
     grid-template-rows: auto auto auto;
     gap: 10px;
     margin-top: 10px;
-    align-items: center; /* Ensure items are centered in their cells */
-    justify-items: stretch; /* Ensure items stretch to fill their cells */
+    align-items: center;
+    justify-items: stretch;
+    color: #E0E0E0;
 }
 
-#updateCategory{
+#updateCategory {
     grid-row: 1/2;
     grid-column: 2/3;
-    width: 100%; /* Ensure items take the full width of their grid cell */
+    width: 100%;
 }
 
-#amountOptions{
+#amountOptions {
     grid-row: 2/3;
     grid-column: 2/3;
     width: 100%;
 }
 
-#fetchAmount{
+#fetchAmount {
     grid-row: 1/2;
     grid-column: 4/5;
     width: 100%;
+    transition: all 0.3s ease;
 }
-/*  */
-#newAmount{
+
+#newAmount {
     grid-row: 3/4;
     grid-column: 2/3;
     width: 90%;
+    background-color: #E0E0E0;
+    color: black;
+    border: solid 1px #cccccc;
 }
 
-#updateAmount{
+#updateAmount {
     grid-row: 2/3;
     grid-column: 4/5;
     width: 100%;
+    transition: all 0.3s ease;
 }
 
-#deleteAmount{
+#deleteAmount {
     grid-row: 3/4;
     grid-column: 4/5;
     width: 100%;
+    transition: all 0.3s ease;
 }
 
-/*  */
-
-#deleteTotalAmount{
+#deleteTotalAmount {
     grid-row: 1/2;
     grid-column: 6/7;
     padding: 12px;
     width: 100%;
     border: solid 1px black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
-    transition: box-shadow 0.3s ease-in-out;
+    transition: all 0.3s ease;
     cursor: pointer;
+    background-color: #E0E0E0;
+    color: black;
 }
 
-/*  */
-
 .updateButton, .adjustInput, .AmountSelector select {
-    padding: 10px; /* Adjust padding for better size */
+    padding: 10px;
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px #cccccc;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
     transition: box-shadow 0.3s ease-in-out;
+    background-color: #E0E0E0;
+    color: black;
 }
 
 .updateButton {
-    width: auto; /* Adjust width to fit content */
-    cursor: pointer; /* Add cursor pointer for better UX */
+    width: auto;
+    cursor: pointer;
 }
 
 .adjustInput, .AmountSelector select {
-    width: 200px; /* Set consistent width */
+    width: 200px;
+    background-color: #E0E0E0;
+    color: black;
 }
 
-
-#subtractForm{
+#subtractForm {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr 1fr;
     grid-template-rows: auto auto;
     gap: 10px;
     margin-top: 10px;
     margin-bottom: 40px;
-    align-items: center; /* Ensure items are centered in their cells */
-    justify-items: stretch; /* Ensure items stretch to fill their cells */
+    align-items: center;
+    justify-items: stretch;
 }
 
-#subtractCategory{
+#subtractCategory {
     grid-row: 1/2;
     grid-column: 2/3;
     width: 100%;
+    background-color: #E0E0E0;
+    color: black;
+    border: solid 1px #cccccc;
 }
 
-#subtractAmount{
+#subtractAmount {
     grid-row: 2/3;
     grid-column: 2/3;
     width: 90%;
     border-radius: 5px;
     padding: 8px;
-    border: solid 1px gray;
+    border: solid 1px #cccccc;
+    background-color: #E0E0E0;
+    color: black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
     transition: box-shadow 0.3s ease-in-out;
 }
 
-.subtractButton{
+.subtractButton {
     grid-row: 1/2;
     grid-column: 4/5;
     width: 100%;
-    padding: 10px; /* Adjust padding for better size */
+    padding: 10px;
     border-radius: 5px;
-    border: solid 1px black;
+    border: none;
+    background-color: #E0E0E0;
+    color: black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease;
 }
 
 select {
-    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     width: 200px;
     padding: 10px;
     border-radius: 15px;
-    border: 2px solid #ccc;
-    background-color: #f9f9f9;
-    color: #333;
+    border: 2px solid #cccccc;
+    background-color: #E0E0E0;
+    color: black;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -243,33 +396,44 @@ select:focus {
 }
 
 option {
-    font-family: 'Cinzel', 'Bebas Neue', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     padding: 10px;
     border-radius: 15px;
-    background-color: #fff;
-    color: #333;
+    background-color: #E0E0E0;
+    color: black;
 }
-
 
 .updateButton {
     border-radius: 5px;
-    border: solid 1px black;
+    border: solid 1px #cccccc;
     padding: 12px 40px;
+    background-color: #E0E0E0;
+    color: black;
 }
 
 .adjustInput {
     border-radius: 5px;
     padding: 8px;
-    border: solid 1px gray;
+    border: solid 1px #cccccc;
+    background-color: #E0E0E0;
+    color: black;
     box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
     transition: box-shadow 0.3s ease-in-out;
+}
+
+.footer_holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 20px;
+    padding: 10px;
 }
 
 /* Adjusted media queries for responsiveness */
 
 @media (max-width: 600px) {
     option {
-        font-size: 10px; /* Adjust font size for smaller screens */
+        font-size: 10px;
     }
 }
 
@@ -295,39 +459,47 @@ option {
     }
 
     button {
-        width: 30%; /* Set button width to 30% */
-        padding: 8px; /* Adjust padding for better size on smaller screens */
+        width: 30%;
+        padding: 8px;
     }
 
     .updateButton, .subtractButton {
-        width: 60%; /* Match width for consistency */
-        padding: 8px; /* Ensure consistent padding */
+        width: 60%;
+        padding: 8px;
         border-radius: 5px;
-        border: solid 1px black;
+        border: solid 1px #cccccc;
         box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
         transition: box-shadow 0.3s ease-in-out;
         text-align: center;
     }
 
     #fetchAmount, #updateAmount, #deleteAmount, #deleteTotalAmount {
-        width: 100%; /* Match width for consistency */
-        padding: 8px; /* Ensure consistent padding */
+        width: 100%;
+        padding: 8px;
     }
 
-    #newAmount{
-        width: 75%; /* Set width to 80% for these specific inputs */
+    #newAmount {
+        width: 75%;
+        background-color: #E0E0E0;
+        color: black;
     }
 
     #subtractAmount {
-        width: 80%; /* Set width to 80% for these specific inputs */
+        width: 80%;
+        background-color: #E0E0E0;
+        color: black;
     }
 
     #updateCategory {
-        width: 80%; /* Set width to 80% for the select input */
+        width: 80%;
+        background-color: #E0E0E0;
+        color: black;
     }
 
     #amountOptions {
         width: 80%;
+        background-color: #E0E0E0;
+        color: black;
     }
 }
 
@@ -349,95 +521,149 @@ option {
 
     button {
         width: 30%;
-        padding: 8px; /* Adjust padding for better size on smaller screens */
+        padding: 8px;
     }
 
     .updateButton, .subtractButton {
-        width: 100%; /* Match width for consistency */
-        padding: 8px; /* Ensure consistent padding */
+        width: 100%;
+        padding: 8px;
         border-radius: 5px;
-        border: solid 1px black;
+        border: solid 1px #cccccc;
         box-shadow: 3px 3px 8px rgba(95, 93, 93, 0.5);
         transition: box-shadow 0.3s ease-in-out;
         text-align: center;
+        background-color: #E0E0E0;
+        color: black;
     }
 
     #fetchAmount, #updateAmount, #deleteAmount {
         width: 100%;
         padding: 5px;
         padding-top: 10px;
-        text-align: center; /* Align text to the center */
+        text-align: center;
     }
 
     #deleteTotalAmount {
         width: 100%;
-        padding: 5px;
-        text-align: center; /* Align text to the center */
+        padding: 1px;
+        text-align: center;
     }
 
     #newAmount {
-        width: 70%; /* Set width to 100% for these specific inputs */
+        width: 70%;
+        background-color: #E0E0E0;
+        color: black;
     }
 
-    #subtractAmount{
+    #subtractAmount {
         width: 80%;
-        padding:8px;
+        padding: 8px;
+        background-color: #E0E0E0;
+        color: black;
     }
 
     #updateCategory {
-        width: 80%; /* Set width to 100% for the select input */
+        width: 80%;
         padding: 5px;
         padding-top: 10px;
-        text-align: center; /* Align text to the center */
+        text-align: center;
+        background-color: #E0E0E0;
+        color: black;
     }
 }
 
+input::placeholder, select::placeholder, textarea::placeholder {
+    color: #bbbbbb;
+}
+
+input:-ms-input-placeholder, select:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: #bbbbbb;
+}
+
+input::-ms-input-placeholder, select::-ms-input-placeholder, textarea::-ms-input-placeholder {
+    color: #bbbbbb;
+}
+
+/* Responsive adjustments for side pics and header */
+
+@media (min-width: 853px) and (max-width: 1028px) {
+    body {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+
+    .side-image {
+        width: 6%;
+    }
+
+    .header-img, .header-img2 {
+        width: 40%;
+    }
+
+    .headrimgs {
+        flex-direction: row;
+    }
+
+    .header-img {
+        width: 40%;
+        margin: 5px 0;
+    }
+
+    .header-img2 {
+        width: 20%;
+        margin: 5px 0;
+    }
+
+    .textlogo {
+        text-align: center;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+
+    .side-image {
+        width: 6%;
+    }
+
+    .side-image img {
+        object-position: 55% 0;
+    }
+
+    .headrimgs {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .header-img {
+        width: 40%;
+        margin: 5px 0;
+    }
+
+    .header-img2 {
+        width: 20%;
+        margin: 5px 0;
+    }
+
+    .textlogo {
+        text-align: center;
+        padding: 5px;
+    }
+}
 
 /* -----------------------------Font Styles -------------------------------------*/
 @font-face {
-    font-family: 'Agbalumo';
-    src: url('font-family/Agbalumo-Regular.ttf') format('truetype');
+    font-family: 'Montserrat';
+    src: url(/public/font-family/Montserrat-VariableFont_wght.ttf) format('truetype');
 }
-
-@font-face {
-    font-family: 'Playfair Display';
-    src: url('font-family/PlayfairDisplay-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Bebas Neue';
-    src: url('font-family/BebasNeue-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Caveat';
-    src: url('font-family/Caveat-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'KdamThmor';
-    src: url('font-family/KdamThmorPro-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Cinzel';
-    src: url('font-family/Cinzel-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'SpecialElite';
-    src: url('font-family/SpecialElite-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'AkayaKanadaka';
-    src: url('font-family/AkayaKanadaka-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'LuckiestGuy';
-    src: url('font-family/LuckiestGuy-Regular.ttf') format('truetype');
-}
-
-
-
