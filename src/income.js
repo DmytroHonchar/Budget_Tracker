@@ -15,10 +15,12 @@ async function addAmount(category, amount) {
     income[category].push(amount);
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/addAmount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ category, amount }),
         });
@@ -47,10 +49,12 @@ async function subtractAmount(category, amount) {
         income[category].push(-amount);
 
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:3000/deleteAmount', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ category, amount }),
             });
@@ -123,7 +127,13 @@ document.addEventListener('DOMContentLoaded', updateTotals);
 // Function to fetch and update totals from the database
 async function updateTotals() {
     try {
-        const response = await fetch('http://localhost:3000/totals');
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/totals', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -260,10 +270,12 @@ document.getElementById('updateAmount').addEventListener('click', async function
     income[category][amountIndex] = parseFloat(newAmount);
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/updateAmount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ category, oldAmount, newAmount: parseFloat(newAmount) }),
         });
@@ -295,10 +307,12 @@ document.getElementById('deleteAmount').addEventListener('click', async function
     income[category].splice(amountIndex, 1);
     
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/deleteAmount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ category, amount: amountToDelete }),
         });
@@ -323,10 +337,12 @@ document.getElementById('deleteTotalAmount').addEventListener('click', async fun
     if (confirm(`Are you sure you want to delete all amounts for ${category}?`)) {
         income[category] = [];
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:3000/deleteTotalAmount', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ category }),
             });
@@ -362,5 +378,9 @@ function refreshDropdown(category) {
     }
 }
 
-// design
-
+// Event listener for logout
+document.getElementById('logout').addEventListener('click', function(event) {
+    event.preventDefault();
+    localStorage.removeItem('token');
+    window.location.href = 'login.html'; // Redirect to login page after logout
+});

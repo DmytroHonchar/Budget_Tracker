@@ -25,7 +25,7 @@ h1, h2, h3, .footer_holder a {
     font-family: 'Cinzel', serif;
     text-align: center;
     margin-bottom: 5px;
-    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d); /* Gradient background */
+    background: linear-gradient(to right,  #ffffff, #65827e, #6368ad); /* Gradient background */
     -webkit-background-clip: text; /* Clip the background to the text */
     color: transparent; /* Make the text color transparent */
     font-weight: bold;
@@ -43,7 +43,7 @@ h1, h2, h3, .footer_holder a {
 .footer_holder a {
     font-family: 'Cinzel', serif;
     text-align: center;
-    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d); /* Gradient background */
+    background: linear-gradient(to right,  #ffffff, #65827e, #6368ad); /* Gradient background */
     -webkit-background-clip: text; /* Clip the background to the text */
     color: transparent; /* Make the text color transparent */
     font-weight: bold;
