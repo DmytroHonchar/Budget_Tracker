@@ -88,135 +88,19 @@ app.get('/totals', authenticateToken, async (req, res) => {
     }
 });
 
-// Endpoint to add an amount
-app.post('/addAmount', authenticateToken, async (req, res) => {
-    const { category, amount } = req.body;
+// Endpoint to update the totals
+app.post('/updateTotals', authenticateToken, async (req, res) => {
+    const { totalCardPounds, totalCardEuro, totalCashPounds, totalCashEuro } = req.body;
     const userId = req.user.userId;
 
     try {
-        let column;
-        switch (category) {
-            case 'card£':
-                column = 'total_card_pounds';
-                break;
-            case 'card€':
-                column = 'total_card_euro';
-                break;
-            case 'cash£':
-                column = 'total_cash_pounds';
-                break;
-            case 'cash€':
-                column = 'total_cash_euro';
-                break;
-            default:
-                return res.status(400).send('Invalid category');
-        }
-        const updateQuery = `UPDATE totals SET ${column} = ${column} + $1 WHERE user_id = $2`;
-        await pool.query(updateQuery, [amount, userId]);
-
-        res.status(200).send('Amount added successfully');
+        await pool.query(
+            'UPDATE totals SET total_card_pounds = $1, total_card_euro = $2, total_cash_pounds = $3, total_cash_euro = $4 WHERE user_id = $5',
+            [totalCardPounds, totalCardEuro, totalCashPounds, totalCashEuro, userId]
+        );
+        res.status(200).send('Totals updated successfully');
     } catch (error) {
-        console.error('Error adding amount:', error.message);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Endpoint to update an amount
-app.post('/updateAmount', authenticateToken, async (req, res) => {
-    const { category, oldAmount, newAmount } = req.body;
-    const userId = req.user.userId;
-    let column;
-
-    switch (category) {
-        case 'card£':
-            column = 'total_card_pounds';
-            break;
-        case 'card€':
-            column = 'total_card_euro';
-            break;
-        case 'cash£':
-            column = 'total_cash_pounds';
-            break;
-        case 'cash€':
-            column = 'total_cash_euro';
-            break;
-        default:
-            return res.status(400).send('Invalid category');
-    }
-
-    try {
-        const updateQuery = `UPDATE totals SET ${column} = ${column} - $1 + $2 WHERE user_id = $3`;
-        await pool.query(updateQuery, [oldAmount, newAmount, userId]);
-        res.status(200).send('Amount updated successfully');
-    } catch (error) {
-        console.error('Error updating database:', error.message);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Endpoint to delete an amount
-app.post('/deleteAmount', authenticateToken, async (req, res) => {
-    const { category, amount } = req.body;
-    const userId = req.user.userId;
-    let column;
-
-    switch (category) {
-        case 'card£':
-            column = 'total_card_pounds';
-            break;
-        case 'card€':
-            column = 'total_card_euro';
-            break;
-        case 'cash£':
-            column = 'total_cash_pounds';
-            break;
-        case 'cash€':
-            column = 'total_cash_euro';
-            break;
-        default:
-            return res.status(400).send('Invalid category');
-    }
-
-    try {
-        const updateQuery = `UPDATE totals SET ${column} = ${column} - $1 WHERE user_id = $2`;
-        await pool.query(updateQuery, [amount, userId]);
-        res.status(200).send('Amount deleted successfully and total updated');
-    } catch (error) {
-        console.error('Error updating database:', error.message);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Endpoint to delete total amount for a category
-app.post('/deleteTotalAmount', authenticateToken, async (req, res) => {
-    const { category } = req.body;
-    const userId = req.user.userId;
-    let column;
-
-    switch (category) {
-        case 'card£':
-            column = 'total_card_pounds';
-            break;
-        case 'card€':
-            column = 'total_card_euro';
-            break;
-        case 'cash£':
-            column = 'total_cash_pounds';
-            break;
-        case 'cash€':
-            column = 'total_cash_euro';
-            break;
-        default:
-            return res.status(400).send('Invalid category');
-    }
-
-    try {
-        // Update the totals table to set the category total to zero
-        const query = `UPDATE totals SET ${column} = 0 WHERE user_id = $1`;
-        await pool.query(query, [userId]);
-        res.status(200).send('Total amount deleted successfully');
-    } catch (error) {
-        console.error('Error updating database:', error.message);
+        console.error('Error updating totals:', error.message);
         res.status(500).send('Internal Server Error');
     }
 });
