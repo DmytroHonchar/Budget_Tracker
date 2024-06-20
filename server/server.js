@@ -105,6 +105,22 @@ app.post('/updateTotals', authenticateToken, async (req, res) => {
     }
 });
 
+// Endpoint to delete the totals
+app.post('/deleteTotals', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        await pool.query(
+            'UPDATE totals SET total_card_pounds = 0, total_card_euro = 0, total_cash_pounds = 0, total_cash_euro = 0 WHERE user_id = $1',
+            [userId]
+        );
+        res.status(200).send('Totals deleted successfully');
+    } catch (error) {
+        console.error('Error deleting totals:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

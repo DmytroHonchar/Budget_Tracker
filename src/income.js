@@ -6,6 +6,13 @@ let grandTotalEuro = 0;
 let exchangeRatePoundToEuro = 1.15;
 let exchangeRateEuroToPound = 0.87;
 
+let initialTotals = {
+    total_card_pounds: 0,
+    total_card_euro: 0,
+    total_cash_pounds: 0,
+    total_cash_euro: 0,
+};
+
 // Function to add amount to income object
 function addAmount(category, amount) {
     amount = parseFloat(amount);
@@ -15,7 +22,8 @@ function addAmount(category, amount) {
     income[category].push(amount);
 
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-    updateTotals();
+    updateOverallTotal();
+    saveTotalsToDatabase(); // Save to database after updating totals
 }
 
 // Function to subtract amount from income object
@@ -31,7 +39,8 @@ function subtractAmount(category, amount) {
         income[category].push(-amount);
 
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-        updateTotals();
+        updateOverallTotal();
+        saveTotalsToDatabase(); // Save to database after updating totals
     } else {
         alert(`Insufficient total in ${category} to subtract ${amount}`);
     }
@@ -51,7 +60,6 @@ document.getElementById('cardForm').addEventListener('submit', function (event) 
     }
 
     document.getElementById('cardForm').reset();
-    updateTotals();
 });
 
 // Event listener for cash form submission
@@ -68,7 +76,6 @@ document.getElementById('cashForm').addEventListener('submit', function (event) 
     }
 
     document.getElementById('cashForm').reset();
-    updateTotals();
 });
 
 // Event listener for subtract form submission
@@ -82,14 +89,15 @@ document.getElementById('subtractForm').addEventListener('submit', function (eve
     }
 
     document.getElementById('subtractForm').reset();
-    updateTotals();
 });
 
 // Event listener to fetch and display totals on page load
-document.addEventListener('DOMContentLoaded', updateTotals);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAndDisplayTotals();
+});
 
-// Function to fetch and update totals from the database
-async function updateTotals() {
+// Function to fetch and display totals from the database
+async function fetchAndDisplayTotals() {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/totals', {
@@ -103,28 +111,37 @@ async function updateTotals() {
         }
         const totals = await response.json();
 
-        const total_card_pounds = parseFloat(totals.total_card_pounds) || 0;
-        const total_card_euro = parseFloat(totals.total_card_euro) || 0;
-        const total_cash_pounds = parseFloat(totals.total_cash_pounds) || 0;
-        const total_cash_euro = parseFloat(totals.total_cash_euro) || 0;
+        initialTotals.total_card_pounds = parseFloat(totals.total_card_pounds) || 0;
+        initialTotals.total_card_euro = parseFloat(totals.total_card_euro) || 0;
+        initialTotals.total_cash_pounds = parseFloat(totals.total_cash_pounds) || 0;
+        initialTotals.total_cash_euro = parseFloat(totals.total_cash_euro) || 0;
 
-        document.getElementById('totalcard£').textContent = `Total on Card: £${total_card_pounds.toFixed(2)}`;
-        document.getElementById('totalcard€').textContent = `Total on Card: €${total_card_euro.toFixed(2)}`;
-        document.getElementById('totalcash£').textContent = `Total in Cash: £${total_cash_pounds.toFixed(2)}`;
-        document.getElementById('totalcash€').textContent = `Total in Cash: €${total_cash_euro.toFixed(2)}`;
-
+        displayCurrentTotals();
         updateOverallTotal();
     } catch (error) {
         console.error('Error fetching totals:', error.message);
     }
 }
 
+// Function to display current totals
+function displayCurrentTotals() {
+    document.getElementById('totalcard£').textContent = `Total on Card: £${initialTotals.total_card_pounds.toFixed(2)}`;
+    document.getElementById('totalcard€').textContent = `Total on Card: €${initialTotals.total_card_euro.toFixed(2)}`;
+    document.getElementById('totalcash£').textContent = `Total in Cash: £${initialTotals.total_cash_pounds.toFixed(2)}`;
+    document.getElementById('totalcash€').textContent = `Total in Cash: €${initialTotals.total_cash_euro.toFixed(2)}`;
+}
+
 // Function to save the totals to the database
 async function saveTotalsToDatabase() {
-    const totalCardPounds = parseTotal('totalcard£', '£');
-    const totalCardEuro = parseTotal('totalcard€', '€');
-    const totalCashPounds = parseTotal('totalcash£', '£');
-    const totalCashEuro = parseTotal('totalcash€', '€');
+    const totalCardPounds = initialTotals.total_card_pounds + parseTotal('totalcard£', '£');
+    const totalCardEuro = initialTotals.total_card_euro + parseTotal('totalcard€', '€');
+    const totalCashPounds = initialTotals.total_cash_pounds + parseTotal('totalcash£', '£');
+    const totalCashEuro = initialTotals.total_cash_euro + parseTotal('totalcash€', '€');
+
+    initialTotals.total_card_pounds = totalCardPounds;
+    initialTotals.total_card_euro = totalCardEuro;
+    initialTotals.total_cash_pounds = totalCashPounds;
+    initialTotals.total_cash_euro = totalCashEuro;
 
     try {
         const token = localStorage.getItem('token');
@@ -141,27 +158,57 @@ async function saveTotalsToDatabase() {
                 totalCashEuro
             }),
         });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         console.log('Totals saved successfully');
+        fetchAndDisplayTotals(); // Refresh the totals after saving
     } catch (error) {
         console.error('Error saving totals:', error);
     }
 }
 
-// Function to update the overall totals in the display and save to database
+// Function to delete the totals from the database
+async function deleteTotalsFromDatabase() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/deleteTotals', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Reset initial totals to zero
+        initialTotals.total_card_pounds = 0;
+        initialTotals.total_card_euro = 0;
+        initialTotals.total_cash_pounds = 0;
+        initialTotals.total_cash_euro = 0;
+
+        // Update the display
+        displayCurrentTotals();
+        updateOverallTotal();
+        console.log('Totals deleted successfully');
+    } catch (error) {
+        console.error('Error deleting totals:', error);
+    }
+}
+
+// Function to update the overall totals in the display
 function updateOverallTotal() {
-    totalPound = parseTotal('totalcard£', '£') + parseTotal('totalcash£', '£');
-    totalEuro = parseTotal('totalcard€', '€') + parseTotal('totalcash€', '€');
+    totalPound = initialTotals.total_card_pounds + initialTotals.total_cash_pounds;
+    totalEuro = initialTotals.total_card_euro + initialTotals.total_cash_euro;
 
     document.getElementById('outputTotal').innerHTML = `
         Overall Totals:<br>
         Combined Total: £${totalPound.toFixed(2)}<br>
         Combined Total: €${totalEuro.toFixed(2)}<br><br>
     `;
-
-    saveTotalsToDatabase();
 }
 
 // Function to convert totals to pounds
@@ -228,7 +275,6 @@ function updateTotal(category) {
     const categoryText = category.includes('card') ? 'card' : 'cash';
     const currencySymbol = category.includes('£') ? '£' : '€';
     document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${total.toFixed(2)}`;
-    updateOverallTotal();
 }
 
 // Event listener for fetching amounts
@@ -268,9 +314,7 @@ document.getElementById('updateAmount').addEventListener('click', function (even
     income[category][amountIndex] = parseFloat(newAmount);
 
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-    updateTotals();
     refreshDropdown(category);
-    document.getElementById('amountOptions').value = "";
 });
 
 document.getElementById('deleteAmount').addEventListener('click', function (event) {
@@ -287,24 +331,13 @@ document.getElementById('deleteAmount').addEventListener('click', function (even
     income[category].splice(amountIndex, 1);
 
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-    updateTotals();
     refreshDropdown(category);
-    document.getElementById('amountOptions').value = "";
 });
 
 document.getElementById('deleteTotalAmount').addEventListener('click', function (event) {
     event.preventDefault();
-    var category = document.getElementById('updateCategory').value;
-
-    if (confirm(`Are you sure you want to delete all amounts for ${category}?`)) {
-        income[category] = [];
-        const categoryText = category.includes('card') ? 'card' : 'cash';
-        const currencySymbol = category.includes('£') ? '£' : '€';
-        document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}0.00`;
-
-        displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-        updateOverallTotal();
-        refreshDropdown(category);
+    if (confirm(`Are you sure you want to delete all amounts?`)) {
+        deleteTotalsFromDatabase();
     }
 });
 

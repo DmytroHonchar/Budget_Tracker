@@ -16,7 +16,7 @@ button, input, select {
 }
 
 button:hover, #fetchAmount:hover, #deleteAmount:hover, #updateAmount:hover, #deleteTotalAmount:hover, .submit:hover, .subtractButton:hover {
-    background: linear-gradient(to right,  #c6ffdd, #fbd786, #f7797d);
+    background: #888888;
     color: black;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -25,7 +25,7 @@ h1, h2, h3, .footer_holder a {
     font-family: 'Cinzel', serif;
     text-align: center;
     margin-bottom: 5px;
-    background: linear-gradient(to right,  #ffffff, #65827e, #6368ad); /* Gradient background */
+    background: linear-gradient(to right, #ffffff, #65827e, #6368ad); /* Gradient background */
     -webkit-background-clip: text; /* Clip the background to the text */
     color: transparent; /* Make the text color transparent */
     font-weight: bold;
@@ -43,11 +43,12 @@ h1, h2, h3, .footer_holder a {
 .footer_holder a {
     font-family: 'Cinzel', serif;
     text-align: center;
-    background: linear-gradient(to right,  #ffffff, #65827e, #6368ad); /* Gradient background */
-    -webkit-background-clip: text; /* Clip the background to the text */
-    color: transparent; /* Make the text color transparent */
-    font-weight: bold;
     transition: background 0.3s ease, transform 0.3s ease;
+    color: white;
+}
+
+.footer_holder a:hover, a#logOut:hover, a#contact:hover {
+    transform: scale(1.2);
 }
 
 .headrimgs {
@@ -83,10 +84,10 @@ h1, h2, h3, .footer_holder a {
 }
 
 .section {
-   display: flex;
-   flex-direction: column;
-   text-align: center;
-   align-items: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
 }
 
 .section h3 {
