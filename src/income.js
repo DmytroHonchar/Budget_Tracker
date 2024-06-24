@@ -315,6 +315,12 @@ document.getElementById('updateAmount').addEventListener('click', function (even
     newAmount = parseFloat(newAmount);
     const oldAmount = income[category][amountIndex];
 
+    // Update the initial totals directly
+    if (category === 'card£') initialTotals.total_card_pounds += newAmount ;
+    if (category === 'card€') initialTotals.total_card_euro += newAmount;
+    if (category === 'cash£') initialTotals.total_cash_pounds += newAmount;
+    if (category === 'cash€') initialTotals.total_cash_euro += newAmount;
+
     // Replace the old amount with the new amount
     income[category][amountIndex] = newAmount;
 
@@ -326,6 +332,7 @@ document.getElementById('updateAmount').addEventListener('click', function (even
     refreshDropdown(category);
     saveTotalsToDatabase(); // Save to database after updating totals
 });
+
 
 document.getElementById('deleteAmount').addEventListener('click', function (event) {
     event.preventDefault();

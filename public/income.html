@@ -3,155 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="income.css">
+    <link rel="stylesheet" href="/income.css">
     <title>How much I have?</title>
 </head>
 <body>
-
     <!-- Left Image Container -->
     <div class="side-image left">
-        <img src="/public/pics/pexels-karolina-grabowska-4386476.jpg" alt="Left Image">
+        <img src="/pics/pexels-karolina-grabowska-4386476.jpg" alt="Left Image">
     </div>
-
-    
 
     <div class="header">
         <div class="headrimgs">
-            <img src="/public/pics/nS62lI01.svg" class="header-img">
-            <img src="/public/pics/picsvg_download (1).svg" class="header-img2">
+            <img src="/pics/nS62lI01.svg" class="header-img">
+            <img src="/pics/picsvg_download (1).svg" class="header-img2">
         </div>
         <div class="textlogo">
             <h2>All in one place</h2>
             <h1>Sort out your money</h1>
         </div>
-        
     </div>
     
     <div class="content">
         <div class="section">
             <h3>Cards</h3>
-            
-                <p>Enter all amounts from your cards to one place.</p>
-                <img src="/public/pics/Animation - 1717366838610.gif" class="section-img">
-           
+            <p>Enter all amounts from your cards to one place.</p>
+            <img src="/pics/Animation - 1717366838610.gif" class="section-img">
         </div>
         <div class="section">
             <h3>Cash</h3>
-            
-                <p>Now you can know what in your wallet.</p>
-                <img src="/public/pics/Animation - 1717367346351.gif" class="section-img">
-            
+            <p>Now you can know what in your wallet.</p>
+            <img src="/pics/Animation - 1717367346351.gif" class="section-img">
         </div>
     </div>
-    
 
-
-<div class="container">
-    <h1>Let's see what I have in my pocket</h1>
-</div>
-<div class="bigholder">
-    <div class="cardholder">
-        <h3>Card Balance</h3>
-        <form id="cardForm" method="POST">
-            <div class="pound">
-                <label for="amountCard£">Amount (£):</label>
-                <input class="Amountinput" type="number" id="amountCard£" name="amountCard£" step="0.01" maxlength="15">
+    <div class="container">
+        <h1>Let's see what I have in my pocket</h1>
+    </div>
+    <div class="bigholder">
+        <div class="cardholder">
+            <h3>Card Balance</h3>
+            <form id="cardForm" method="POST">
+                <div class="pound">
+                    <label for="amountCard£">Amount (£):</label>
+                    <input class="Amountinput" type="number" id="amountCard£" name="amountCard£" step="0.01" maxlength="15">
+                </div>
+                <div class="pound">
+                    <label for="amountCard€">Amount (€):</label>
+                    <input class="Amountinput" type="number" id="amountCard€" name="amountCard€" step="0.01" maxlength="15">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <div class="totalcontainer">
+                <div id="outputCard£"></div>
+                <div id="outputCard€"></div>
+                <div id="totalcard£">Total on Card: £0.00</div>
+                <div id="totalcard€">Total on Card: €0.00</div>
             </div>
-            <div class="pound">
-                <label for="amountCard€">Amount (€):</label>
-                <input class="Amountinput" type="number" id="amountCard€" name="amountCard€" step="0.01" maxlength="15">
+        </div>
+        <div class="cardholder">
+            <h3>Cash Balance</h3>
+            <form id="cashForm" method="POST">
+                <div class="pound">
+                    <label for="amountCash£">Amount (£):</label>
+                    <input class="Amountinput" type="number" id="amountCash£" name="amountCash£" step="0.01">
+                </div>
+                <div class="pound">
+                    <label for="amountCash€">Amount (€):</label>
+                    <input class="Amountinput" type="number" id="amountCash€" name="amountCash€" step="0.01">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <div class="totalcontainer">
+                <div id="outputCash£"></div>
+                <div id="outputCash€"></div>
+                <div id="totalcash£">Total in Cash: £0.00</div>
+                <div id="totalcash€">Total in Cash: €0.00</div>
             </div>
-            <button type="submit">Submit</button>
-        </form>
-        <div class="totalcontainer">
-            <div id="outputCard£"></div>
-            <div id="outputCard€"></div>
-            <div id="totalcard£">Total on Card: £0.00</div>
-            <div id="totalcard€">Total on Card: €0.00</div>
         </div>
     </div>
-    <div class="cardholder">
-        <h3>Cash Balance</h3>
-        <form id="cashForm" method="POST">
-            <div class="pound">
-                <label for="amountCash£">Amount (£):</label>
-                <input class="Amountinput" type="number" id="amountCash£" name="amountCash£" step="0.01">
-            </div>
-            <div class="pound">
-                <label for="amountCash€">Amount (€):</label>
-                <input class="Amountinput" type="number" id="amountCash€" name="amountCash€" step="0.01">
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-        <div class="totalcontainer">
-            <div id="outputCash£"></div>
-            <div id="outputCash€"></div>
-            <div id="totalcash£">Total in Cash: £0.00</div>
-            <div id="totalcash€">Total in Cash: €0.00</div>
+
+    <div id="outputTotal">
+        Overall Totals:<br><br>
+        Combined Total (£): £0.00<br>
+        Combined Total (€): €0.00<br><br><br>
+    </div>
+
+    <h2>Exchange Rates</h2>
+
+    <div class="bigholder2">
+        <div class="exchangeholder">
+            <p>GBP to EUR Rate:</p>
+            <input class="exchange" type="number" id="exchangeRatePounds" value="1.15" step="0.01">
+            <button id="convertToEuros">Convert</button>
+        </div>
+        <div class="exchangeholder">
+            <p>EUR to GBP Rate:</p>
+            <input class="exchange" type="number" id="exchangeRateEuros" value="0.87" step="0.01">
+            <button id="convertToPounds">Convert</button>
         </div>
     </div>
-</div>
 
-<div id="outputTotal">
-    Overall Totals:<br><br>
-    Combined Total (£): £0.00<br>
-    Combined Total (€): €0.00<br><br><br>
-    <!-- Grand Totals:<br><br>
-    Grand Total (Converted to Pounds): £0.00<br>
-    Grand Total (Converted to Euros): €0.00<br> -->
-</div>
-
-<h2>Exchange Rates</h2>
-
-<div class="bigholder2">
-    <div class="exchangeholder">
-        <p>GBP to EUR Rate:</p>
-        <input class="exchange" type="number" id="exchangeRatePounds" value="1.15" step="0.01">
-        <button id="convertToEuros">Convert</button>
+    <div id="outputTotal2">
+        Grand Totals:<br>
+        Grand Total: £0.00<br>
+        Grand Total: €0.00<br>
     </div>
-    
-    <div class="exchangeholder">
-        <p>EUR to GBP Rate:</p>
-        <input class="exchange" type="number" id="exchangeRateEuros" value="0.87" step="0.01">
-        <button id="convertToPounds">Convert</button>
-    </div>
-</div>
 
-<div id="outputTotal2">
-    Grand Totals:<br>
-    Grand Total: £0.00<br>
-    Grand Total: €0.00<br>
-</div>
-
-<h3>Update/Delete Amounts</h3>
-<div class="UpdateHolder">
-   
+    <h3>Update/Delete Amounts</h3>
+    <div class="UpdateHolder">
         <select id="updateCategory">
             <option value="card£">Card (£)</option>
             <option value="card€">Card (€)</option>
             <option value="cash£">Cash (£)</option>
             <option value="cash€">Cash (€)</option>
         </select>
-
         <select id="amountOptions">
             <option value="">Select an amount</option>
         </select>
-
         <button class="updateButton" id="fetchAmount">Fetch Amount</button>
-    
-
-    
         <input class="adjustInput" type="number" id="newAmount" step="0.01" placeholder="New Amount">
         <button class="updateButton" id="updateAmount">Update Amount</button>
         <button class="updateButton" id="deleteAmount">Delete Amount</button>
-    
-
         <button id="deleteTotalAmount">Delete Total Amount</button>
-    
-</div>
+    </div>
 
-<h3>Subtract Amount</h3>
-
+    <h3>Subtract Amount</h3>
     <form id="subtractForm" method="POST">
         <select id="subtractCategory">
             <option value="card£">Card (£)</option>
@@ -163,19 +139,18 @@
         <button class="subtractButton" type="submit">Submit</button>
     </form>
 
-<footer>
-    <div class="footer_holder">
-        <a>Contact us</a>
-        <a id="logout" >Log out</a>
+    <footer>
+        <div class="footer_holder">
+            <a>Contact us</a>
+            <a id="logout">Log out</a>
+        </div>
+    </footer>
+
+    <!-- Right Image Container -->
+    <div class="side-image right">
+        <img src="/pics/pexels-pratikxox-1643052-3222685.jpg" alt="Right Image">
     </div>
 
-</footer>
-
-<!-- Right Image Container -->
-<div class="side-image right">
-    <img src="/public/pics/pexels-pratikxox-1643052-3222685.jpg" alt="Right Image">
-</div>
-
-<script src="/src/income.js"></script>
+    <script src="/income.js"></script>
 </body>
 </html>

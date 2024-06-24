@@ -1,24 +1,46 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const { Pool } = require('pg');
+const path = require('path');
+const url = require('url');
 
 const app = express();
-const port = 3000;
-const jwtSecret = '3AVmFaW67d3bK9vD9pj0aIb3KbD/2jp0b7svBErXlF8J7TvRv1u/mwTgT2tnqD2Z4iOH8Bvv1oI3lKv7CJ8zZg==';
+const port = process.env.PORT || 3000;
+const jwtSecret = process.env.JWT_SECRET;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'budget_tracker',
-    password: 'jordan236',
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+});
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+// Logging middleware to log all requests
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
 });
 
 // Register endpoint
@@ -68,10 +90,16 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(401); // If there's no token
+    if (token == null) {
+        console.error('No token provided');
+        return res.sendStatus(401); // If there's no token
+    }
 
     jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) return res.sendStatus(403); // If token is not valid
+        if (err) {
+            console.error('Token verification failed:', err.message);
+            return res.sendStatus(403); // If token is not valid
+        }
         req.user = user;
         next();
     });
@@ -119,6 +147,83 @@ app.post('/deleteTotals', authenticateToken, async (req, res) => {
         console.error('Error deleting totals:', error.message);
         res.status(500).send('Internal Server Error');
     }
+});
+
+// Endpoint to request password reset
+app.post('/request-reset', async (req, res) => {
+    const { email } = req.body;
+    try {
+        const result = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            console.error('User not found for email:', email);
+            return res.status(404).send('User not found');
+        }
+
+        const userId = result.rows[0].id;
+        const token = crypto.randomBytes(20).toString('hex');
+        const expiration = Date.now() + 3600000; // 1 hour from now
+
+        console.log(`Generated token: ${token}, Expiration: ${expiration}`);
+
+        await pool.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3', [token, expiration, userId]);
+
+        const resetLink = url.format({
+            protocol: 'http',
+            hostname: 'localhost',
+            port: process.env.PORT || 3000,
+            pathname: 'reset-password.html',
+            query: { token: token }
+        });
+
+        console.log(`Password reset link: ${resetLink}`);
+
+        const mailOptions = {
+            to: email,
+            from: 'passwordreset@yourapp.com',
+            subject: 'Password Reset',
+            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+            Please click on the following link, or paste this into your browser to complete the process:\n\n
+            ${resetLink}\n\n
+            If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+        };
+
+        transporter.sendMail(mailOptions, (error, response) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                return res.status(500).send('Error sending email');
+            }
+            console.log('Recovery email sent:', response);
+            res.status(200).send('Recovery email sent');
+        });
+    } catch (error) {
+        console.error('Error processing password reset request:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Endpoint to reset password
+app.post('/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+    try {
+        const result = await pool.query('SELECT id FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2', [token, Date.now()]);
+        if (result.rows.length === 0) {
+            console.error('Invalid or expired token:', token);
+            return res.status(400).send('Password reset token is invalid or has expired');
+        }
+        const userId = result.rows[0].id;
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await pool.query('UPDATE users SET password_hash = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2', [hashedPassword, userId]);
+        res.status(200).send('Password has been reset');
+    } catch (error) {
+        console.error('Error resetting password:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Unexpected error:', err.stack);
+    res.status(500).send('Something broke!');
 });
 
 app.listen(port, () => {
