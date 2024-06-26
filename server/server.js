@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: 'C:/Users/dmytr/Documents/Budget_Tracker/public/.env' });
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Pool } = require('pg');
 const path = require('path');
-const url = require('url');
+const url = require('url'); // Make sure to require the 'url' module
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,8 +18,45 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Middleware to log requests
+app.use((req, res, next) => {
+    console.log(`Request URL: ${req.url}`);
+    next();
+});
+
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+    const staticPath = path.join(__dirname, '..', 'public');
+    console.log(`Trying to serve static files from: ${staticPath}`);
+    express.static(staticPath)(req, res, next);
+});
+
+// Serve static files from the 'src' directory
+app.use('/src', (req, res, next) => {
+    const srcPath = path.join(__dirname, '..', 'src');
+    console.log(`Trying to serve static files from: ${srcPath}`);
+    express.static(srcPath)(req, res, next);
+});
+
+// Serve static files from an alternative path if the above fails
+app.use((req, res, next) => {
+    const alternativePath = 'C:/Users/dmytr/Documents/Budget_Tracker/public';
+    console.log(`Trying to serve static files from: ${alternativePath}`);
+    express.static(alternativePath)(req, res, next);
+});
+
+app.use('/src', (req, res, next) => {
+    const alternativeSrcPath = 'C:/Users/dmytr/Documents/Budget_Tracker/src';
+    console.log(`Trying to serve static files from: ${alternativeSrcPath}`);
+    express.static(alternativeSrcPath)(req, res, next);
+});
+
+// Log environment variables for debugging
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_DATABASE:", process.env.DB_DATABASE);
+console.log("DB_PORT:", process.env.DB_PORT);
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -35,12 +72,6 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
-});
-
-// Logging middleware to log all requests
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
 });
 
 // Register endpoint
@@ -90,16 +121,10 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) {
-        console.error('No token provided');
-        return res.sendStatus(401); // If there's no token
-    }
+    if (token == null) return res.sendStatus(401); // If there's no token
 
     jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) {
-            console.error('Token verification failed:', err.message);
-            return res.sendStatus(403); // If token is not valid
-        }
+        if (err) return res.sendStatus(403); // If token is not valid
         req.user = user;
         next();
     });
@@ -149,7 +174,7 @@ app.post('/deleteTotals', authenticateToken, async (req, res) => {
     }
 });
 
-// Endpoint to request password reset
+// Password reset endpoints
 app.post('/request-reset', async (req, res) => {
     const { email } = req.body;
     try {
@@ -201,7 +226,6 @@ app.post('/request-reset', async (req, res) => {
     }
 });
 
-// Endpoint to reset password
 app.post('/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
     try {
@@ -218,12 +242,6 @@ app.post('/reset-password', async (req, res) => {
         console.error('Error resetting password:', error.message);
         res.status(500).send('Internal Server Error');
     }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Unexpected error:', err.stack);
-    res.status(500).send('Something broke!');
 });
 
 app.listen(port, () => {
