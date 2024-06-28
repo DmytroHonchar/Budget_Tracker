@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Pool } = require('pg');
 const path = require('path');
-const url = require('url'); // Make sure to require the 'url' module
+const url = require('url');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,31 +24,18 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files from the 'public' directory
+// Serve static files from 'public' and 'src' directories
+const staticPath = path.join(__dirname, '..', 'public');
+const srcPath = path.join(__dirname, '..', 'src');
+
 app.use((req, res, next) => {
-    const staticPath = path.join(__dirname, '..', 'public');
-    console.log(`Trying to serve static files from: ${staticPath}`);
+    console.log(`Serving static files from: ${staticPath}`);
     express.static(staticPath)(req, res, next);
 });
 
-// Serve static files from the 'src' directory
 app.use('/src', (req, res, next) => {
-    const srcPath = path.join(__dirname, '..', 'src');
-    console.log(`Trying to serve static files from: ${srcPath}`);
+    console.log(`Serving src files from: ${srcPath}`);
     express.static(srcPath)(req, res, next);
-});
-
-// Serve static files from an alternative path if the above fails
-app.use((req, res, next) => {
-    const alternativePath = 'C:/Users/dmytr/Documents/Budget_Tracker/public';
-    console.log(`Trying to serve static files from: ${alternativePath}`);
-    express.static(alternativePath)(req, res, next);
-});
-
-app.use('/src', (req, res, next) => {
-    const alternativeSrcPath = 'C:/Users/dmytr/Documents/Budget_Tracker/src';
-    console.log(`Trying to serve static files from: ${alternativeSrcPath}`);
-    express.static(alternativeSrcPath)(req, res, next);
 });
 
 // Log environment variables for debugging
@@ -76,6 +63,7 @@ const transporter = nodemailer.createTransport({
 
 // Register endpoint
 app.post('/register', async (req, res) => {
+    console.log('/register endpoint called');
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -98,6 +86,7 @@ app.post('/register', async (req, res) => {
 
 // Login endpoint
 app.post('/login', async (req, res) => {
+    console.log('/login endpoint called');
     const { email, password } = req.body;
 
     try {
@@ -118,6 +107,7 @@ app.post('/login', async (req, res) => {
 
 // Middleware to protect routes
 const authenticateToken = (req, res, next) => {
+    console.log('authenticateToken middleware called');
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -132,6 +122,7 @@ const authenticateToken = (req, res, next) => {
 
 // Endpoint to get totals
 app.get('/totals', authenticateToken, async (req, res) => {
+    console.log('/totals endpoint called');
     try {
         const result = await pool.query('SELECT total_card_pounds, total_card_euro, total_cash_pounds, total_cash_euro FROM totals WHERE user_id = $1', [req.user.userId]);
         res.status(200).json(result.rows[0]);
@@ -143,6 +134,7 @@ app.get('/totals', authenticateToken, async (req, res) => {
 
 // Endpoint to update the totals
 app.post('/updateTotals', authenticateToken, async (req, res) => {
+    console.log('/updateTotals endpoint called');
     const { totalCardPounds, totalCardEuro, totalCashPounds, totalCashEuro } = req.body;
     const userId = req.user.userId;
 
@@ -160,6 +152,7 @@ app.post('/updateTotals', authenticateToken, async (req, res) => {
 
 // Endpoint to delete the totals
 app.post('/deleteTotals', authenticateToken, async (req, res) => {
+    console.log('/deleteTotals endpoint called');
     const userId = req.user.userId;
 
     try {
@@ -176,6 +169,7 @@ app.post('/deleteTotals', authenticateToken, async (req, res) => {
 
 // Password reset endpoints
 app.post('/request-reset', async (req, res) => {
+    console.log('/request-reset endpoint called');
     const { email } = req.body;
     try {
         const result = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
@@ -227,6 +221,7 @@ app.post('/request-reset', async (req, res) => {
 });
 
 app.post('/reset-password', async (req, res) => {
+    console.log('/reset-password endpoint called');
     const { token, newPassword } = req.body;
     try {
         const result = await pool.query('SELECT id FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2', [token, Date.now()]);
