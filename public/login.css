@@ -16,7 +16,7 @@ button, input, select {
     font-family: 'Montserrat', sans-serif;
     background-color: #E0E0E0;
     color: black;
-    border: solid 1px #cccccc;
+    border: 2px solid transparent;
     transition: all 0.3s ease;
 }
 
@@ -24,6 +24,7 @@ button, input, select {
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     color: white;
+    transition: all 0.3s ease;
 }
 
 .back-link {
@@ -32,17 +33,28 @@ button, input, select {
     left: 20px;
     display: flex;
     align-items: center;
+    transition: all 0.3s ease;
 }
 
 .back-link img {
     width: 20px;
     height: 20px;
     margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover .arrow {
+    font-size: 1.1em;
+}
+
+.back-link:hover img {
+    width: 22px;
+    height: 22px;
 }
 
 .login-container {
-    background: #333; /* Darker background for the form container */
-    padding: 40px;
+    background: #333;
+    padding: 50px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: center;
@@ -52,14 +64,14 @@ button, input, select {
 }
 
 .logo {
-    width: 160px; /* Adjust the size as needed */
+    width: 190px;
     margin-bottom: 20px;
 }
 
 .input-group {
     position: relative;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
 }
@@ -67,26 +79,30 @@ button, input, select {
 .input-group input {
     width: 100%;
     padding: 10px;
-    padding-left: 40px; /* Add padding to the left for the icon */
-    border: none;
+    padding-left: 40px;
+    border: 2px solid transparent;
     border-radius: 5px;
     background: #555;
     color: #fff;
-    font-size: 16px;
-    transition: background 0.3s ease, color 0.3s ease;
+    font-size: 14px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Ensure the input fields have consistent styling when focused */
-.input-group input:focus {
-    outline: none; /* Remove default outline */
-    background: #555; /* Maintain the same background color */
-    color: #fff; /* Maintain the same text color */
+.input-group input:focus, .input-group input:hover {
+    outline: none;
+    background: #555;
+    color: #fff;
+    border-color: white;
 }
 
-/* Prevent autofill background color from changing */
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px #555 inset !important;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 14px !important;
     -webkit-text-fill-color: #fff !important;
+    box-shadow: 0 0 0px 1000px #555 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .input-icon {
@@ -103,17 +119,34 @@ input:-webkit-autofill {
 
 button[type="submit"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
-    background: #e91e63; /* Pink color for the button */
+    background: #e91e63;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-bottom: 1px;
 }
 
 button[type="submit"]:hover {
-    background: #d81b60; /* Darker pink on hover */
+    background: #c20047;
+    transform: scale(1.05);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
 }
 
 .reset-link {
@@ -121,25 +154,39 @@ button[type="submit"]:hover {
     margin-top: 10px;
     color: #fff;
     text-decoration: none;
+    font-size: 15px;
+    position: relative;
+    transition: all 0.3s ease;
 }
 
-.reset-link:hover {
-    text-decoration: underline;
+.reset-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
 }
 
-/* -----------------------------Font Styles -------------------------------------*/
+.reset-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
 @font-face {
     font-family: 'Montserrat';
     src: url(/font-family/Montserrat-VariableFont_wght.ttf) format('truetype');
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .login-container {
-        padding: 20px;
-        width: 90%;
+        padding: 30px;
     }
     .input-group input {
-        padding: 10px 10px 10px 35px; /* Adjust padding for smaller screens */
+        padding: 10px 10px 10px 35px;
     }
 }
