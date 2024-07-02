@@ -190,3 +190,27 @@ button[type="submit"]:hover {
         padding: 10px 10px 10px 35px;
     }
 }
+
+#message {
+    padding: 10px; 
+    border-radius: 5px;
+    margin-top: 20px; /* Increased margin for better spacing */
+    text-align: center;
+    width: 100%;
+    max-width: 300px; /* Increased max-width for larger message box */
+    display: none; /* Initially hidden */
+}
+
+#message.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#message.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}

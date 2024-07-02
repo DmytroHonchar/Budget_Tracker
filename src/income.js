@@ -137,10 +137,10 @@ async function fetchAndDisplayTotals() {
 
 // Function to display current totals
 function displayCurrentTotals() {
-    document.getElementById('totalcard£').textContent = `Total on Card: £${initialTotals.total_card_pounds.toFixed(2)}`;
-    document.getElementById('totalcard€').textContent = `Total on Card: €${initialTotals.total_card_euro.toFixed(2)}`;
-    document.getElementById('totalcash£').textContent = `Total in Cash: £${initialTotals.total_cash_pounds.toFixed(2)}`;
-    document.getElementById('totalcash€').textContent = `Total in Cash: €${initialTotals.total_cash_euro.toFixed(2)}`;
+    document.getElementById('totalcard£').textContent = `£${initialTotals.total_card_pounds.toFixed(2)}`;
+    document.getElementById('totalcard€').textContent = `€${initialTotals.total_card_euro.toFixed(2)}`;
+    document.getElementById('totalcash£').textContent = `£${initialTotals.total_cash_pounds.toFixed(2)}`;
+    document.getElementById('totalcash€').textContent = `€${initialTotals.total_cash_euro.toFixed(2)}`;
 }
 
 // Function to save the totals to the database
@@ -207,9 +207,9 @@ function updateOverallTotal() {
     totalEuro = initialTotals.total_card_euro + initialTotals.total_cash_euro;
 
     document.getElementById('outputTotal').innerHTML = `
-        Overall Totals:<br>
-        Combined Total: £${totalPound.toFixed(2)}<br>
-        Combined Total: €${totalEuro.toFixed(2)}<br><br>
+        Totals:<br>
+        £${totalPound.toFixed(2)}<br>
+        €${totalEuro.toFixed(2)}
     `;
 }
 
@@ -217,9 +217,9 @@ function updateOverallTotal() {
 function convertToPounds() {
     grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
     document.getElementById('outputTotal2').innerHTML = `
-        Grand Totals:<br>
-        Grand Total: £${grandTotalPound.toFixed(2)}<br>
-        Grand Total: €${grandTotalEuro.toFixed(2)}<br>
+        Converted Totals:<br>
+        £${grandTotalPound.toFixed(2)}<br>
+        €${grandTotalEuro.toFixed(2)}<br>
     `;
     console.log('Grand Total in Pounds updated:', { grandTotalPound });
 }
@@ -228,9 +228,9 @@ function convertToPounds() {
 function convertToEuros() {
     grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
     document.getElementById('outputTotal2').innerHTML = `
-        Grand Totals:<br>
-        Grand Total: £${grandTotalPound.toFixed(2)}<br>
-        Grand Total: €${grandTotalEuro.toFixed(2)}<br>
+        Converted Totals:<br>
+        £${grandTotalPound.toFixed(2)}<br>
+        €${grandTotalEuro.toFixed(2)}<br>
         
     `;
     console.log('Grand Total in Euros updated:', { grandTotalEuro });
@@ -316,7 +316,7 @@ document.getElementById('updateAmount').addEventListener('click', function (even
     const oldAmount = income[category][amountIndex];
 
     // Update the initial totals directly
-    if (category === 'card£') initialTotals.total_card_pounds += newAmount ;
+    if (category === 'card£') initialTotals.total_card_pounds += newAmount;
     if (category === 'card€') initialTotals.total_card_euro += newAmount;
     if (category === 'cash£') initialTotals.total_cash_pounds += newAmount;
     if (category === 'cash€') initialTotals.total_cash_euro += newAmount;
@@ -332,7 +332,6 @@ document.getElementById('updateAmount').addEventListener('click', function (even
     refreshDropdown(category);
     saveTotalsToDatabase(); // Save to database after updating totals
 });
-
 
 document.getElementById('deleteAmount').addEventListener('click', function (event) {
     event.preventDefault();

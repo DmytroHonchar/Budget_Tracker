@@ -77,12 +77,22 @@ app.post('/register', async (req, res) => {
         // Create initial totals entry for the new user
         await pool.query('INSERT INTO totals (user_id, total_card_pounds, total_card_euro, total_cash_pounds, total_cash_euro) VALUES ($1, 0, 0, 0, 0)', [userId]);
 
-        res.status(201).json({ userId });
+        const token = jwt.sign({ userId: userId }, jwtSecret, { expiresIn: '1h' });
+
+        res.status(201).json({ token });
     } catch (error) {
         console.error('Error registering user:', error.message);
-        res.status(500).send('Internal Server Error');
+
+        if (error.message.includes('users_email_key')) {
+            res.status(400).send('A user with this email already exists.');
+        } else if (error.message.includes('users_username_key')) {
+            res.status(400).send('A user with this username already exists.');
+        } else {
+            res.status(500).send('Internal Server Error');
+        }
     }
 });
+
 
 // Login endpoint
 app.post('/login', async (req, res) => {
