@@ -18,7 +18,7 @@
                     <span class="input-icon">
                         <img src="/pics/pound.png" alt="Pound Icon">
                     </span>
-                    <input class="Amountinput" type="number" id="amountCard£" name="amountCard£" step="0.01"  maxlength="15">
+                    <input class="Amountinput" type="number" id="amountCard£" name="amountCard£" step="0.01" maxlength="15">
                 </div>
                 <div class="input-group">
                     <span class="input-icon">
@@ -45,13 +45,13 @@
                     <span class="input-icon">
                         <img src="/pics/pound.png" alt="Pound Icon">
                     </span>
-                    <input class="Amountinput" type="number" id="amountCash£" name="amountCash£" step="0.01" >
+                    <input class="Amountinput" type="number" id="amountCash£" name="amountCash£" step="0.01">
                 </div>
                 <div class="input-group">
                     <span class="input-icon">
                         <img src="/pics/euro.png" alt="Euro Icon">
                     </span>
-                    <input class="Amountinput" type="number" id="amountCash€" name="amountCash€" step="0.01" >
+                    <input class="Amountinput" type="number" id="amountCash€" name="amountCash€" step="0.01">
                 </div>
                 <button type="submit">Submit</button>
             </form>
@@ -107,48 +107,45 @@
     <h3>Manage amounts</h3>
 
     <div class="manage-wrapper">
-    <div class="manage-container">
-        <form id="manageForm" method="POST">
-            <div class="split">
-                <div class="select-group">
-                    <select id="category">
-                        <option value="card£">Card (£)</option>
-                        <option value="card€">Card (€)</option>
-                        <option value="cash£">Cash (£)</option>
-                        <option value="cash€">Cash (€)</option>
-                    </select>
+        <div class="manage-container">
+            <form id="manageForm" method="POST">
+                <div class="split">
+                    <div class="select-group">
+                        <select id="category">
+                            <option value="card£">Card (£)</option>
+                            <option value="card€">Card (€)</option>
+                            <option value="cash£">Cash (£)</option>
+                            <option value="cash€">Cash (€)</option>
+                        </select>
+                    </div>
+                    <div class="select-group">
+                        <select id="amountOptions">
+                            <option value="">Select an amount</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="select-group">
-                    <select id="amountOptions">
-                        <option value="">Select an amount</option>
-                    </select>
+                <div class="split">
+                    <div class="select-group">
+                        <select id="action">
+                            <option value="update">Update</option>
+                            <option value="subtract">Subtract</option>
+                            <option value="delete">Delete</option>
+                            <option value="deleteTotal">Delete Total</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <img src="/pics/amount.png" alt="Amount Icon">
+                        </span>
+                        <input class="adjustInput" type="number" id="amount" step="0.01">
+                    </div>
                 </div>
-            </div>
-            <div class="split">
-                <div class="select-group">
-                    <select id="action">
-                        <option value="update">Update</option>
-                        <option value="subtract">Subtract</option>
-                        <option value="delete">Delete</option>
-                        <option value="deleteTotal">Delete Total</option>
-                    </select>
+                <div>
+                    <button type="submit">Submit</button>
                 </div>
-                <div class="input-group">
-                    <span class="input-icon">
-                        <img src="/pics/amount.png" alt="Amount Icon">
-                    </span>
-                    <input class="adjustInput" type="number" id="amount" step="0.01">
-                </div>
-            </div>
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-
-    
-
 
     <footer>
         <div class="footer_holder">

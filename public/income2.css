@@ -13,16 +13,31 @@ h1 {
     color: #e91e63;
     font-weight: bold;
     margin-bottom: 20px;
+    font-size: 24px;
+}
+
+@media (min-width: 768px) {
+    h1 {
+        font-size: 32px;
+    }
 }
 
 h3 {
     font-family: 'Montserrat', sans-serif;
     text-align: left;
-    margin-left: 144px;
+    margin-left: 20px;
     margin-top: 60px;
     color: #e91e63;
     font-weight: bold;
     margin-bottom: 10px;
+    font-size: 20px;
+}
+
+@media (min-width: 768px) {
+    h3 {
+        margin-left: 144px;
+        font-size: 22px;
+    }
 }
 
 .balance-title {
@@ -40,9 +55,16 @@ h3 {
 
 .bigholder, .bigholder2 {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
     padding: 5px;
+}
+
+@media (min-width: 768px) {
+    .bigholder, .bigholder2 {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
 }
 
 .cardholder, .exchangeholder {
@@ -54,9 +76,16 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px;
+    margin: 10px auto;
     width: 100%;
     max-width: 300px;
+}
+
+@media (min-width: 768px) {
+    .cardholder, .exchangeholder {
+        width: calc(50% - 20px);
+        margin: 10px;
+    }
 }
 
 .input-group {
@@ -118,15 +147,23 @@ button:hover {
 
 #outputTotal, #outputTotal2 {
     display: flex;
-    flex-direction: row;
-    margin-left: 140px;
+    flex-direction: column;
+    margin-left: 20px;
     color: #E0E0E0;
     font-size: large;
     background: #333;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    width: 320px;
+    width: 90%;
+    max-width: 320px;
+}
+
+@media (min-width: 768px) {
+    #outputTotal, #outputTotal2 {
+        flex-direction: row;
+        margin-left: 140px;
+    }
 }
 
 .totalcontainer {
@@ -157,11 +194,20 @@ button:hover {
 
 .manage-wrapper {
     display: flex;
-    justify-content: left;
-    margin-left: 126px;
-    align-items: center;
-    height: auto;
+    justify-content: flex-start; /* Align to the start */
     margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .manage-wrapper {
+        margin-left: 20px; /* Adjust this value for mobile view */
+    }
+}
+
+@media (min-width: 768px) {
+    .manage-wrapper {
+        margin-left: 126px; /* Adjust this value for desktop view */
+    }
 }
 
 .manage-container {
@@ -173,16 +219,23 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 300px;
-    margin: 10px;
-    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    margin-right: auto; /* Ensure it doesn't center horizontally */
 }
 
 .split {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    gap: 15px;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .split {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        gap: 15px;
+    }
 }
 
 .select-group select {
@@ -193,7 +246,7 @@ button:hover {
     border-radius: 5px;
     background: #555;
     color: #fff;
-    font-size: 12px;
+    font-size: 14px;
     transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     appearance: none;
     padding-right: 20px; /* Make space for the arrow */
@@ -205,7 +258,6 @@ button:hover {
     width: 100%;
     margin-bottom: 10px;
 }
-
 
 .select-group::after {
     content: '▼'; /* Unicode character for downward arrow */
@@ -225,11 +277,9 @@ button:hover {
     border-color: white;
 }
 
-
 footer {
     margin-top: 30px;
 }
-
 
 .footer_holder {
     display: flex;
