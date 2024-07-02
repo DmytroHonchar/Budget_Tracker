@@ -90,20 +90,105 @@ document.getElementById('cashForm').addEventListener('submit', function (event) 
     document.getElementById('cashForm').reset();
 });
 
-// Event listener for subtract form submission
-document.getElementById('subtractForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const category = document.getElementById('subtractCategory').value;
-    const amount = document.getElementById('subtractAmount').value;
-
-    if (isValidPositiveNumber(amount)) {
-        subtractAmount(category, amount);
-    }
-
-    document.getElementById('subtractForm').reset();
+// Event listener for category selection to fetch amounts
+document.getElementById('category').addEventListener('change', function () {
+    fetchAmounts(this.value);
 });
 
-// Event listener to fetch and display totals on page load
+// Function to fetch amounts for the selected category
+function fetchAmounts(category) {
+    var selectElement = document.getElementById('amountOptions');
+    var defaultOption = document.createElement('option');
+
+    selectElement.innerHTML = '';
+    defaultOption.textContent = "Select an amount";
+    defaultOption.value = "";
+    selectElement.appendChild(defaultOption);
+
+    if (income[category] && income[category].length > 0) {
+        income[category].forEach(function (amount, index) {
+            var option = document.createElement('option');
+            option.textContent = amount.toFixed(2);
+            option.value = index;
+            selectElement.appendChild(option);
+        });
+    }
+}
+
+// Event listener for manage form submission
+document.getElementById('manageForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var category = document.getElementById('category').value;
+    var action = document.getElementById('action').value;
+    var amountIndex = document.getElementById('amountOptions').value;
+    var newAmount = parseFloat(document.getElementById('amount').value);
+
+    if (action === 'update') {
+        if (amountIndex === "" || isNaN(newAmount)) {
+            alert("Please select a valid amount to update.");
+            return;
+        }
+
+        const oldAmount = income[category][amountIndex];
+        income[category][amountIndex] = newAmount;
+
+        if (category === 'card£') initialTotals.total_card_pounds += newAmount - oldAmount;
+        if (category === 'card€') initialTotals.total_card_euro += newAmount - oldAmount;
+        if (category === 'cash£') initialTotals.total_cash_pounds += newAmount - oldAmount;
+        if (category === 'cash€') initialTotals.total_cash_euro += newAmount - oldAmount;
+
+        updateTotal(category);
+        updateOverallTotal();
+        displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
+        saveTotalsToDatabase(); // Save to database after updating totals
+
+    } else if (action === 'subtract') {
+        if (isNaN(newAmount) || newAmount <= 0) {
+            alert("Please enter a valid amount to subtract.");
+            return;
+        }
+        subtractAmount(category, newAmount);
+
+    } else if (action === 'delete') {
+        if (amountIndex === "") {
+            alert("Please select an amount to delete.");
+            return;
+        }
+
+        const amountToDelete = income[category][amountIndex];
+        income[category].splice(amountIndex, 1);
+
+        if (category === 'card£') initialTotals.total_card_pounds -= amountToDelete;
+        if (category === 'card€') initialTotals.total_card_euro -= amountToDelete;
+        if (category === 'cash£') initialTotals.total_cash_pounds -= amountToDelete;
+        if (category === 'cash€') initialTotals.total_cash_euro -= amountToDelete;
+
+        displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
+        updateOverallTotal();
+        saveTotalsToDatabase(); // Save to database after updating totals
+
+    } else if (action === 'deleteTotal') {
+        if (!category) {
+            alert("Please select a category to delete.");
+            return;
+        }
+
+        if (category === 'card£') initialTotals.total_card_pounds = 0;
+        if (category === 'card€') initialTotals.total_card_euro = 0;
+        if (category === 'cash£') initialTotals.total_cash_pounds = 0;
+        if (category === 'cash€') initialTotals.total_cash_euro = 0;
+
+        if (income[category]) {
+            income[category] = [];
+        }
+
+        displayCurrentTotals();
+        updateOverallTotal();
+        saveTotalsToDatabase();
+    }
+});
+
+// Event listener for fetching totals on page load
 document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayTotals();
 });
@@ -168,36 +253,6 @@ async function saveTotalsToDatabase() {
         fetchAndDisplayTotals(); // Refresh the totals after saving
     } catch (error) {
         console.error('Error saving totals:', error);
-    }
-}
-
-// Function to delete the totals from the database
-async function deleteTotalsFromDatabase() {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/deleteTotals', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Reset initial totals to zero
-        initialTotals.total_card_pounds = 0;
-        initialTotals.total_card_euro = 0;
-        initialTotals.total_cash_pounds = 0;
-        initialTotals.total_cash_euro = 0;
-
-        // Update the display
-        displayCurrentTotals();
-        updateOverallTotal();
-        console.log('Totals deleted successfully');
-    } catch (error) {
-        console.error('Error deleting totals:', error);
     }
 }
 
@@ -277,126 +332,6 @@ function updateTotal(category) {
     const categoryText = category.includes('card') ? 'card' : 'cash';
     const currencySymbol = category.includes('£') ? '£' : '€';
     document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${total.toFixed(2)}`;
-}
-
-// Event listener for fetching amounts
-document.getElementById('fetchAmount').addEventListener('click', function (event) {
-    event.preventDefault();
-    var category = document.getElementById('updateCategory').value;
-    var selectElement = document.getElementById('amountOptions');
-    var defaultOption = document.createElement('option');
-
-    selectElement.innerHTML = '';
-    defaultOption.textContent = "Select an amount";
-    defaultOption.value = "";
-    selectElement.appendChild(defaultOption);
-
-    if (income[category] && income[category].length > 0) {
-        income[category].forEach(function (amount, index) {
-            var option = document.createElement('option');
-            option.textContent = amount;
-            option.value = index;
-            selectElement.appendChild(option);
-        });
-    }
-});
-
-document.getElementById('updateAmount').addEventListener('click', function (event) {
-    event.preventDefault();
-    var category = document.getElementById('updateCategory').value;
-    var amountIndex = document.getElementById('amountOptions').value;
-    var newAmount = document.getElementById('newAmount').value;
-
-    if (amountIndex === "" || isNaN(parseFloat(newAmount))) {
-        alert("Please select a valid amount to update.");
-        return;
-    }
-
-    newAmount = parseFloat(newAmount);
-    const oldAmount = income[category][amountIndex];
-
-    // Update the initial totals directly
-    if (category === 'card£') initialTotals.total_card_pounds += newAmount;
-    if (category === 'card€') initialTotals.total_card_euro += newAmount;
-    if (category === 'cash£') initialTotals.total_cash_pounds += newAmount;
-    if (category === 'cash€') initialTotals.total_cash_euro += newAmount;
-
-    // Replace the old amount with the new amount
-    income[category][amountIndex] = newAmount;
-
-    // Recalculate the totals directly by fetching the new amounts
-    updateTotal(category);
-    updateOverallTotal();
-
-    displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-    refreshDropdown(category);
-    saveTotalsToDatabase(); // Save to database after updating totals
-});
-
-document.getElementById('deleteAmount').addEventListener('click', function (event) {
-    event.preventDefault();
-    var category = document.getElementById('updateCategory').value;
-    var amountIndex = document.getElementById('amountOptions').value;
-
-    if (amountIndex === "") {
-        alert("Please select an amount to delete.");
-        return;
-    }
-
-    const amountToDelete = income[category][amountIndex];
-    income[category].splice(amountIndex, 1);
-
-    // Update the initial totals directly
-    if (category === 'card£') initialTotals.total_card_pounds -= amountToDelete;
-    if (category === 'card€') initialTotals.total_card_euro -= amountToDelete;
-    if (category === 'cash£') initialTotals.total_cash_pounds -= amountToDelete;
-    if (category === 'cash€') initialTotals.total_cash_euro -= amountToDelete;
-
-    displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
-    refreshDropdown(category);
-    updateOverallTotal();
-    saveTotalsToDatabase(); // Save to database after updating totals
-});
-
-// Event listener for deleting total amount
-document.getElementById('deleteTotalAmount').addEventListener('click', function (event) {
-    event.preventDefault();
-    var category = document.getElementById('updateCategory').value;
-
-    if (!category) {
-        alert("Please select a category to delete.");
-        return;
-    }
-
-    // Reset the initial totals for the selected category
-    if (category === 'card£') initialTotals.total_card_pounds = 0;
-    if (category === 'card€') initialTotals.total_card_euro = 0;
-    if (category === 'cash£') initialTotals.total_cash_pounds = 0;
-    if (category === 'cash€') initialTotals.total_cash_euro = 0;
-
-    // Clear the income for the selected category
-    if (income[category]) {
-        income[category] = [];
-    }
-
-    // Update the display and save the new totals to the database
-    displayCurrentTotals();
-    updateOverallTotal();
-    saveTotalsToDatabase();
-});
-
-function refreshDropdown(category) {
-    var selectElement = document.getElementById('amountOptions');
-    selectElement.innerHTML = '<option value="">Select an amount</option>';
-
-    if (income[category] && income[category].length > 0) {
-        income[category].forEach(function (amount, index) {
-            var option = document.createElement('option');
-            option.textContent = `${amount.toFixed(2)}`;
-            option.value = index;
-            selectElement.appendChild(option);
-        });
-    }
 }
 
 // Event listener for logout
