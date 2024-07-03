@@ -30,6 +30,7 @@ function addAmount(category, amount) {
     displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
     updateOverallTotal();
     saveTotalsToDatabase(); // Save to database after updating totals
+    fetchAmounts(category); // Update the dropdown options
 }
 
 // Function to subtract amount from income object
@@ -53,6 +54,7 @@ function subtractAmount(category, amount) {
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
         updateOverallTotal();
         saveTotalsToDatabase(); // Save to database after updating totals
+        fetchAmounts(category); // Update the dropdown options
     } else {
         alert(`Insufficient total in ${category} to subtract ${amount}`);
     }
@@ -141,6 +143,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
         updateOverallTotal();
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
         saveTotalsToDatabase(); // Save to database after updating totals
+        fetchAmounts(category); // Update the dropdown options
 
     } else if (action === 'subtract') {
         if (isNaN(newAmount) || newAmount <= 0) {
@@ -166,6 +169,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
         displayIncome(category, `output${category.charAt(0).toUpperCase() + category.slice(1)}`);
         updateOverallTotal();
         saveTotalsToDatabase(); // Save to database after updating totals
+        fetchAmounts(category); // Update the dropdown options
 
     } else if (action === 'deleteTotal') {
         if (!category) {
@@ -182,6 +186,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
             income[category] = [];
         }
 
+        fetchAmounts(category); // Update the dropdown options
         displayCurrentTotals();
         updateOverallTotal();
         saveTotalsToDatabase();
@@ -191,6 +196,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
 // Event listener for fetching totals on page load
 document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayTotals();
+    fetchAmounts(document.getElementById('category').value); // Fetch amounts for the initially selected category
 });
 
 // Function to fetch and display totals from the database

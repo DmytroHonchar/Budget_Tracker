@@ -222,6 +222,7 @@ button:hover {
     width: 100%;
     max-width: 300px;
     margin-right: auto; /* Ensure it doesn't center horizontally */
+    margin-left: 10px;
 }
 
 .split {
@@ -246,7 +247,7 @@ button:hover {
     border-radius: 5px;
     background: #555;
     color: #fff;
-    font-size: 14px;
+    font-size: 12px;
     transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     appearance: none;
     padding-right: 20px; /* Make space for the arrow */
