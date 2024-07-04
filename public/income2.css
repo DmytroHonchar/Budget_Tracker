@@ -40,6 +40,40 @@ h3 {
     }
 }
 
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    margin-bottom: 50px;
+}
+
+.back-link img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.arrow {
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover .arrow {
+    font-size: 1.1em;
+}
+
+.back-link:hover img {
+    width: 22px;
+    height: 22px;
+}
+
+
 .balance-title {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
@@ -50,6 +84,7 @@ h3 {
 }
 
 .container {
+    margin-top: 60px;
     margin-bottom: 30px;
 }
 
@@ -279,27 +314,77 @@ button:hover {
 }
 
 footer {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #444;
+    color: #E0E0E0;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 30px;
+}
+
+footer {
+    background-color: #333;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #444;
+    color: #E0E0E0;
+    font-family: 'Montserrat', sans-serif;
     margin-top: 30px;
 }
 
 .footer_holder {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    font-size: 20px;
-    padding: 10px;
+    justify-content: space-between;
+    margin: 5px 40px;
 }
 
-.footer_holder a {
-    font-family: 'Montserrat', serif;
-    text-align: center;
-    transition: transform 0.3s ease;
-    color: white;
+.logo {
+    width: 200px;
+}
+
+.footer-text {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.footer-links a {
     text-decoration: none;
+    color: white;
+    margin-right: 6px;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
 
-.footer_holder a:hover {
-    transform: scale(1.2);
+.footer-links a:hover {
+    color: #c20047;
+}
+
+.footer-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #E0E0E0;
+}
+
+
+.footer-text a{
+    text-decoration: none;
+    color: white;
+    margin-right: 6px;
+    transition: color 0.3s ease;
+}
+
+.footer-text a :hover{
+    color: #c20047;
 }
 
 @font-face {
