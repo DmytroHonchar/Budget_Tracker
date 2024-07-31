@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const { Pool } = require('pg');
 const path = require('path');
 const url = require('url');
-
 const app = express();
 const port = process.env.PORT || 3000;
 const jwtSecret = process.env.JWT_SECRET;
@@ -92,7 +91,6 @@ app.post('/register', async (req, res) => {
         }
     }
 });
-
 
 // Login endpoint
 app.post('/login', async (req, res) => {
@@ -177,6 +175,51 @@ app.post('/deleteTotals', authenticateToken, async (req, res) => {
     }
 });
 
+// Update email endpoint
+app.post('/update-email', authenticateToken, async (req, res) => {
+    const { newEmail } = req.body;
+    const userId = req.user.userId;
+    try {
+        await pool.query('UPDATE users SET email = $1 WHERE id = $2', [newEmail, userId]);
+        res.status(200).send('Email updated successfully');
+    } catch (error) {
+        console.error('Error updating email:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Change password endpoint
+app.post('/change-password', authenticateToken, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.userId;
+    try {
+        const result = await pool.query('SELECT password_hash FROM users WHERE id = $1', [userId]);
+        const user = result.rows[0];
+        if (user && await bcrypt.compare(currentPassword, user.password_hash)) {
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hashedPassword, userId]);
+            res.status(200).send('Password changed successfully');
+        } else {
+            res.status(400).send('Current password is incorrect');
+        }
+    } catch (error) {
+        console.error('Error changing password:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Delete account endpoint
+app.post('/delete-account', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    try {
+        await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+        res.status(200).send('Account deleted successfully');
+    } catch (error) {
+        console.error('Error deleting account:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Password reset endpoints
 app.post('/request-reset', async (req, res) => {
     console.log('/request-reset endpoint called');
@@ -213,19 +256,13 @@ app.post('/request-reset', async (req, res) => {
             text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
             Please click on the following link, or paste this into your browser to complete the process:\n\n
             ${resetLink}\n\n
-            If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+            If you did not request this, please ignore this email and your password will remain unchanged.\n`
         };
 
-        transporter.sendMail(mailOptions, (error, response) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                return res.status(500).send('Error sending email');
-            }
-            console.log('Recovery email sent:', response);
-            res.status(200).send('Recovery email sent');
-        });
+        await transporter.sendMail(mailOptions);
+        res.status(200).send('Password reset email sent');
     } catch (error) {
-        console.error('Error processing password reset request:', error.message);
+        console.error('Error requesting password reset:', error.message);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -234,14 +271,21 @@ app.post('/reset-password', async (req, res) => {
     console.log('/reset-password endpoint called');
     const { token, newPassword } = req.body;
     try {
-        const result = await pool.query('SELECT id FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2', [token, Date.now()]);
+        const result = await pool.query('SELECT id, reset_password_expires FROM users WHERE reset_password_token = $1', [token]);
         if (result.rows.length === 0) {
-            console.error('Invalid or expired token:', token);
-            return res.status(400).send('Password reset token is invalid or has expired');
+            console.error('Invalid or expired password reset token');
+            return res.status(400).send('Invalid or expired password reset token');
         }
-        const userId = result.rows[0].id;
+
+        const user = result.rows[0];
+        if (Date.now() > user.reset_password_expires) {
+            console.error('Password reset token has expired');
+            return res.status(400).send('Password reset token has expired');
+        }
+
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await pool.query('UPDATE users SET password_hash = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2', [hashedPassword, userId]);
+        await pool.query('UPDATE users SET password_hash = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2', [hashedPassword, user.id]);
+
         res.status(200).send('Password has been reset');
     } catch (error) {
         console.error('Error resetting password:', error.message);
@@ -249,6 +293,7 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+// Start the server
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });

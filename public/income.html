@@ -7,15 +7,25 @@
     <title>How much I have?</title>
 </head>
 <body>
-    
     <div class="back-link">
         <img src="/pics/arrow_back.png" alt="Logout">
-        <a class="arrow" href="#" id="logout">Logout</a>
+        <a class="arrow" href="#" id="logout">Log out</a>
     </div>
-    
+
+    <!-- Add My Account Icon -->
+    <div class="account-icon" id="account-icon">
+        <img src="/pics/account_circle.png" alt="My Account">
+        <div class="account-menu" id="account-menu">
+            <a href="#" id="update-email">Update Email</a>
+            <a href="#" id="change-password">Change Password</a>
+            <a href="#" id="delete-account">Delete Account</a>
+        </div>
+    </div>
+
     <div class="container">
         <h1>Let's see what I have in my pocket</h1>
     </div>
+
     <div class="bigholder">
         <div class="cardholder">
             <h4 class="balance-title">Card Balance</h4>
@@ -141,7 +151,7 @@
                     </div>
                     <div class="input-group">
                         <span class="input-icon">
-                            <img src="/pics/amount.png" alt="Amount Icon">
+                            <!-- <img src="/pics/amount.png" alt="Amount Icon"> -->
                         </span>
                         <input class="adjustInput" type="number" id="amount" step="0.01">
                     </div>
@@ -153,19 +163,66 @@
         </div>
     </div>
 
+    <!-- Modals for account actions -->
+   <div id="updateEmailModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('updateEmailModal')">&times;</span>
+        <h2>Update Email</h2>
+        <form id="updateEmailForm">
+            <label for="newEmail">New Email:</label>
+            <div class="input-group">
+                <span class="input-icon">
+                    <img src="/pics/mail.png" alt="Email Icon">
+                </span>
+                <input type="email" id="newEmail" name="newEmail" required>
+            </div>
+            <button type="submit">Update Email</button>
+        </form>
+    </div>
+</div>
+
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('changePasswordModal')">&times;</span>
+        <h2>Change Password</h2>
+        <form id="changePasswordForm">
+            <div class="input-group">
+                <label for="currentPassword" class="modal-label">Current Password:</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="input-group">
+                <label for="newPassword" class="modal-label">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+            </div>
+            <button type="submit">Change Password</button>
+        </form>
+    </div>
+</div>
+
+
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('deleteAccountModal')">&times;</span>
+            <h2>Delete Account</h2>
+            <form id="deleteAccountForm">
+                <p>Are you sure you want to delete your account?</p>
+                <button type="submit">Delete Account</button>
+            </form>
+        </div>
+    </div>
+
     <footer>
         <div class="footer_holder">
             <div><img src="/pics/nS62lI01.svg" alt="Logo" class="logo"></div>
             <div class="footer-text">
                 <div class="footer-links">
-                    <a href="#">About</a>
-                    <a href="#">Contact us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">About us</a>
                 </div>
-                <div><p>©2024 Pocket. All rights reserved</p></div>
+                <div><p>©2024 Pocket. All rights reserved.</p></div>
             </div>
         </div>
     </footer>
-    
 
     <script src="/src/income.js"></script>
 </body>

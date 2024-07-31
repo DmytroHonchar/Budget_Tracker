@@ -346,3 +346,122 @@ document.getElementById('logout').addEventListener('click', function(event) {
     localStorage.removeItem('token');
     window.location.href = 'login.html'; // Redirect to login page after logout
 });
+
+// JavaScript for account actions
+document.getElementById('account-icon').addEventListener('click', function(event) {
+    event.stopPropagation(); // Prevent the click event from bubbling up to the window
+    this.classList.toggle('open');
+});
+
+// Close the menu when clicking outside of it
+window.addEventListener('click', function(event) {
+    var dropdowns = document.getElementsByClassName('account-icon');
+    for (var i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('open')) {
+            openDropdown.classList.remove('open');
+        }
+    }
+});
+
+document.getElementById('update-email').addEventListener('click', function() {
+    openModal('updateEmailModal');
+});
+
+document.getElementById('change-password').addEventListener('click', function() {
+    openModal('changePasswordModal');
+});
+
+document.getElementById('delete-account').addEventListener('click', function() {
+    openModal('deleteAccountModal');
+});
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modals = ['updateEmailModal', 'changePasswordModal', 'deleteAccountModal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target == modal) {
+            closeModal(modalId);
+        }
+    });
+};
+
+// Handle form submissions
+document.getElementById('updateEmailForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const newEmail = document.getElementById('newEmail').value;
+    try {
+        const response = await fetch('http://localhost:3000/update-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ newEmail })
+        });
+        if (response.ok) {
+            alert('Email updated successfully');
+            closeModal('updateEmailModal');
+        } else {
+            alert('Error updating email');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating email');
+    }
+});
+
+document.getElementById('changePasswordForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    try {
+        const response = await fetch('http://localhost:3000/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+        if (response.ok) {
+            alert('Password changed successfully');
+            closeModal('changePasswordModal');
+        } else {
+            alert('Error changing password');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error changing password');
+    }
+});
+
+document.getElementById('deleteAccountForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    try {
+        const response = await fetch('http://localhost:3000/delete-account', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        if (response.ok) {
+            alert('Account deleted successfully');
+            closeModal('deleteAccountModal');
+            window.location.href = 'login.html';
+        } else {
+            alert('Error deleting account');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error deleting account');
+    }
+});
