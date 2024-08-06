@@ -13,6 +13,19 @@ let initialTotals = {
     total_cash_euro: 0,
 };
 
+// Function to show modal messages
+function showModalMessage(message) {
+    const messageModal = document.getElementById('messageModal');
+    const messageContent = document.getElementById('messageContent');
+    messageContent.textContent = message;
+    messageModal.style.display = 'block';
+}
+
+// Function to close modal messages
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
 // Function to add amount to income object
 function addAmount(category, amount) {
     amount = parseFloat(amount);
@@ -56,7 +69,7 @@ function subtractAmount(category, amount) {
         saveTotalsToDatabase(); // Save to database after updating totals
         fetchAmounts(category); // Update the dropdown options
     } else {
-        alert(`Insufficient total in ${category} to subtract ${amount}`);
+        showModalMessage(`Insufficient total in ${category} to subtract ${amount}`);
     }
 }
 
@@ -127,7 +140,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
 
     if (action === 'update') {
         if (amountIndex === "" || isNaN(newAmount)) {
-            alert("Please select a valid amount to update.");
+            showModalMessage("Please select a valid amount to update.");
             return;
         }
 
@@ -147,14 +160,14 @@ document.getElementById('manageForm').addEventListener('submit', function (event
 
     } else if (action === 'subtract') {
         if (isNaN(newAmount) || newAmount <= 0) {
-            alert("Please enter a valid amount to subtract.");
+            showModalMessage("Please enter a valid amount to subtract.");
             return;
         }
         subtractAmount(category, newAmount);
 
     } else if (action === 'delete') {
         if (amountIndex === "") {
-            alert("Please select an amount to delete.");
+            showModalMessage("Please select an amount to delete.");
             return;
         }
 
@@ -173,7 +186,7 @@ document.getElementById('manageForm').addEventListener('submit', function (event
 
     } else if (action === 'deleteTotal') {
         if (!category) {
-            alert("Please select a category to delete.");
+            showModalMessage("Please select a category to delete.");
             return;
         }
 
@@ -408,14 +421,14 @@ document.getElementById('updateEmailForm').addEventListener('submit', async func
             body: JSON.stringify({ newEmail })
         });
         if (response.ok) {
-            alert('Email updated successfully');
+            showModalMessage('Email updated successfully');
             closeModal('updateEmailModal');
         } else {
-            alert('Error updating email');
+            showModalMessage('Error updating email');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error updating email');
+        showModalMessage('Error updating email');
     }
 });
 
@@ -433,14 +446,14 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
             body: JSON.stringify({ currentPassword, newPassword })
         });
         if (response.ok) {
-            alert('Password changed successfully');
+            showModalMessage('Password changed successfully');
             closeModal('changePasswordModal');
         } else {
-            alert('Error changing password');
+            showModalMessage('Error changing password');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error changing password');
+        showModalMessage('Error changing password');
     }
 });
 
@@ -455,18 +468,17 @@ document.getElementById('deleteAccountForm').addEventListener('submit', async fu
             }
         });
         if (response.ok) {
-            alert('Account deleted successfully');
+            showModalMessage('Account deleted successfully');
             closeModal('deleteAccountModal');
             localStorage.removeItem('token');
             window.location.href = 'login.html';
         } else {
             const errorText = await response.text();
             console.error('Error deleting account:', errorText);
-            alert(`Error deleting account: ${errorText}`);
+            showModalMessage(`Error deleting account: ${errorText}`);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error deleting account');
+        showModalMessage('Error deleting account');
     }
 });
-

@@ -214,3 +214,27 @@ button[type="submit"]:hover {
 .hidden {
     display: none;
 }
+
+#loginMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    display: none;
+}
+
+#loginMessage.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#loginMessage.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}

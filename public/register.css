@@ -188,3 +188,27 @@ button[type="submit"]:hover {
 .hidden {
     display: none;
 }
+
+#registerMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    display: none;
+}
+
+#registerMessage.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#registerMessage.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}

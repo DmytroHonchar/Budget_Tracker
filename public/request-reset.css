@@ -165,3 +165,51 @@ button[type="submit"]:hover {
 .hidden {
     display: none;
 }
+
+#requestResetMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    display: none;
+}
+
+#requestResetMessage.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#requestResetMessage.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+#resetPasswordMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    display: none;
+}
+
+#resetPasswordMessage.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#resetPasswordMessage.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}

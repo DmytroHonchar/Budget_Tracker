@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to show messages
-    function showMessage(message, isError = false) {
-        const messageDiv = document.getElementById('message');
+    function showMessage(message, isError = false, messageId = 'message') {
+        const messageDiv = document.getElementById(messageId);
         messageDiv.textContent = message;
         messageDiv.style.display = 'block';
         if (isError) {
@@ -52,13 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const errorText = await response.text();
                     if (response.status === 401) {
-                        showMessage('Invalid credentials. Please check your email and password.', true);
+                        showMessage('Invalid credentials. Please check your email and password.', true, 'loginMessage');
                     } else {
-                        showMessage(`Login failed: ${errorText}`, true);
+                        showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
                     }
                 }
             } catch (error) {
-                showMessage(`An error occurred: ${error.message}`, true);
+                showMessage(`An error occurred: ${error.message}`, true, 'loginMessage');
             }
         });
     }
@@ -82,16 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('token', data.token);
-                    showMessage('Registration successful!', false);
+                    showMessage('Registration successful!', false, 'registerMessage');
                     setTimeout(() => {
                         window.location.href = 'income.html'; // Redirect to income.html after 2 seconds
                     }, 2000);
                 } else {
                     const errorText = await response.text();
-                    showMessage(`${errorText}`, true);
+                    showMessage(`${errorText}`, true, 'registerMessage');
                 }
             } catch (error) {
-                showMessage(`An error occurred: ${error.message}`, true);
+                showMessage(`An error occurred: ${error.message}`, true, 'registerMessage');
             }
         });
     }
@@ -111,13 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    showMessage('Password reset email sent', false);
+                    showMessage('Password reset email sent', false, 'requestResetMessage');
                 } else {
                     const errorText = await response.text();
-                    showMessage(`Password reset request failed: ${errorText}`, true);
+                    showMessage(`Password reset request failed: ${errorText}`, true, 'requestResetMessage');
                 }
             } catch (error) {
-                showMessage(`An error occurred during password reset request: ${error.message}`, true);
+                showMessage(`An error occurred during password reset request: ${error.message}`, true, 'requestResetMessage');
             }
         });
     }
@@ -139,16 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    showMessage('Password has been reset successfully', false);
+                    showMessage('Password has been reset successfully', false, 'resetPasswordMessage');
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 2000);
                 } else {
                     const errorText = await response.text();
-                    showMessage(`Password reset failed: ${errorText}`, true);
+                    showMessage(`Password reset failed: ${errorText}`, true, 'resetPasswordMessage');
                 }
             } catch (error) {
-                showMessage(`An error occurred during password reset: ${error.message}`, true);
+                showMessage(`An error occurred during password reset: ${error.message}`, true, 'resetPasswordMessage');
             }
         });
     }
