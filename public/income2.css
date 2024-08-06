@@ -1,5 +1,5 @@
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'xt', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -498,6 +498,7 @@ footer {
     width: 80%;
     max-width: 500px;
     color: white;
+    border-radius: 10px;
 }
 
 .close {
@@ -513,3 +514,87 @@ footer {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Specific styles for the Change Password modal */
+#changePasswordModal .input-group {
+    display: flex;
+    align-items: center; /* Align items to center vertically */
+    margin-bottom: 15px; /* Adjust space between input groups */
+}
+
+#changePasswordModal .input-group label {
+    margin-right: 4px; /* Space between label and input */
+    font-size: 14px;
+    flex: 0 0 150px; /* Adjust the width of the label */
+}
+
+#changePasswordModal .input-group input {
+    flex: 1; /* Allow input to take remaining space */
+    padding: 10px; /* Adjust padding if needed */
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: #555;
+    color: #fff;
+    font-size: 14px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+#changePasswordModal .input-group input:focus, 
+#changePasswordModal .input-group input:hover {
+    outline: none;
+    background: #666;
+    color: #fff;
+    border-color: white;
+}
+
+#changePasswordModal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Message Modal */
+#messageModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#messageModal .modal-content {
+    background-color: #333;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#messageModal .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#messageModal .close:hover,
+#messageModal .close:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+#updateEmailModal .input-group input {
+    margin-top: 10px; /* Adjust the value as needed */
+}
+

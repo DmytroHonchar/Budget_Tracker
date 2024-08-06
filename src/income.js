@@ -446,6 +446,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
 
 document.getElementById('deleteAccountForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    console.log('Delete account form submitted');
     try {
         const response = await fetch('http://localhost:3000/delete-account', {
             method: 'POST',
@@ -456,12 +457,16 @@ document.getElementById('deleteAccountForm').addEventListener('submit', async fu
         if (response.ok) {
             alert('Account deleted successfully');
             closeModal('deleteAccountModal');
+            localStorage.removeItem('token');
             window.location.href = 'login.html';
         } else {
-            alert('Error deleting account');
+            const errorText = await response.text();
+            console.error('Error deleting account:', errorText);
+            alert(`Error deleting account: ${errorText}`);
         }
     } catch (error) {
         console.error('Error:', error);
         alert('Error deleting account');
     }
 });
+

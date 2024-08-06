@@ -187,11 +187,11 @@
         <h2>Change Password</h2>
         <form id="changePasswordForm">
             <div class="input-group">
-                <label for="currentPassword" class="modal-label">Current Password:</label>
+                <label for="currentPassword">Current Password:</label>
                 <input type="password" id="currentPassword" name="currentPassword" required>
             </div>
             <div class="input-group">
-                <label for="newPassword" class="modal-label">New Password:</label>
+                <label for="newPassword">New Password:</label>
                 <input type="password" id="newPassword" name="newPassword" required>
             </div>
             <button type="submit">Change Password</button>
@@ -210,6 +210,14 @@
             </form>
         </div>
     </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('messageModal')">&times;</span>
+            <p id="messageContent"></p>
+        </div>
+    </div>
+    
 
     <footer>
         <div class="footer_holder">

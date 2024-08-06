@@ -211,14 +211,37 @@ app.post('/change-password', authenticateToken, async (req, res) => {
 // Delete account endpoint
 app.post('/delete-account', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
+    console.log(`Attempting to delete account with user ID: ${userId}`);
     try {
+        // Begin transaction
+        await pool.query('BEGIN');
+
+        // Check if user exists
+        const userCheck = await pool.query('SELECT id FROM users WHERE id = $1', [userId]);
+        if (userCheck.rowCount === 0) {
+            console.error(`User with ID ${userId} not found.`);
+            await pool.query('ROLLBACK');
+            return res.status(404).send('User not found');
+        }
+
+        // Delete related entries in the totals table
+        await pool.query('DELETE FROM totals WHERE user_id = $1', [userId]);
+
+        // Delete user
         await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+
+        // Commit transaction
+        await pool.query('COMMIT');
+        console.log(`Account with user ID ${userId} deleted successfully.`);
         res.status(200).send('Account deleted successfully');
     } catch (error) {
-        console.error('Error deleting account:', error.message);
+        // Rollback transaction in case of error
+        await pool.query('ROLLBACK');
+        console.error('Error deleting account:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Password reset endpoints
 app.post('/request-reset', async (req, res) => {

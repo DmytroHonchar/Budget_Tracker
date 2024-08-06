@@ -12,46 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Register Form Submission
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const response = await fetch('http://127.0.0.1:3000/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password }),
-                });
-
-                const messageDiv = document.getElementById('message');
-
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('token', data.token);
-                    messageDiv.textContent = 'Registration successful!';
-                    messageDiv.className = 'success';
-                    messageDiv.style.display = 'block';
-                    setTimeout(() => {
-                        window.location.href = 'income.html'; // Redirect to income.html after 2 seconds
-                    }, 2000);
-                } else {
-                    const errorText = await response.text();
-                    messageDiv.textContent = `${errorText}`;
-                    messageDiv.className = 'error';
-                    messageDiv.style.display = 'block';
-                }
-            } catch (error) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = `An error occurred: ${error.message}`;
-                messageDiv.className = 'error';
-                messageDiv.style.display = 'block';
-            }
-        });
+    // Function to show messages
+    function showMessage(message, isError = false) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = message;
+        messageDiv.style.display = 'block';
+        if (isError) {
+            messageDiv.classList.add('error');
+            messageDiv.classList.remove('success');
+        } else {
+            messageDiv.classList.add('success');
+            messageDiv.classList.remove('error');
+        }
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000); // Hide after 5 seconds
     }
 
     // Login Form Submission
@@ -69,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ email, password }),
                 });
 
-                const messageDiv = document.getElementById('message');
-
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('token', data.token);
@@ -79,18 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const errorText = await response.text();
                     if (response.status === 401) {
-                        messageDiv.textContent = 'Invalid credentials. Please check your email and password.';
+                        showMessage('Invalid credentials. Please check your email and password.', true);
                     } else {
-                        messageDiv.textContent = `Login failed: ${errorText}`;
+                        showMessage(`Login failed: ${errorText}`, true);
                     }
-                    messageDiv.className = 'error';
-                    messageDiv.style.display = 'block';
                 }
             } catch (error) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = `An error occurred: ${error.message}`;
-                messageDiv.className = 'error';
-                messageDiv.style.display = 'block';
+                showMessage(`An error occurred: ${error.message}`, true);
+            }
+        });
+    }
+
+    // Register Form Submission
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:3000/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    showMessage('Registration successful!', false);
+                    setTimeout(() => {
+                        window.location.href = 'income.html'; // Redirect to income.html after 2 seconds
+                    }, 2000);
+                } else {
+                    const errorText = await response.text();
+                    showMessage(`${errorText}`, true);
+                }
+            } catch (error) {
+                showMessage(`An error occurred: ${error.message}`, true);
             }
         });
     }
@@ -109,23 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ email }),
                 });
 
-                const messageDiv = document.getElementById('message');
-
                 if (response.ok) {
-                    messageDiv.textContent = 'Password reset email sent';
-                    messageDiv.className = 'success';
-                    messageDiv.style.display = 'block';
+                    showMessage('Password reset email sent', false);
                 } else {
                     const errorText = await response.text();
-                    messageDiv.textContent = `Password reset request failed: ${errorText}`;
-                    messageDiv.className = 'error';
-                    messageDiv.style.display = 'block';
+                    showMessage(`Password reset request failed: ${errorText}`, true);
                 }
             } catch (error) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = `An error occurred during password reset request: ${error.message}`;
-                messageDiv.className = 'error';
-                messageDiv.style.display = 'block';
+                showMessage(`An error occurred during password reset request: ${error.message}`, true);
             }
         });
     }
@@ -146,26 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ token, newPassword }),
                 });
 
-                const messageDiv = document.getElementById('message');
-
                 if (response.ok) {
-                    messageDiv.textContent = 'Password has been reset successfully';
-                    messageDiv.className = 'success';
-                    messageDiv.style.display = 'block';
+                    showMessage('Password has been reset successfully', false);
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 2000);
                 } else {
                     const errorText = await response.text();
-                    messageDiv.textContent = `Password reset failed: ${errorText}`;
-                    messageDiv.className = 'error';
-                    messageDiv.style.display = 'block';
+                    showMessage(`Password reset failed: ${errorText}`, true);
                 }
             } catch (error) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = `An error occurred during password reset: ${error.message}`;
-                messageDiv.className = 'error';
-                messageDiv.style.display = 'block';
+                showMessage(`An error occurred during password reset: ${error.message}`, true);
             }
         });
     }
