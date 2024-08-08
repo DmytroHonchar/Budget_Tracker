@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to show messages
-    function showMessage(message, isError = false, messageId = 'message') {
+      function showMessage(message, isError = false, messageId = 'message') {
         const messageDiv = document.getElementById(messageId);
         messageDiv.textContent = message;
         messageDiv.style.display = 'block';
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDiv.style.display = 'none';
         }, 5000); // Hide after 5 seconds
     }
+
 
     // Login Form Submission
     const loginForm = document.getElementById('loginForm');
@@ -149,6 +150,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 showMessage(`An error occurred during password reset: ${error.message}`, true, 'resetPasswordMessage');
+            }
+        });
+    }
+
+    // Contact Form Submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, message })
+                });
+
+                if (response.ok) {
+                    showMessage('Message sent successfully', false, 'contactMessage');
+                    contactForm.reset();
+                } else {
+                    showMessage('Failed to send message', true, 'contactMessage');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('An error occurred while sending the message', true, 'contactMessage');
             }
         });
     }

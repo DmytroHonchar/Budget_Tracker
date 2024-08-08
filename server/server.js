@@ -242,7 +242,6 @@ app.post('/delete-account', authenticateToken, async (req, res) => {
     }
 });
 
-
 // Password reset endpoints
 app.post('/request-reset', async (req, res) => {
     console.log('/request-reset endpoint called');
@@ -316,7 +315,32 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+// Contact form endpoint
+app.post('/contact', async (req, res) => {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.status(400).send('All fields are required');
+    }
+
+    const mailOptions = {
+        from: email, // User's email address
+        to: process.env.EMAIL_USER, // Your fixed receiver email address
+        subject: 'New Contact Form Submission',
+        text: `You have a new message from ${name} (${email}):\n\n${message}`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).send('Message sent successfully');
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+

@@ -66,7 +66,7 @@ body {
 }
 
 .contact-form .logo {
-    width: 150px;
+    width: 200px;
     margin-bottom: 20px;
 }
 
@@ -125,4 +125,76 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background: #c20047;
     transform: scale(1.05);
+}
+
+#contactMessage {
+    padding: 20px; 
+    border-radius: 5px;
+    margin-top: 20px; 
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Same max-width as .contact-form */
+    display: none; 
+}
+
+#contactMessage.success {
+    background-color: #35a839;
+    color: white;
+}
+
+#contactMessage.error {
+    background-color: #dd4034;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        width: 100%;
+    }
+
+    .contact-form {
+        padding: 30px;
+    }
+
+    .contact-form .logo {
+        width: 150px;
+    }
+
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 10px;
+        width: 100%;
+    }
+
+    #contactMessage {
+        max-width: 50%;
+        padding: 15px;
+        font-size: medium;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        width: 80%;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+
+    .contact-form .logo {
+        width: 120px;
+    }
+
+    button[type="submit"] {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    
+    #contactMessage {
+        max-width: 68%;
+        padding: 15px;
+        font-size: small;
+    }
 }
