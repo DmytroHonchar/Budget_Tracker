@@ -13,6 +13,11 @@ let initialTotals = {
     total_cash_euro: 0,
 };
 
+// Function to format numbers with commas
+function formatNumberWithCommas(number) {
+    return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 // Function to show modal messages
 function showModalMessage(message) {
     const messageModal = document.getElementById('messageModal');
@@ -123,7 +128,7 @@ function fetchAmounts(category) {
     if (income[category] && income[category].length > 0) {
         income[category].forEach(function (amount, index) {
             var option = document.createElement('option');
-            option.textContent = amount.toFixed(2);
+            option.textContent = formatNumberWithCommas(amount);
             option.value = index;
             selectElement.appendChild(option);
         });
@@ -241,10 +246,10 @@ async function fetchAndDisplayTotals() {
 
 // Function to display current totals
 function displayCurrentTotals() {
-    document.getElementById('totalcard£').textContent = `£${initialTotals.total_card_pounds.toFixed(2)}`;
-    document.getElementById('totalcard€').textContent = `€${initialTotals.total_card_euro.toFixed(2)}`;
-    document.getElementById('totalcash£').textContent = `£${initialTotals.total_cash_pounds.toFixed(2)}`;
-    document.getElementById('totalcash€').textContent = `€${initialTotals.total_cash_euro.toFixed(2)}`;
+    document.getElementById('totalcard£').textContent = `£${formatNumberWithCommas(initialTotals.total_card_pounds)}`;
+    document.getElementById('totalcard€').textContent = `€${formatNumberWithCommas(initialTotals.total_card_euro)}`;
+    document.getElementById('totalcash£').textContent = `£${formatNumberWithCommas(initialTotals.total_cash_pounds)}`;
+    document.getElementById('totalcash€').textContent = `€${formatNumberWithCommas(initialTotals.total_cash_euro)}`;
 }
 
 // Function to save the totals to the database
@@ -282,8 +287,8 @@ function updateOverallTotal() {
 
     document.getElementById('outputTotal').innerHTML = `
         Totals:<br>
-        £${totalPound.toFixed(2)}<br>
-        €${totalEuro.toFixed(2)}
+        £${formatNumberWithCommas(totalPound)}<br>
+        €${formatNumberWithCommas(totalEuro)}
     `;
 }
 
@@ -292,8 +297,8 @@ function convertToPounds() {
     grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
     document.getElementById('outputTotal2').innerHTML = `
         Converted Totals:<br>
-        £${grandTotalPound.toFixed(2)}<br>
-        €${grandTotalEuro.toFixed(2)}<br>
+        £${formatNumberWithCommas(grandTotalPound)}<br>
+        €${formatNumberWithCommas(grandTotalEuro)}<br>
     `;
     console.log('Grand Total in Pounds updated:', { grandTotalPound });
 }
@@ -303,8 +308,8 @@ function convertToEuros() {
     grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
     document.getElementById('outputTotal2').innerHTML = `
         Converted Totals:<br>
-        £${grandTotalPound.toFixed(2)}<br>
-        €${grandTotalEuro.toFixed(2)}<br>
+        £${formatNumberWithCommas(grandTotalPound)}<br>
+        €${formatNumberWithCommas(grandTotalEuro)}<br>
         
     `;
     console.log('Grand Total in Euros updated:', { grandTotalEuro });
@@ -319,7 +324,7 @@ document.getElementById('convertToEuros').addEventListener('click', convertToEur
 // Helper function to parse total from the formatted string
 function parseTotal(id, currencySymbol) {
     const totalString = document.getElementById(id).textContent;
-    const total = parseFloat(totalString.split(currencySymbol)[1]);
+    const total = parseFloat(totalString.split(currencySymbol)[1].replace(/,/g, ''));
     return isNaN(total) ? 0 : total;
 }
 
@@ -333,7 +338,7 @@ function isValidPositiveNumber(input) {
 function displayIncome(category, outputId) {
     const outputElement = document.getElementById(outputId);
     if (income[category] && income[category].length > 0) {
-        const amountsText = income[category].map(val => val >= 0 ? `${val.toFixed(2)}` : `-${Math.abs(val).toFixed(2)}`).join(', ');
+        const amountsText = income[category].map(val => val >= 0 ? formatNumberWithCommas(val) : `-${formatNumberWithCommas(Math.abs(val))}`).join(', ');
         outputElement.textContent = `${category}: ${amountsText}`;
     } else {
         outputElement.textContent = ''; 
@@ -350,7 +355,7 @@ function updateTotal(category) {
     }
     const categoryText = category.includes('card') ? 'card' : 'cash';
     const currencySymbol = category.includes('£') ? '£' : '€';
-    document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${total.toFixed(2)}`;
+    document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${formatNumberWithCommas(total)}`;
 }
 
 // Event listener for logout

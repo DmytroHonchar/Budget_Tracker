@@ -8,9 +8,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Changed to flex-start to allow margin to work */
-    min-height: 100vh; /* Ensures the body takes at least full viewport height */
-    padding-bottom: 100px; /* Adds space at the bottom of the page */
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding-bottom: 100px;
 }
 
 .back-link {
@@ -45,13 +45,27 @@ body {
     height: 22px;
 }
 
+.get-in-touch {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.get-in-touch h2 {
+    color: #e91e63;
+    margin-bottom: 10px;
+}
+
+.get-in-touch p {
+    margin-bottom: 20px;
+}
+
 .contact-container {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40%;
     height: 40%;
-    margin-top: 100px; 
+    margin-top: 20px; 
     margin-bottom: 20px; 
 }
 
@@ -127,13 +141,31 @@ button[type="submit"]:hover {
     transform: scale(1.05);
 }
 
+.social-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.social-links p {
+    margin: 5px 0;
+}
+
+.social-links a {
+    color: #e91e63;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
 #contactMessage {
     padding: 20px; 
     border-radius: 5px;
     margin-top: 20px; 
     text-align: center;
     width: 100%;
-    max-width: 400px; /* Same max-width as .contact-form */
+    max-width: 400px; 
     display: none; 
 }
 
@@ -171,6 +203,10 @@ button[type="submit"]:hover {
         padding: 15px;
         font-size: medium;
     }
+
+    .get-in-touch {
+        margin-top: 60px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -191,10 +227,15 @@ button[type="submit"]:hover {
         padding: 10px;
     }
 
-    
     #contactMessage {
         max-width: 68%;
         padding: 15px;
         font-size: small;
+    }
+
+    .get-in-touch {
+        margin-top: 50px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
 }

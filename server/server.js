@@ -1,4 +1,11 @@
-require('dotenv').config({ path: 'C:/Users/dmytr/Documents/Budget_Tracker/public/.env' });
+if (process.env.NODE_ENV === 'production') {
+    // Server environment
+    require('dotenv').config({ path: '/home/ubuntu/Budget_Tracker/public/.env' });
+} else {
+    // Local development
+    require('dotenv').config({ path: 'C:/Users/dmytr/Documents/Budget_Tracker/public/.env' });
+}
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');

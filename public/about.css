@@ -45,7 +45,7 @@ body {
 }
 
 .back-link:hover .arrow {
-    font-size: 1.1em;
+    font-size: 10px;
 }
 
 .back-link:hover img {
@@ -103,26 +103,7 @@ main p, main ul, main ol {
     color: #d0d0d0;
 }
 
-#contact-info ul {
-    list-style: none;
-    padding: 0;
-    margin: 20px auto;
-    text-align: center;
-}
 
-#contact-info ul li {
-    margin-bottom: 10px;
-}
-
-#contact-info ul li a {
-    color: #e91e63;
-    font-size: 1.2em;
-    text-decoration: none;
-}
-
-#contact-info ul li a:hover {
-    text-decoration: underline;
-}
 
 a {
     color: #e91e63;
