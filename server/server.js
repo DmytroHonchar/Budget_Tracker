@@ -24,24 +24,20 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve static files from 'public' and 'src' directories
+const staticPath = path.resolve(__dirname, '..', 'public');
+const srcPath = path.resolve(__dirname, '..', 'src');
+
+
+app.use(express.static(staticPath));
+app.use('/src', express.static(srcPath));
+
+
+
 // Middleware to log requests
 app.use((req, res, next) => {
     console.log(`Request URL: ${req.url}`);
     next();
-});
-
-// Serve static files from 'public' and 'src' directories
-const staticPath = path.join(__dirname, '..', 'public');
-const srcPath = path.join(__dirname, '..', 'src');
-
-app.use((req, res, next) => {
-    console.log(`Serving static files from: ${staticPath}`);
-    express.static(staticPath)(req, res, next);
-});
-
-app.use('/src', (req, res, next) => {
-    console.log(`Serving src files from: ${srcPath}`);
-    express.static(srcPath)(req, res, next);
 });
 
 // Log environment variables for debugging

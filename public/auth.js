@@ -13,8 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to show messages
-      function showMessage(message, isError = false, messageId = 'message') {
+    function showMessage(message, isError = false, messageId = 'message') {
         const messageDiv = document.getElementById(messageId);
+        if (!messageDiv) {
+            console.error(`Element with id '${messageId}' not found.`);
+            return;
+        }
+        
         messageDiv.textContent = message;
         messageDiv.style.display = 'block';
         if (isError) {
