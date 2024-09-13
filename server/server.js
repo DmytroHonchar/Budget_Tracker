@@ -1,11 +1,28 @@
-if (process.env.NODE_ENV === 'production') {
-    // Server environment
-    require('dotenv').config({ path: '/home/ubuntu/Budget_Tracker/public/.env' });
-} else {
-    // Local development
-    require('dotenv').config({ path: 'C:/Users/dmytr/Documents/Budget_Tracker/public/.env' });
+const path = require('path'); // For path operations
+const fs = require('fs'); // For file system operations
+
+// Function to load .env file from a given path
+function loadEnvFile(envFilePath) {
+    if (fs.existsSync(envFilePath)) {
+        require('dotenv').config({ path: envFilePath });
+        console.log(`Loaded .env file from ${envFilePath}`);
+    } else {
+        console.error(`.env file not found at ${envFilePath}`);
+    }
 }
 
+// Determine the environment and load the .env file accordingly
+if (process.env.NODE_ENV === 'production') {
+    // AWS Server environment
+    const envFilePath = path.resolve('/home/ubuntu/Budget_Tracker/.env');
+    loadEnvFile(envFilePath);
+} else {
+    // Local development
+    const envFilePath = path.resolve('C:/Users/dmytr/Documents/Budget_Tracker/server/.env');
+    loadEnvFile(envFilePath);
+}
+
+// Now, require the necessary modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -14,31 +31,10 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Pool } = require('pg');
-const path = require('path');
 const url = require('url');
 const app = express();
 const port = process.env.PORT || 3000;
 const jwtSecret = process.env.JWT_SECRET;
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Serve static files from 'public' and 'src' directories
-const staticPath = path.resolve(__dirname, '..', 'public');
-const srcPath = path.resolve(__dirname, '..', 'src');
-
-
-app.use(express.static(staticPath));
-app.use('/src', express.static(srcPath));
-
-
-
-// Middleware to log requests
-app.use((req, res, next) => {
-    console.log(`Request URL: ${req.url}`);
-    next();
-});
 
 // Log environment variables for debugging
 console.log("DB_USER:", process.env.DB_USER);
@@ -46,7 +42,10 @@ console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log("DB_HOST:", process.env.DB_HOST);
 console.log("DB_DATABASE:", process.env.DB_DATABASE);
 console.log("DB_PORT:", process.env.DB_PORT);
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
 
+// Create a new instance of the Pool class
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -55,6 +54,7 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
+// Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -62,6 +62,42 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
     },
 });
+
+// Middleware setup
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files from 'public' and 'src' directories
+const staticPath = path.resolve(__dirname, '..', 'public');
+const srcPath = path.resolve(__dirname, '..', 'src');
+
+console.log('Static Path:', staticPath);
+console.log('Src Path:', srcPath);
+
+app.use(express.static(staticPath));
+app.use('/src', express.static(srcPath));
+
+// Middleware to log requests
+app.use((req, res, next) => {
+    console.log(`Request URL: ${req.url}`);
+    next();
+});
+
+// Middleware to protect routes
+const authenticateToken = (req, res, next) => {
+    console.log('authenticateToken middleware called');
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401); // If there's no token
+
+    jwt.verify(token, jwtSecret, (err, user) => {
+        if (err) return res.sendStatus(403); // If token is not valid
+        req.user = user;
+        next();
+    });
+};
 
 // Register endpoint
 app.post('/register', async (req, res) => {
@@ -115,21 +151,6 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-// Middleware to protect routes
-const authenticateToken = (req, res, next) => {
-    console.log('authenticateToken middleware called');
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401); // If there's no token
-
-    jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) return res.sendStatus(403); // If token is not valid
-        req.user = user;
-        next();
-    });
-};
 
 // Endpoint to get totals
 app.get('/totals', authenticateToken, async (req, res) => {

@@ -1,5 +1,6 @@
+/* General Styles */
 body {
-    font-family: 'xt', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,11 +11,14 @@ body {
     min-height: 100vh;
 }
 
-h1 {
+h1, h3 {
     font-family: 'Montserrat', sans-serif;
-    text-align: center;
     color: #e91e63;
     font-weight: bold;
+}
+
+h1 {
+    text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
 }
@@ -26,12 +30,9 @@ h1 {
 }
 
 h3 {
-    font-family: 'Montserrat', sans-serif;
     text-align: left;
     margin-left: 20px;
     margin-top: 60px;
-    color: #e91e63;
-    font-weight: bold;
     margin-bottom: 10px;
     font-size: 20px;
 }
@@ -43,6 +44,7 @@ h3 {
     }
 }
 
+/* Back Link */
 .back-link {
     position: absolute;
     top: 20px;
@@ -50,7 +52,6 @@ h3 {
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
-    margin-bottom: 50px;
 }
 
 .back-link img {
@@ -62,7 +63,6 @@ h3 {
 
 .arrow {
     text-decoration: none;
-    font-family: 'Montserrat', sans-serif;
     color: white;
     transition: all 0.3s ease;
 }
@@ -76,6 +76,7 @@ h3 {
     height: 22px;
 }
 
+/* Balance Title */
 .balance-title {
     font-family: 'Montserrat', sans-serif;
     text-align: center;
@@ -85,11 +86,13 @@ h3 {
     font-size: 22px;
 }
 
+/* Container */
 .container {
     margin-top: 60px;
     margin-bottom: 30px;
 }
 
+/* Bigholder and Responsive Layout */
 .bigholder, .bigholder2 {
     display: flex;
     flex-direction: column;
@@ -104,7 +107,8 @@ h3 {
     }
 }
 
-.cardholder, .exchangeholder {
+/* Cardholder and Exchangeholder */
+.cardholder, .exchangeholder, #outputTotal, #outputTotal2 {
     background: #333;
     padding: 20px;
     border-radius: 10px;
@@ -119,12 +123,18 @@ h3 {
 }
 
 @media (min-width: 768px) {
-    .cardholder, .exchangeholder {
+    .cardholder, .exchangeholder, #outputTotal, #outputTotal2 {
         width: calc(50% - 20px);
         margin: 10px;
     }
 }
 
+/* Hidden Class */
+.hidden {
+    visibility: hidden;
+}
+
+/* Input Group */
 .input-group {
     position: relative;
     width: 100%;
@@ -147,8 +157,7 @@ h3 {
 
 .input-group input:focus, .input-group input:hover {
     outline: none;
-    background: #555;
-    color: #fff;
+    background: #666;
     border-color: white;
 }
 
@@ -164,6 +173,7 @@ h3 {
     height: 20px;
 }
 
+/* Button Styles */
 button {
     width: 100%;
     padding: 12px;
@@ -182,27 +192,19 @@ button:hover {
     transform: scale(1.05);
 }
 
+/* Total Content Styles */
 #outputTotal, #outputTotal2 {
-    display: flex;
-    flex-direction: column;
-    margin-left: 24px;
+    /* Inherit styles from .cardholder */
+}
+
+#outputTotal p, #outputTotal2 p {
+    font-size: 18px;
     color: #E0E0E0;
-    font-size: large;
-    background: #333;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    width: 90%;
-    max-width: 320px;
+    line-height: 1.5;
+    margin: 0;
 }
 
-@media (min-width: 768px) {
-    #outputTotal, #outputTotal2 {
-        flex-direction: row;
-        margin-left: 140px;
-    }
-}
-
+/* Total Container */
 .totalcontainer {
     display: flex;
     flex-direction: column;
@@ -219,7 +221,6 @@ button:hover {
     margin-top: 10px;
     padding: 0 20px;
     font-size: 18px;
-    color: #E0E0E0;
 }
 
 .separator {
@@ -229,25 +230,22 @@ button:hover {
     margin: 2px 0;
 }
 
+/* Manage Wrapper */
 .manage-wrapper {
     display: flex;
-    justify-content: flex-start; /* Align to the start */
+    justify-content: flex-start;
     margin-top: 20px;
     margin-bottom: 40px;
-}
-
-@media (max-width: 768px) {
-    .manage-wrapper {
-        margin-left: 20px; /* Adjust this value for mobile view */
-    }
+    padding-left: 20px;
 }
 
 @media (min-width: 768px) {
     .manage-wrapper {
-        margin-left: 126px; /* Adjust this value for desktop view */
+        padding-left: 126px;
     }
 }
 
+/* Manage Container */
 .manage-container {
     background: #333;
     padding: 20px;
@@ -257,15 +255,14 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
     max-width: 300px;
-    margin-right: auto; /* Ensure it doesn't center horizontally */
-    margin-left: 10px;
 }
 
+/* Split Classes */
 .split {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -277,45 +274,44 @@ button:hover {
     }
 }
 
-.select-group select {
-    width: 100%;
-    padding: 10px;
-    padding-left: 10px;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    background: #555;
-    color: #fff;
-    font-size: 12px;
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    appearance: none;
-    padding-right: 20px; /* Make space for the arrow */
-    font-family: 'Montserrat', sans-serif;
-}
-
+/* Select Group */
 .select-group {
     position: relative;
     width: 100%;
     margin-bottom: 10px;
 }
 
+.select-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: #555;
+    color: #fff;
+    font-size: 14px;
+    appearance: none;
+    padding-right: 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
 .select-group::after {
-    content: '▼'; /* Unicode character for downward arrow */
+    content: '▼';
     position: absolute;
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: #fff;
-    pointer-events: none; /* Prevent clicking on the arrow */
+    pointer-events: none;
     font-size: 12px;
 }
 
 .select-group select:focus, .select-group select:hover {
     outline: none;
     background: #666;
-    color: #fff;
     border-color: white;
 }
 
+/* Footer Styles */
 footer {
     background-color: #333;
     padding: 20px 0;
@@ -358,13 +354,12 @@ footer {
     width: 2px;
     height: 100%;
     background-color: #e91e63;
-    display: none; /* Hide by default */
+    display: none;
 }
 
 .footer-links a {
     text-decoration: none;
     color: white;
-    margin-right: 6px;
     font-size: 14px;
     transition: color 0.3s ease;
 }
@@ -376,22 +371,6 @@ footer {
 .footer-text p {
     margin: 0;
     font-size: 14px;
-    color: #E0E0E0;
-}
-
-.footer-text a {
-    text-decoration: none;
-    color: white;
-    margin-right: 6px;
-    transition: color 0.3s ease;
-}
-
-.footer-text a:hover {
-    color: #c20047;
-}
-
-.logo {
-    width: 100px; /* Adjust logo size for better fit */
 }
 
 @media (min-width: 768px) {
@@ -407,13 +386,8 @@ footer {
         margin-top: 0;
     }
 
-    .footer-links {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-   
     .footer-links::before {
-        display: block; /* Show on larger screens */
+        display: block;
     }
 
     .logo {
@@ -421,9 +395,8 @@ footer {
     }
 }
 
-@font-face {
-    font-family: 'Montserrat';
-    src: url(/font-family/Montserrat-VariableFont_wght.ttf) format('truetype');
+.logo {
+    width: 100px;
 }
 
 /* Account Icon and Dropdown Menu */
@@ -438,7 +411,7 @@ footer {
 }
 
 .account-icon img {
-    width: 30px; /* Adjust size as needed */
+    width: 30px;
     height: 30px;
     transition: all 0.3s ease;
 }
@@ -451,7 +424,7 @@ footer {
 .account-menu {
     display: none;
     position: absolute;
-    top: 40px; /* Adjust this value to position below the icon */
+    top: 40px;
     right: 0;
     background-color: #333;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -515,35 +488,33 @@ footer {
     cursor: pointer;
 }
 
-/* Specific styles for the Change Password modal */
+/* Change Password Modal */
 #changePasswordModal .input-group {
     display: flex;
-    align-items: center; /* Align items to center vertically */
-    margin-bottom: 15px; /* Adjust space between input groups */
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 #changePasswordModal .input-group label {
-    margin-right: 4px; /* Space between label and input */
+    margin-right: 10px;
     font-size: 14px;
-    flex: 0 0 150px; /* Adjust the width of the label */
+    flex: 0 0 150px;
 }
 
 #changePasswordModal .input-group input {
-    flex: 1; /* Allow input to take remaining space */
-    padding: 10px; /* Adjust padding if needed */
+    flex: 1;
+    padding: 10px;
     border: 2px solid transparent;
     border-radius: 5px;
     background: #555;
     color: #fff;
     font-size: 14px;
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-#changePasswordModal .input-group input:focus, 
+#changePasswordModal .input-group input:focus,
 #changePasswordModal .input-group input:hover {
     outline: none;
     background: #666;
-    color: #fff;
     border-color: white;
 }
 
@@ -555,23 +526,22 @@ footer {
 
 /* Message Modal */
 #messageModal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
 
 #messageModal .modal-content {
     background-color: #333;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 80%;
     max-width: 500px;
     color: white;
     border-radius: 10px;
@@ -592,9 +562,13 @@ footer {
     cursor: pointer;
 }
 
-
-
+/* Update Email Modal */
 #updateEmailModal .input-group input {
-    margin-top: 10px; /* Adjust the value as needed */
+    margin-top: 10px;
 }
 
+/* Font Face */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/font-family/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
