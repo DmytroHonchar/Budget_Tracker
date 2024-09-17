@@ -11,16 +11,15 @@ body {
     min-height: 100vh;
 }
 
-h1, h3 {
+/* Heading Styles */
+h1 {
     font-family: 'Montserrat', sans-serif;
     color: #e91e63;
     font-weight: bold;
-}
-
-h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
+    margin-top: 0;
 }
 
 @media (min-width: 768px) {
@@ -29,20 +28,106 @@ h1 {
     }
 }
 
-h3 {
-    text-align: left;
-    margin-left: 20px;
-    margin-top: 60px;
-    margin-bottom: 10px;
-    font-size: 20px;
+/* Section Holder */
+.section-holder {
+    display: flex;
+    flex-direction: column; /* Stack vertically on mobile */
+    align-items: center;
+    padding: 5px;
 }
 
 @media (min-width: 768px) {
-    h3 {
-        margin-left: 144px;
-        font-size: 22px;
+    .section-holder {
+        flex-direction: row; /* Side by side on larger screens */
+        justify-content: space-evenly;
     }
 }
+
+/* Exchangeholder */
+.exchangeholder {
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px auto;
+    width: 100%;
+    max-width: 300px;
+}
+
+@media (min-width: 768px) {
+    .exchangeholder {
+        width: calc(50% - 20px);
+        margin: 10px;
+    }
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+    background-color: transparent;
+}
+
+/* Ensure hidden cardholder and manage-container are fully hidden */
+
+
+@media (min-width: 768px) {
+    .hidden {
+        display: flex;
+        visibility: hidden;
+        background-color: transparent;
+    }
+}
+
+/* Specific hidden elements */
+.cardholder.hidden,
+.manage-container.hidden,
+.exchangeholder.hidden {
+    background-color: transparent;
+}
+
+/* Adjust h3 within exchangeholder */
+.exchangeholder h3 {
+    margin: 0;
+    text-align: center;
+    color: #e91e63;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Remove background from exchangeholder inside section-holder */
+.section-holder .exchangeholder {
+    background: none;
+}
+
+
+
+@media (min-width: 768px) {
+    .exchangeholder h3 {
+        text-align: left;
+        width: 100%;
+    }
+}
+
+/* Ensure that .hidden overrides .exchangeholder */
+.exchangeholder.hidden {
+    display: none ;
+    background: none;
+}
+
+@media (min-width: 768px) {
+    .exchangeholder.hidden {
+        display: flex;
+        visibility: hidden;
+        background-color: transparent;
+        background-image: none;
+    }
+}
+
+
 
 /* Back Link */
 .back-link {
@@ -88,27 +173,32 @@ h3 {
 
 /* Container */
 .container {
-    margin-top: 60px;
-    margin-bottom: 30px;
+    margin-top: 80px;
+    margin-bottom: 10px;
 }
 
 /* Bigholder and Responsive Layout */
-.bigholder, .bigholder2 {
+.bigholder, .bigholder2, .manage-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stack vertically on mobile */
     align-items: center;
     padding: 5px;
+    margin-top: 0px;
+}
+
+.manage-wrapper {
+    margin-bottom: 30px;
 }
 
 @media (min-width: 768px) {
-    .bigholder, .bigholder2 {
-        flex-direction: row;
+    .bigholder, .bigholder2, .manage-wrapper {
+        flex-direction: row; /* Side by side on larger screens */
         justify-content: space-evenly;
     }
 }
 
-/* Cardholder and Exchangeholder */
-.cardholder, .exchangeholder, #outputTotal, #outputTotal2 {
+/* Cardholder */
+.cardholder {
     background: #333;
     padding: 20px;
     border-radius: 10px;
@@ -123,15 +213,10 @@ h3 {
 }
 
 @media (min-width: 768px) {
-    .cardholder, .exchangeholder, #outputTotal, #outputTotal2 {
+    .cardholder {
         width: calc(50% - 20px);
         margin: 10px;
     }
-}
-
-/* Hidden Class */
-.hidden {
-    visibility: hidden;
 }
 
 /* Input Group */
@@ -193,15 +278,28 @@ button:hover {
 }
 
 /* Total Content Styles */
-#outputTotal, #outputTotal2 {
-    /* Inherit styles from .cardholder */
+.cardholder#outputTotal{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
 }
 
-#outputTotal p, #outputTotal2 p {
-    font-size: 18px;
-    color: #E0E0E0;
-    line-height: 1.5;
+.cardholder#outputTotal2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+}
+
+.cardholder#outputTotal {
+    text-align: center;
     margin: 0;
+    font-size: 18px;
+}
+
+.cardholder#outputTotal2 p {
+    text-align: center;
+    margin: 0;
+    font-size: 18px;
 }
 
 /* Total Container */
@@ -230,21 +328,6 @@ button:hover {
     margin: 2px 0;
 }
 
-/* Manage Wrapper */
-.manage-wrapper {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    padding-left: 20px;
-}
-
-@media (min-width: 768px) {
-    .manage-wrapper {
-        padding-left: 126px;
-    }
-}
-
 /* Manage Container */
 .manage-container {
     background: #333;
@@ -255,7 +338,16 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     max-width: 300px;
+    margin: 10px auto;
+}
+
+@media (min-width: 768px) {
+    .manage-container {
+        width: calc(50% - 20px);
+        margin: 10px;
+    }
 }
 
 /* Split Classes */
@@ -306,6 +398,23 @@ button:hover {
 }
 
 .select-group select:focus, .select-group select:hover {
+    outline: none;
+    background: #666;
+    border-color: white;
+}
+
+/* Input Group Adjustments for Manage Section */
+.adjustInput {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: #555;
+    color: #fff;
+    font-size: 14px;
+}
+
+.adjustInput:focus, .adjustInput:hover {
     outline: none;
     background: #666;
     border-color: white;
@@ -396,7 +505,7 @@ footer {
 }
 
 .logo {
-    width: 100px;
+    width: 200px;
 }
 
 /* Account Icon and Dropdown Menu */
@@ -488,7 +597,7 @@ footer {
     cursor: pointer;
 }
 
-/* Change Password Modal */
+/* Specific styles for the Change Password modal */
 #changePasswordModal .input-group {
     display: flex;
     align-items: center;
@@ -525,41 +634,8 @@ footer {
 }
 
 /* Message Modal */
-#messageModal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
 #messageModal .modal-content {
-    background-color: #333;
-    margin: 15% auto;
-    padding: 20px;
-    width: 80%;
-    max-width: 500px;
-    color: white;
-    border-radius: 10px;
     text-align: center;
-}
-
-#messageModal .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-#messageModal .close:hover,
-#messageModal .close:focus {
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 /* Update Email Modal */

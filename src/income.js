@@ -295,10 +295,7 @@ function updateOverallTotal() {
 // Function to convert totals to pounds
 function convertToPounds() {
     grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
-    document.getElementById('outputTotal2').innerHTML = `
-        Converted Totals:<br>
-        £${formatNumberWithCommas(grandTotalPound)}<br>
-        €${formatNumberWithCommas(grandTotalEuro)}<br>
+    document.getElementById('outputTotal2').querySelector('p:nth-child(2)').textContent = `£${formatNumberWithCommas(grandTotalPound)}
     `;
     console.log('Grand Total in Pounds updated:', { grandTotalPound });
 }
@@ -306,20 +303,22 @@ function convertToPounds() {
 // Function to convert totals to euros
 function convertToEuros() {
     grandTotalEuro = totalEuro + (totalPound * parseFloat(document.getElementById('exchangeRatePounds').value));
-    document.getElementById('outputTotal2').innerHTML = `
-        Converted Totals:<br>
-        £${formatNumberWithCommas(grandTotalPound)}<br>
-        €${formatNumberWithCommas(grandTotalEuro)}<br>
-        
-    `;
+    document.getElementById('outputTotal2').querySelector('p:nth-child(3)').textContent = `€${formatNumberWithCommas(grandTotalEuro)}`;
     console.log('Grand Total in Euros updated:', { grandTotalEuro });
 }
 
 // Event listener for converting to pounds
-document.getElementById('convertToPounds').addEventListener('click', convertToPounds);
+document.getElementById('convertToPounds').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent form submission
+    convertToPounds();
+});
 
 // Event listener for converting to euros
-document.getElementById('convertToEuros').addEventListener('click', convertToEuros);
+document.getElementById('convertToEuros').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent form submission
+    convertToEuros();
+});
+
 
 // Helper function to parse total from the formatted string
 function parseTotal(id, currencySymbol) {
