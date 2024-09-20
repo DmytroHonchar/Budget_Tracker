@@ -51,7 +51,7 @@ body {
     padding: 40px;
     text-align: center;
     width: 100%;
-    max-width: 1400px; /* Increased width for larger screens */
+    max-width: 1400px;
 }
 
 /* Header */
@@ -69,7 +69,7 @@ section {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin-bottom: 30px;
     width: 100%;
-    max-width: 1000px; /* Increased width for large screens */
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -100,18 +100,32 @@ ul li, ol li {
     margin-bottom: 15px;
 }
 
+#about-me {
+    margin-bottom: 10px;
+}
+
+
+/* Footer Section */
+footer {
+    text-align: center;
+    color: #E0E0E0;
+    font-size: 1rem;
+    padding: 5px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
 /* New Responsive Design with Larger Margins */
 @media (max-width: 1200px) {
     .content {
         padding: 30px;
-        max-width: 90%; /* Allow for larger margins */
+        max-width: 90%;
     }
 
     section {
         padding: 25px;
-        max-width: 90%; /* Increased width while maintaining margins */
-        margin-left: auto;
-        margin-right: auto;
+        max-width: 90%;
     }
 
     section h2 {
@@ -132,14 +146,12 @@ ul li, ol li {
 @media (max-width: 1024px) {
     .content {
         padding: 30px;
-        max-width: 85%; /* Larger margin for tablets */
+        max-width: 85%;
     }
 
     section {
         padding: 20px;
-        max-width: 85%; /* Keep wider margins on tablets */
-        margin-left: auto;
-        margin-right: auto;
+        max-width: 85%;
     }
 
     section h2 {
@@ -160,14 +172,12 @@ ul li, ol li {
 @media (max-width: 768px) {
     .content {
         padding: 25px;
-        max-width: 85%; /* Larger margin for smaller screens */
+        max-width: 85%;
     }
 
     section {
         padding: 20px;
         max-width: 85%;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     section h2 {
@@ -188,14 +198,12 @@ ul li, ol li {
 @media (max-width: 480px) {
     .content {
         padding: 20px;
-        max-width: 80%; /* Generous margin for small screens */
+        max-width: 80%;
     }
 
     section {
         padding: 15px;
-        max-width: 80%; /* Increased margin for small screens */
-        margin-left: auto;
-        margin-right: auto;
+        max-width: 80%;
     }
 
     section h2 {
