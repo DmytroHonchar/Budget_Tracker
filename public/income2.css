@@ -643,6 +643,14 @@ footer {
     margin-top: 10px;
 }
 
+.input-group:has(#newEmail) .input-icon{
+    margin-top: 10px;
+}
+
+.manage-wrapper #amount{
+    padding-left: 10px;
+}
+
 /* Font Face */
 @font-face {
     font-family: 'Montserrat';

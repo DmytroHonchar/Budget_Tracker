@@ -299,10 +299,19 @@ app.post('/request-reset', async (req, res) => {
             to: email,
             from: 'passwordreset@yourapp.com',
             subject: 'Password Reset',
-            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-            Please click on the following link, or paste this into your browser to complete the process:\n\n
-            ${resetLink}\n\n
-            If you did not request this, please ignore this email and your password will remain unchanged.\n`
+            text: `Hello,
+
+We received a request to reset the password for your Pocket account.
+
+If you initiated this request, please click the link below or copy and paste it into your browser to reset your password:
+
+Reset your password: ${resetLink}
+For security reasons, this link will expire in 1 hour. If you did not request a password reset, no action is needed. You can safely ignore this email, and your password will remain unchanged.
+
+Thank you for using Pocket!
+
+Best regards,
+The Pocket Team`
         };
 
         await transporter.sendMail(mailOptions);

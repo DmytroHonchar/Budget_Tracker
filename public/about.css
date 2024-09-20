@@ -1,9 +1,10 @@
+/* General Page Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #1e1e1e;
+    background-color: black;
     color: #E0E0E0;
     display: flex;
     flex-direction: column;
@@ -13,25 +14,11 @@ body {
     padding-bottom: 50px;
 }
 
-.container {
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
+/* Back Link */
 .back-link {
     position: absolute;
     top: 20px;
-    left: 10px;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.back-link a {
-    text-decoration: none;
-    color: white;
+    left: 20px;
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
@@ -44,8 +31,14 @@ body {
     transition: all 0.3s ease;
 }
 
+.arrow {
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
 .back-link:hover .arrow {
-    font-size: 10px;
+    font-size: 1.1em;
 }
 
 .back-link:hover img {
@@ -53,223 +46,175 @@ body {
     height: 22px;
 }
 
-back-link:hover a {
-    transform: scale(1.05);
-}
-
-header, main, footer {
-    width: 100%;
+/* Main Content */
+.content {
+    padding: 40px;
     text-align: center;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 1400px; /* Increased width for larger screens */
 }
 
+/* Header */
 header h1 {
-    font-size: 2.5em;
+    color: #E91E63;
     margin-bottom: 20px;
-    color: #e91e63;
+    font-size: 3rem;
 }
 
-main h2 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-    color: #e91e63;
-}
-
-main ul, main ol {
-    text-align: left;
-    margin: 0 auto;
-    padding: 0 20px;
-    list-style: none;
-}
-
-main ul li, main ol li {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-}
-
-main section {
-    margin-bottom: 30px;
-    padding: 20px;
+/* Features, How It Works, and About Me Sections */
+section {
     background: #2e2e2e;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 1000px; /* Increased width for large screens */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-main section h1, main section h2 {
-    margin-top: 0;
+/* Text and Font Sizes */
+section h2 {
+    color: #E91E63;
+    margin-bottom: 15px;
+    font-size: 2rem;
 }
 
-main p, main ul, main ol {
-    color: #d0d0d0;
+ul, ol {
+    text-align: left;
+    padding-left: 30px;
+    font-size: 1.2rem;
+    margin: 0;
 }
 
-
-
-a {
-    color: #e91e63;
-    text-decoration: none;
+ul li, ol li {
+    margin-bottom: 15px;
 }
 
-a:hover {
-    text-decoration: underline;
+/* Ensure that the "About Me" text font size matches other sections */
+#about-me p {
+    font-size: 1.2rem;
+    text-align: left;
+    padding-left: 30px;
+    margin-bottom: 15px;
 }
 
-footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #777;
+/* New Responsive Design with Larger Margins */
+@media (max-width: 1200px) {
+    .content {
+        padding: 30px;
+        max-width: 90%; /* Allow for larger margins */
+    }
+
+    section {
+        padding: 25px;
+        max-width: 90%; /* Increased width while maintaining margins */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    section h2 {
+        font-size: 1.8rem;
+    }
+
+    ul, ol {
+        padding-left: 25px;
+        font-size: 1.1rem;
+    }
+
+    #about-me p {
+        font-size: 1.1rem;
+        padding-left: 25px;
+    }
 }
 
-/* Responsive Design */
+@media (max-width: 1024px) {
+    .content {
+        padding: 30px;
+        max-width: 85%; /* Larger margin for tablets */
+    }
+
+    section {
+        padding: 20px;
+        max-width: 85%; /* Keep wider margins on tablets */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    section h2 {
+        font-size: 1.7rem;
+    }
+
+    ul, ol {
+        padding-left: 20px;
+        font-size: 1.05rem;
+    }
+
+    #about-me p {
+        font-size: 1.05rem;
+        padding-left: 20px;
+    }
+}
+
 @media (max-width: 768px) {
-    header h1 {
-        font-size: 2em;
+    .content {
+        padding: 25px;
+        max-width: 85%; /* Larger margin for smaller screens */
     }
 
-    main h2 {
-        font-size: 1.5em;
+    section {
+        padding: 20px;
+        max-width: 85%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    main ul, main ol {
-        padding: 0 15px;
+    section h2 {
+        font-size: 1.6rem;
     }
 
-    main section {
-        padding: 15px;
+    ul, ol {
+        padding-left: 20px;
+        font-size: 1rem;
     }
 
-    #contact-info ul li a {
-        font-size: 1.1em;
-    }
-
-    .back-link {
-        top: 15px;
-        left: 5px;
-    }
-
-    .back-link a {
-        font-size: 0.9em;
-    }
-
-    .back-link img {
-        width: 18px;
-        height: 18px;
+    #about-me p {
+        font-size: 1rem;
+        padding-left: 20px;
     }
 }
 
 @media (max-width: 480px) {
-    header h1 {
-        font-size: 1.8em;
+    .content {
+        padding: 20px;
+        max-width: 80%; /* Generous margin for small screens */
     }
 
-    main h2 {
-        font-size: 1.3em;
+    section {
+        padding: 15px;
+        max-width: 80%; /* Increased margin for small screens */
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    main ul, main ol {
-        padding: 0 10px;
+    section h2 {
+        font-size: 1.5rem;
     }
 
-    main section {
-        padding: 10px;
+    ul, ol {
+        padding-left: 15px;
+        font-size: 0.95rem;
     }
 
-    #contact-info ul li a {
-        font-size: 1em;
-    }
-
-    .back-link {
-        top: 10px;
-        left: 5px;
-    }
-
-    .back-link a {
-        font-size: 0.8em;
-        margin-left: 5px;
-    }
-
-    .back-link img {
-        width: 16px;
-        height: 16px;
+    #about-me p {
+        font-size: 0.95rem;
+        padding-left: 15px;
     }
 }
 
-@media (min-width: 1024px) {
-    .container {
-        max-width: 1200px;
-    }
-
-    header h1 {
-        font-size: 3em;
-    }
-
-    main h2 {
-        font-size: 2em;
-    }
-
-    main ul, main ol {
-        padding: 0 30px;
-    }
-
-    main section {
-        padding: 30px;
-    }
-
-    #contact-info ul li a {
-        font-size: 1.4em;
-    }
-
-    .back-link {
-        top: 30px;
-        left: 20px;
-    }
-
-    .back-link a {
-        font-size: 1.2em;
-    }
-
-    .back-link img {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-@media (min-width: 1440px) {
-    .container {
-        max-width: 1400px;
-    }
-
-    header h1 {
-        font-size: 3.5em;
-    }
-
-    main h2 {
-        font-size: 2.2em;
-    }
-
-    main ul, main ol {
-        padding: 0 40px;
-    }
-
-    main section {
-        padding: 40px;
-    }
-
-    #contact-info ul li a {
-        font-size: 1.6em;
-    }
-
-    .back-link {
-        top: 35px;
-        left: 25px;
-    }
-
-    .back-link a {
-        font-size: 1.4em;
-    }
-
-    .back-link img {
-        width: 28px;
-        height: 28px;
-    }
+/* Font Face */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/font-family/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
