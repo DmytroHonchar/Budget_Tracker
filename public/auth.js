@@ -1,16 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Toggle password visibility
-    const showPasswordCheckbox = document.getElementById('show-password');
-    if (showPasswordCheckbox) {
-        showPasswordCheckbox.addEventListener('change', () => {
-            const passwordInput = document.getElementById('password');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
-        });
-    }
+    // Determine whether the app is running locally or in production (AWS)
+    const apiUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'    // Local API URL for development
+        : 'http://13.48.43.226';     // Production API URL (AWS EC2 Public IP)
 
     // Function to show messages
     function showMessage(message, isError = false, messageId = 'message') {
@@ -19,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(`Element with id '${messageId}' not found.`);
             return;
         }
-        
+
         messageDiv.textContent = message;
         messageDiv.style.display = 'block';
         if (isError) {
@@ -34,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000); // Hide after 5 seconds
     }
 
-
     // Login Form Submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -44,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://127.0.0.1:3000/login', {
+                const response = await fetch(`${apiUrl}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
@@ -52,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('token', data.token);  // Save JWT token in local storage
                     console.log('Login successful');
                     window.location.href = 'income.html'; // Redirect to income.html after login
                 } else {
@@ -79,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://127.0.0.1:3000/register', {
+                const response = await fetch(`${apiUrl}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password }),
@@ -87,10 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('token', data.token);  // Store JWT token
                     showMessage('Registration successful!', false, 'registerMessage');
                     setTimeout(() => {
-                        window.location.href = 'income.html'; // Redirect to income.html after 2 seconds
+                        window.location.href = 'income.html';  // Redirect after successful registration
                     }, 2000);
                 } else {
                     const errorText = await response.text();
@@ -110,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('email').value;
 
             try {
-                const response = await fetch('http://localhost:3000/request-reset', {
+                const response = await fetch(`${apiUrl}/request-reset`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email }),
@@ -138,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = urlParams.get('token');
 
             try {
-                const response = await fetch('http://localhost:3000/reset-password', {
+                const response = await fetch(`${apiUrl}/reset-password`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token, newPassword }),
@@ -169,11 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = document.getElementById('message').value;
 
             try {
-                const response = await fetch('http://localhost:3000/contact', {
+                const response = await fetch(`${apiUrl}/contact`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, message })
                 });
 
