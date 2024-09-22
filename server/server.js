@@ -33,7 +33,7 @@ const crypto = require('crypto');
 const { Pool } = require('pg');
 const url = require('url');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 3000);
 const jwtSecret = process.env.JWT_SECRET;
 
 // Log environment variables for debugging
