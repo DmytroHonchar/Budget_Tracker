@@ -11,6 +11,9 @@ function loadEnvFile(envFilePath) {
     }
 }
 
+// Log the environment to make sure it's set properly
+console.log("Environment:", process.env.NODE_ENV);
+
 // Check for production environment explicitly
 if (process.env.NODE_ENV === 'production') {
     // AWS Server environment
@@ -24,7 +27,6 @@ if (process.env.NODE_ENV === 'production') {
     loadEnvFile(envFilePath);
 }
 
-
 // Now, require the necessary modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -36,17 +38,27 @@ const crypto = require('crypto');
 const { Pool } = require('pg');
 const url = require('url');
 const app = express();
+
+// Use appropriate port for production and local environments
 const port = process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 3000);
 const jwtSecret = process.env.JWT_SECRET;
 
-// Log environment variables for debugging
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_DATABASE:", process.env.DB_DATABASE);
-console.log("DB_PORT:", process.env.DB_PORT);
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
+// Check for missing environment variables
+if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.JWT_SECRET) {
+    console.error("Missing necessary environment variables! Please check your .env file.");
+    process.exit(1); // Exit the application
+}
+
+// Log environment variables for debugging (only in development)
+if (process.env.NODE_ENV !== 'production') {
+    console.log("DB_USER:", process.env.DB_USER);
+    console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+    console.log("DB_HOST:", process.env.DB_HOST);
+    console.log("DB_DATABASE:", process.env.DB_DATABASE);
+    console.log("DB_PORT:", process.env.DB_PORT);
+    console.log("EMAIL_USER:", process.env.EMAIL_USER);
+    console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
+}
 
 // Create a new instance of the Pool class
 const pool = new Pool({
