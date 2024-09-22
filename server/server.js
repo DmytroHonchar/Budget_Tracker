@@ -1,5 +1,5 @@
-const path = require('path'); // For path operations
-const fs = require('fs'); // For file system operations
+const path = require('path');
+const fs = require('fs');
 
 // Function to load .env file from a given path
 function loadEnvFile(envFilePath) {
@@ -11,16 +11,19 @@ function loadEnvFile(envFilePath) {
     }
 }
 
-// Determine the environment and load the .env file accordingly
+// Check for production environment explicitly
 if (process.env.NODE_ENV === 'production') {
     // AWS Server environment
+    console.log("Running in production mode");
     const envFilePath = path.resolve('/home/ubuntu/Budget_Tracker/.env');
     loadEnvFile(envFilePath);
 } else {
     // Local development
+    console.log("Running in development mode");
     const envFilePath = path.resolve('C:/Users/dmytr/Documents/Budget_Tracker/server/.env');
     loadEnvFile(envFilePath);
 }
+
 
 // Now, require the necessary modules
 const express = require('express');
