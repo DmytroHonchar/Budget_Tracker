@@ -38,7 +38,7 @@ const url = require('url');
 const app = express();
 
 // Use appropriate port for production and local environments
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const jwtSecret = process.env.JWT_SECRET;
 
 // Check for missing environment variables
