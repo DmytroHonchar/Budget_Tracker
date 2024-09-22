@@ -11,17 +11,15 @@ function loadEnvFile(envFilePath) {
     }
 }
 
-// Log the environment to make sure it's set properly
-console.log("Environment:", process.env.NODE_ENV);
+// Log the current NODE_ENV
+console.log("Current NODE_ENV:", process.env.NODE_ENV);
 
 // Check for production environment explicitly
 if (process.env.NODE_ENV === 'production') {
-    // AWS Server environment
     console.log("Running in production mode");
     const envFilePath = path.resolve('/home/ubuntu/Budget_Tracker/.env');
     loadEnvFile(envFilePath);
 } else {
-    // Local development
     console.log("Running in development mode");
     const envFilePath = path.resolve('C:/Users/dmytr/Documents/Budget_Tracker/server/.env');
     loadEnvFile(envFilePath);
