@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchAndDisplayTotals() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/totals', {
+        const response = await fetch('http://localhost:8080/totals', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -256,7 +256,7 @@ function displayCurrentTotals() {
 async function saveTotalsToDatabase() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/updateTotals', {
+        const response = await fetch('http://localhost:8080/updateTotals', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -441,7 +441,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     try {
-        const response = await fetch('http://localhost:3000/change-password', {
+        const response = await fetch('http://localhost:8080/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -465,7 +465,7 @@ document.getElementById('deleteAccountForm').addEventListener('submit', async fu
     event.preventDefault();
     console.log('Delete account form submitted');
     try {
-        const response = await fetch('http://localhost:3000/delete-account', {
+        const response = await fetch('http://localhost:8080/delete-account', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
