@@ -76,8 +76,13 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// CORS Configuration: Allow requests from your EC2 frontend
+app.use(cors({
+    origin: 'http://13.60.241.57', // EC2 public IP or domain
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true
+}));
 // Middleware setup
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -299,9 +304,9 @@ app.post('/request-reset', async (req, res) => {
         await pool.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3', [token, expiration, userId]);
 
         const resetLink = url.format({
-            protocol: 'http',
-            hostname: 'localhost',
-            port: process.env.PORT || 3000,
+            protocol: 'http',  // Use 'https' if you're using SSL in production
+            hostname: apiUrl.replace(/^http:\/\/|https:\/\//, ''),  // Remove protocol for hostname
+            port: process.env.NODE_ENV === 'development' ? (process.env.PORT || 8080) : '',  // Include port in development, exclude in production
             pathname: 'reset-password.html',
             query: { token: token }
         });

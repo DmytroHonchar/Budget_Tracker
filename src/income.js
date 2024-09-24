@@ -13,6 +13,12 @@ let initialTotals = {
     total_cash_euro: 0,
 };
 
+// Set the API URL based on the environment (localhost or production)
+const apiUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:8080'    // Local development
+    : 'http://13.60.241.57';     // Production (AWS EC2 Public IP)
+
+
 // Function to format numbers with commas
 function formatNumberWithCommas(number) {
     return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -221,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchAndDisplayTotals() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/totals', {
+        const response = await fetch('${apiUrl}/totals', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -256,7 +262,7 @@ function displayCurrentTotals() {
 async function saveTotalsToDatabase() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/updateTotals', {
+        const response = await fetch('${apiUrl}/updateTotals', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -279,18 +285,6 @@ async function saveTotalsToDatabase() {
         console.error('Error saving totals:', error);
     }
 }
-
-// // Function to update the overall totals in the display
-// function updateOverallTotal() {
-//     totalPound = initialTotals.total_card_pounds + initialTotals.total_cash_pounds;
-//     totalEuro = initialTotals.total_card_euro + initialTotals.total_cash_euro;
-
-//     document.getElementById('outputTotal').innerHTML = `
-//         Totals:<br>
-//         £${formatNumberWithCommas(totalPound)}<br>
-//         €${formatNumberWithCommas(totalEuro)}
-//     `;
-// }
 
 function updateOverallTotal() {
     totalPound = initialTotals.total_card_pounds + initialTotals.total_cash_pounds;
@@ -425,7 +419,7 @@ document.getElementById('updateEmailForm').addEventListener('submit', async func
     event.preventDefault();
     const newEmail = document.getElementById('newEmail').value;
     try {
-        const response = await fetch('http://localhost:3000/update-email', {
+        const response = await fetch('${apiUrl}/update-email', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -450,7 +444,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     try {
-        const response = await fetch('http://localhost:8080/change-password', {
+        const response = await fetch('${apiUrl}/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -474,7 +468,7 @@ document.getElementById('deleteAccountForm').addEventListener('submit', async fu
     event.preventDefault();
     console.log('Delete account form submitted');
     try {
-        const response = await fetch('http://localhost:8080/delete-account', {
+        const response = await fetch('${apiUrl}/delete-account', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
