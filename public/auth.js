@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Relative API URL (browser automatically uses the same host and port)
-    const apiUrl = '';
+    const apiUrl = window.location.origin;
 
     // Function to show messages
     function showMessage(message, isError = false, messageId = 'message') {
