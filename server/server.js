@@ -77,11 +77,16 @@ const transporter = nodemailer.createTransport({
 });
 
 // CORS Configuration: Allow requests from your EC2 frontend
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? ['http://your-production-domain.com']
+    : ['http://localhost:8080', 'http://127.0.0.1:8080'];
+
 app.use(cors({
-    origin: 'http://13.60.241.57', // EC2 public IP or domain
+    origin: allowedOrigins,
     methods: 'GET,POST,PUT,DELETE',
     credentials: true
 }));
+
 // Middleware setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

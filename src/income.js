@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchAndDisplayTotals() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('${apiUrl}/totals', {
+        const response = await fetch(`${apiUrl}/totals`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -262,7 +262,7 @@ function displayCurrentTotals() {
 async function saveTotalsToDatabase() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('${apiUrl}/updateTotals', {
+        const response = await fetch(`${apiUrl}/updateTotals`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -419,7 +419,7 @@ document.getElementById('updateEmailForm').addEventListener('submit', async func
     event.preventDefault();
     const newEmail = document.getElementById('newEmail').value;
     try {
-        const response = await fetch('${apiUrl}/update-email', {
+        const response = await fetch(`${apiUrl}/update-email`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
