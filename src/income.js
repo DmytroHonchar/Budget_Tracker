@@ -16,7 +16,7 @@ let initialTotals = {
 // Set the API URL based on the environment (localhost or production)
 const apiUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:8080'    // Local development
-    : 'http://13.61.15.104';     // Production (AWS EC2 Public IP)
+    : 'http://13.61.15.104:8080';     // Production (AWS EC2 Public IP)
 
 
 // Function to format numbers with commas
