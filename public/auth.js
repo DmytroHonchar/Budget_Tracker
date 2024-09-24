@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Determine whether the app is running locally or in production (AWS)
     const apiUrl = window.location.hostname === 'localhost'
         ? 'http://localhost:8080'    // Local API URL for development
-        : 'http://16.171.170.111';     // Production API URL (AWS EC2 Public IP)
+        : 'http://13.61.15.104';     // Production API URL (AWS EC2 Public IP)
 
     // Function to show messages
     function showMessage(message, isError = false, messageId = 'message') {
