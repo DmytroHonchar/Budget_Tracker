@@ -675,6 +675,12 @@ footer {
     }
 }
 
+.cardholder p {
+    margin: 0; /* Adjust as needed */
+    padding: 0;    /* Ensure no extra padding */
+    text-align: left; /* Ensure consistent alignment */
+}
+
 /* Font Face */
 @font-face {
     font-family: 'Montserrat';

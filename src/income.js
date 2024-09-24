@@ -280,17 +280,26 @@ async function saveTotalsToDatabase() {
     }
 }
 
-// Function to update the overall totals in the display
+// // Function to update the overall totals in the display
+// function updateOverallTotal() {
+//     totalPound = initialTotals.total_card_pounds + initialTotals.total_cash_pounds;
+//     totalEuro = initialTotals.total_card_euro + initialTotals.total_cash_euro;
+
+//     document.getElementById('outputTotal').innerHTML = `
+//         Totals:<br>
+//         £${formatNumberWithCommas(totalPound)}<br>
+//         €${formatNumberWithCommas(totalEuro)}
+//     `;
+// }
+
 function updateOverallTotal() {
     totalPound = initialTotals.total_card_pounds + initialTotals.total_cash_pounds;
     totalEuro = initialTotals.total_card_euro + initialTotals.total_cash_euro;
 
-    document.getElementById('outputTotal').innerHTML = `
-        Totals:<br>
-        £${formatNumberWithCommas(totalPound)}<br>
-        €${formatNumberWithCommas(totalEuro)}
-    `;
+    document.getElementById('totalPoundOutput').textContent = `£${formatNumberWithCommas(totalPound)}`;
+    document.getElementById('totalEuroOutput').textContent = `€${formatNumberWithCommas(totalEuro)}`;
 }
+
 
 // Function to convert totals to pounds
 function convertToPounds() {
@@ -352,10 +361,10 @@ function updateTotal(category) {
     if (income[category] && income[category].length > 0) {
         total = income[category].reduce((acc, val) => acc + val, 0);
     }
-    const categoryText = category.includes('card') ? 'card' : 'cash';
     const currencySymbol = category.includes('£') ? '£' : '€';
-    document.getElementById(`total${category}`).textContent = `Total ${categoryText}: ${currencySymbol}${formatNumberWithCommas(total)}`;
+    document.getElementById(`total${category}`).textContent = `${currencySymbol}${formatNumberWithCommas(total)}`;
 }
+
 
 // Event listener for logout
 document.getElementById('logout').addEventListener('click', function(event) {
