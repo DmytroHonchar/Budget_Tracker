@@ -312,13 +312,8 @@ app.post('/request-reset', async (req, res) => {
 
         await pool.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3', [token, expiration, userId]);
 
-        const resetLink = url.format({
-            protocol: 'http',  // Use 'https' if you're using SSL in production
-            hostname: apiUrl.replace(/^http:\/\/|https:\/\//, ''),  // Remove protocol for hostname
-            port: process.env.NODE_ENV === 'development' ? (process.env.PORT || 8080) : '',  // Include port in development, exclude in production
-            pathname: 'reset-password.html',
-            query: { token: token }
-        });
+        // Construct the reset link using req.protocol and req.headers.host
+        const resetLink = `${req.protocol}://${req.headers.host}/reset-password.html?token=${token}`;
 
         console.log(`Password reset link: ${resetLink}`);
 
@@ -333,6 +328,7 @@ We received a request to reset the password for your Pocket account.
 If you initiated this request, please click the link below or copy and paste it into your browser to reset your password:
 
 Reset your password: ${resetLink}
+
 For security reasons, this link will expire in 1 hour. If you did not request a password reset, no action is needed. You can safely ignore this email, and your password will remain unchanged.
 
 Thank you for using Pocket!
@@ -348,6 +344,7 @@ The Pocket Team`
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.post('/reset-password', async (req, res) => {
     console.log('/reset-password endpoint called');
