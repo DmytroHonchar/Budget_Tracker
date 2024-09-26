@@ -82,7 +82,7 @@ const transporter = nodemailer.createTransport({
 
 // CORS Configuration: Allow requests from your EC2 frontend
 const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['http://13.61.15.104']  // Public IP or your domain in production
+    ? ['https://gopocket.co.uk', 'https://www.gopocket.co.uk']  
     : ['http://localhost:8080', 'http://127.0.0.1:8080'];
 
 app.use(cors({

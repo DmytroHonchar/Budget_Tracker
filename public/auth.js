@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Relative API URL (browser automatically uses the same host and port)
     const apiUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:8080'
-    : 'http://13.61.15.104:8080';
+    : 'https://gopocket.co.uk';;
 
     // Show Password Toggle
 const showPasswordCheckbox = document.getElementById('show-password');
