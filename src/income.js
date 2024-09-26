@@ -444,7 +444,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     try {
-        const response = await fetch('${apiUrl}/change-password', {
+        const response = await fetch(`${apiUrl}/change-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -468,7 +468,7 @@ document.getElementById('deleteAccountForm').addEventListener('submit', async fu
     event.preventDefault();
     console.log('Delete account form submitted');
     try {
-        const response = await fetch('${apiUrl}/delete-account', {
+        const response = await fetch(`${apiUrl}/delete-account`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

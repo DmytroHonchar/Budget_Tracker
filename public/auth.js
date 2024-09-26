@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     ? 'http://localhost:8080'
     : 'http://13.61.15.104:8080';
 
+    // Show Password Toggle
+const showPasswordCheckbox = document.getElementById('show-password');
+if (showPasswordCheckbox) {
+    showPasswordCheckbox.addEventListener('change', function() {
+        const passwordField = document.getElementById('password');
+        if (this.checked) {
+            passwordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+        }
+    });
+}
+
 
     // Function to show messages
     function showMessage(message, isError = false, messageId = 'message') {
