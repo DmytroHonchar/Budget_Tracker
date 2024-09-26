@@ -63,7 +63,7 @@ if (showPasswordCheckbox) {
                 } else {
                     const errorText = await response.text();
                     if (response.status === 401) {
-                        showMessage('Invalid credentials. Please check your email and password.', true, 'loginMessage');
+                        showMessage('Please check your email and password.', true, 'loginMessage');
                     } else {
                         showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
                     }
