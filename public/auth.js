@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Relative API URL (browser automatically uses the same host and port)
-    const apiUrl = 'http://13.61.15.104:8080'; // Replace with your backend's public IP and port
+    const apiUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:8080'
+    : 'http://13.61.15.104:8080';
 
 
     // Function to show messages
