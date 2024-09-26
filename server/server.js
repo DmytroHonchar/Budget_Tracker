@@ -82,11 +82,19 @@ const transporter = nodemailer.createTransport({
 
 // CORS Configuration: Allow requests from your EC2 frontend
 const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['http://your-production-domain.com']
+    ? ['http://13.61.15.104']  // Public IP or your domain in production
     : ['http://localhost:8080', 'http://127.0.0.1:8080'];
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (such as mobile apps or Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     methods: 'GET,POST,PUT,DELETE',
     credentials: true
 }));
