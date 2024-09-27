@@ -59,7 +59,7 @@ if (showPasswordCheckbox) {
                     const data = await response.json();
                     localStorage.setItem('token', data.token);  // Save JWT token in local storage
                     console.log('Login successful');
-                    window.location.href = 'income.html'; // Redirect to income.html after login
+                    window.location.href = '/income'; // Redirect to income.html after login
                 } else {
                     const errorText = await response.text();
                     if (response.status === 401) {
@@ -95,7 +95,7 @@ if (showPasswordCheckbox) {
                     localStorage.setItem('token', data.token);  // Store JWT token
                     showMessage('Registration successful!', false, 'registerMessage');
                     setTimeout(() => {
-                        window.location.href = 'income.html';  // Redirect after successful registration
+                        window.location.href = '/income';  // Redirect after successful registration
                     }, 2000);
                 } else {
                     const errorText = await response.text();
@@ -152,7 +152,7 @@ if (showPasswordCheckbox) {
                 if (response.ok) {
                     showMessage('Password has been reset successfully', false, 'resetPasswordMessage');
                     setTimeout(() => {
-                        window.location.href = 'login.html';
+                        window.location.href = '/login';
                     }, 2000);
                 } else {
                     const errorText = await response.text();

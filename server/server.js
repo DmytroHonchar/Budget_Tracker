@@ -119,6 +119,40 @@ app.use((req, res, next) => {
     next();
 });
 
+// Routes for clean URLs (without .html extensions) to serve specific HTML files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(staticPath, 'welcome.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(staticPath, 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(staticPath, 'register.html'));
+});
+
+app.get('/income', (req, res) => {
+    res.sendFile(path.join(staticPath, 'income.html'));
+});
+
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(staticPath, 'contact.html'));
+});
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(staticPath, 'about.html'));
+});
+
+app.get('/request-reset', (req, res) => {
+    res.sendFile(path.join(staticPath, 'request-reset.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(staticPath, 'reset-password.html'));
+});
+
+
 // Middleware to protect routes
 const authenticateToken = (req, res, next) => {
     console.log('authenticateToken middleware called');

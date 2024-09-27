@@ -364,7 +364,7 @@ function updateTotal(category) {
 document.getElementById('logout').addEventListener('click', function(event) {
     event.preventDefault();
     localStorage.removeItem('token');
-    window.location.href = 'login.html'; // Redirect to login page after logout
+    window.location.href = '/login'; // Redirect to login page after logout
 });
 
 // JavaScript for account actions
