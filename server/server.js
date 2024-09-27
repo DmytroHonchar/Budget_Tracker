@@ -355,7 +355,7 @@ app.post('/request-reset', async (req, res) => {
         await pool.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3', [token, expiration, userId]);
 
         // Construct the reset link using req.protocol and req.headers.host
-        const resetLink = `${req.protocol}://${req.headers.host}/reset-password.html?token=${token}`;
+        const resetLink = `${req.protocol}://${req.headers.host}/reset-password?token=${token}`;
 
         console.log(`Password reset link: ${resetLink}`);
 
