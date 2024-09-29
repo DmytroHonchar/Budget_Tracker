@@ -1,3 +1,5 @@
+// server.js
+
 const path = require('path');
 const fs = require('fs');
 
@@ -25,7 +27,8 @@ if (process.env.NODE_ENV === 'production') {
     loadEnvFile(envFilePath);
 }
 
-// Now, require the necessary modules
+// The necessary modules
+const passwordValidator = require('password-validator');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -35,6 +38,8 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Pool } = require('pg');
 const url = require('url');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const app = express();
 
 // Use appropriate port for production and local environments
@@ -58,6 +63,38 @@ if (process.env.NODE_ENV !== 'production') {
     console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
 }
 
+app.use(helmet());
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "https:", "'unsafe-inline'"],  // Allow CSS from self and HTTPS
+        scriptSrc: ["'self'", "https:", "'unsafe-inline'"],  // Allow scripts from self and HTTPS
+        imgSrc: ["'self'", "data:", "https:"],  // Allow images from self, HTTPS, and data URIs
+    }
+}));
+app.use(helmet.frameguard({ action: 'deny' }));  // Prevents clickjacking
+
+app.use(helmet.xssFilter());
+app.use(helmet.referrerPolicy({ policy: 'no-referrer' }));
+app.use(helmet.hsts({
+    maxAge: 31536000,  // 1 year
+    includeSubDomains: true,
+    preload: true
+}));
+app.use(helmet.noSniff());
+app.use(helmet.frameguard({ action: 'sameorigin' }));
+
+// Cookie Parser
+app.use(cookieParser());
+
+// Body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Determine if SSL should be enabled based on the environment
+const sslConfig = process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
+
 // Create a new instance of the Pool class
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -65,11 +102,8 @@ const pool = new Pool({
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false, // Accept self-signed certificates
-    },
+    ssl: sslConfig,
 });
-
 
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -82,7 +116,7 @@ const transporter = nodemailer.createTransport({
 
 // CORS Configuration: Allow requests from your EC2 frontend
 const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['https://gopocket.co.uk', 'https://www.gopocket.co.uk']  
+    ? ['https://gopocket.co.uk', 'https://www.gopocket.co.uk']
     : ['http://localhost:8080', 'http://127.0.0.1:8080'];
 
 app.use(cors({
@@ -100,6 +134,7 @@ app.use(cors({
 }));
 
 // Middleware setup
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -152,29 +187,46 @@ app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(staticPath, 'reset-password.html'));
 });
 
-
 // Middleware to protect routes
 const authenticateToken = (req, res, next) => {
     console.log('authenticateToken middleware called');
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(401); // If there's no token
+    const token = req.cookies.jwt;  // Access token is stored in cookies
 
+    if (!token) return res.sendStatus(401); // No token, unauthorized
+
+    // Verify the JWT token
     jwt.verify(token, jwtSecret, (err, user) => {
-        if (err) return res.sendStatus(403); // If token is not valid
-        req.user = user;
-        next();
+        if (err) return res.sendStatus(403); // Invalid token, forbidden
+        req.user = user;  // Attach user to the request object
+        next();  // Proceed to the next middleware or route handler
     });
 };
 
-// Register endpoint
+// Password validation schema
+const schema = new passwordValidator();
+schema
+    .is().min(8)                                    // Minimum length 8 characters
+    .is().max(100)                                  // Maximum length 100 characters
+    .has().uppercase()                              // Must have at least one uppercase letter
+    .has().lowercase()                              // Must have at least one lowercase letter
+    .has().digits(1)                                // Must have at least one digit
+    .has().not().spaces();                          // Should not contain spaces
+
+// Registration endpoint
 app.post('/register', async (req, res) => {
     console.log('/register endpoint called');
     const { username, email, password } = req.body;
+
+    // Validate password strength
+    if (!schema.validate(password)) {
+        return res.status(400).send('Password does not meet security requirements.');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
+        // Insert the new user into the database
         const result = await pool.query(
             'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id',
             [username, email, hashedPassword]
@@ -184,17 +236,43 @@ app.post('/register', async (req, res) => {
         // Create initial totals entry for the new user
         await pool.query('INSERT INTO totals (user_id, total_card_pounds, total_card_euro, total_cash_pounds, total_cash_euro) VALUES ($1, 0, 0, 0, 0)', [userId]);
 
+        // Generate a JWT token
         const token = jwt.sign({ userId: userId }, jwtSecret, { expiresIn: '1h' });
 
-        res.status(201).json({ token });
+        // Generate a refresh token
+        const refreshToken = crypto.randomBytes(40).toString('hex');
+
+        // Store refresh token in the database with the user id
+        await pool.query('UPDATE users SET refresh_token = $1 WHERE id = $2', [refreshToken, userId]);
+
+        // Set the tokens in HTTP-only cookies
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000 // 1 hour for access token
+        };
+
+        const refreshCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days for refresh token
+        };
+
+        // Send both tokens
+        res.cookie('jwt', token, cookieOptions); // Access token
+        res.cookie('refreshToken', refreshToken, refreshCookieOptions); // Refresh token
+
+        res.status(201).json({ message: 'Registration successful!' });
     } catch (error) {
         console.error('Error registering user:', error.message);
 
+        // Handle specific errors like duplicate email or username
         if (error.message.includes('users_email_key')) {
             res.status(400).send('A user with this email already exists.');
         } else if (error.message.includes('users_username_key')) {
             res.status(400).send('A user with this username already exists.');
         } else {
+            // Catch-all for unexpected errors
             res.status(500).send('Internal Server Error');
         }
     }
@@ -210,13 +288,108 @@ app.post('/login', async (req, res) => {
         const user = result.rows[0];
 
         if (user && await bcrypt.compare(password, user.password_hash)) {
-            const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
-            res.json({ token });
+            const accessToken = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+
+            // Generate a refresh token
+            const refreshToken = crypto.randomBytes(40).toString('hex');
+
+            // Store refresh token in the database with the user id
+            await pool.query('UPDATE users SET refresh_token = $1 WHERE id = $2', [refreshToken, user.id]);
+
+            // Set the tokens in HTTP-only cookies
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 3600000 // 1 hour for access token
+            };
+
+            const refreshCookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days for refresh token
+            };
+
+            // Send both tokens
+            res.cookie('jwt', accessToken, cookieOptions); // Access token
+            res.cookie('refreshToken', refreshToken, refreshCookieOptions); // Refresh token
+
+            res.status(200).json({ message: 'Login successful!' });
+
         } else {
-            res.status(401).send('Invalid credentials');
+            res.status(401).json({ error: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error('Error logging in:', error.message);
+        console.error('Error logging in:', error); // Log the full error object
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Refresh token endpoint
+app.post('/refresh-token', async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(401).send('No refresh token provided');
+    }
+
+    try {
+        // Fetch user with this refresh token
+        const result = await pool.query('SELECT * FROM users WHERE refresh_token = $1', [refreshToken]);
+        const user = result.rows[0];
+
+        if (!user) {
+            return res.status(403).send('Invalid refresh token');
+        }
+
+        // Invalidate the old refresh token
+        const newRefreshToken = crypto.randomBytes(40).toString('hex');
+        await pool.query('UPDATE users SET refresh_token = $1 WHERE id = $2', [newRefreshToken, user.id]);
+
+        // Generate a new access token
+        const newAccessToken = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+
+        // Send the new tokens
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000 // 1 hour expiry
+        };
+
+        const refreshCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days expiry
+        };
+
+        res.cookie('jwt', newAccessToken, cookieOptions);
+        res.cookie('refreshToken', newRefreshToken, refreshCookieOptions);
+        res.status(200).json({ message: 'Access token refreshed!' });
+
+    } catch (error) {
+        console.error('Error refreshing token:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Logout endpoint
+app.post('/logout', async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(400).send('No refresh token found');
+    }
+
+    try {
+        // Invalidate the refresh token
+        await pool.query('UPDATE users SET refresh_token = NULL WHERE refresh_token = $1', [refreshToken]);
+
+        // Clear both access token and refresh token cookies
+        res.clearCookie('jwt', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        res.clearCookie('refreshToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+        res.status(200).send('Logged out successfully');
+    } catch (error) {
+        console.error('Error during logout:', error.message);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -387,7 +560,6 @@ The Pocket Team`
     }
 });
 
-
 app.post('/reset-password', async (req, res) => {
     console.log('/reset-password endpoint called');
     const { token, newPassword } = req.body;
@@ -402,6 +574,11 @@ app.post('/reset-password', async (req, res) => {
         if (Date.now() > user.reset_password_expires) {
             console.error('Password reset token has expired');
             return res.status(400).send('Password reset token has expired');
+        }
+
+        // Validate new password strength
+        if (!schema.validate(newPassword)) {
+            return res.status(400).send('Password does not meet security requirements.');
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -442,4 +619,3 @@ app.post('/contact', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-

@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ... (other head elements) ... -->
     <link rel="stylesheet" href="register.css">
     <title>Register</title>
-    <!-- Favicon setup for standard browsers, modern browsers, and iOS devices -->
-<link rel="icon" href="/pics/favicon.ico" type="image/x-icon">
-<link rel="icon" type="image/png" sizes="32x32" href="/pics/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/pics/apple-touch-icon.png">
-
+    <!-- Favicon setup -->
 </head>
 <body>
     <div class="back-link">
@@ -32,20 +27,29 @@
                 </span>
                 <input type="email" id="email" name="email" placeholder="Email" required>
             </div>
-            <div class="input-group">
-                <span class="input-icon">
-                    <img src="/pics/key.png" alt="Password Icon">
-                </span>
-                <input type="password" id="password" name="password" placeholder="Password" required>
+            <!-- Wrap the password input and feedback in a container -->
+            <div class="input-container">
+                <div class="input-group">
+                    <span class="input-icon">
+                        <img src="/pics/key.png" alt="Password Icon">
+                    </span>
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" required>
+                </div>
+                
             </div>
+         
             <div class="checkbox-group">
                 <input type="checkbox" id="show-password">
                 <label for="show-password">Show Password</label>
             </div>
-            <button type="submit">Register</button>
+            <button type="submit" id="submitBtn" disabled>Register</button>
         </form>
     </div>
-    <div id="registerMessage" class="hidden"></div> <!-- This is the message div -->
+
+       <!-- Password feedback placed outside the input-group -->
+       <div id="passwordFeedback"></div>
+    
+    <div id="registerMessage" class="hidden"></div> <!-- Message div -->
 
     <script src="/auth.js"></script>
 </body>
