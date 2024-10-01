@@ -55,10 +55,6 @@ A full-stack web application designed to help users manage their personal financ
 
 Contributions are welcome! If you'd like to contribute to the project, please fork the repository and submit a pull request.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 
 - [Node.js](https://nodejs.org/)
