@@ -363,8 +363,12 @@ function updateTotal(category) {
 // Event listener for logout
 document.getElementById('logout').addEventListener('click', function(event) {
     event.preventDefault();
-    localStorage.removeItem('token');
-    window.location.href = '/login'; // Redirect to login page after logout
+    localStorage.removeItem('token'); // Remove token
+    fetch('/logout', { method: 'POST' }) // Call the logout API
+        .then(() => {
+            window.location.href = '/login'; // Redirect after logout
+        })
+        .catch(err => console.error('Error during logout:', err));
 });
 
 // JavaScript for account actions

@@ -40,6 +40,7 @@ const { Pool } = require('pg');
 const url = require('url');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const app = express();
 
 // Use appropriate port for production and local environments
@@ -157,6 +158,19 @@ app.use((req, res, next) => {
 // Routes for clean URLs (without .html extensions) to serve specific HTML files
 app.get('/', (req, res) => {
     res.sendFile(path.join(staticPath, 'welcome.html'));
+});
+
+// Initialize rate limiter store
+const MemoryStore = rateLimit.MemoryStore;
+const loginLimiterStore = new MemoryStore();
+
+// Rate limiter for login
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login requests per windowMs
+    message: 'Too many login attempts, please try again later.',
+    store: loginLimiterStore, // Use memory store
+    keyGenerator: (req) => req.ip // Track attempts per IP address
 });
 
 app.get('/login', (req, res) => {
@@ -279,7 +293,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/login', async (req, res) => {
+app.post('/login',loginLimiter, async (req, res) => {
     console.log('/login endpoint called');
     const { email, password } = req.body;
 
@@ -374,14 +388,20 @@ app.post('/refresh-token', async (req, res) => {
 // Logout endpoint
 app.post('/logout', async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
+    const userIP = req.ip; // Get the user's IP address
 
     if (!refreshToken) {
         return res.status(400).send('No refresh token found');
     }
 
     try {
-        // Invalidate the refresh token
+        // Invalidate the refresh token in the database
         await pool.query('UPDATE users SET refresh_token = NULL WHERE refresh_token = $1', [refreshToken]);
+
+        // Reset the rate limiter for this IP
+        loginLimiterStore.resetKey(userIP, () => {
+            console.log(`Rate limiter reset for IP: ${userIP}`);
+        });
 
         // Clear both access token and refresh token cookies
         res.clearCookie('jwt', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });

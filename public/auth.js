@@ -100,27 +100,28 @@ if (passwordInput && passwordFeedback && submitBtn) {
     });
 }
 
-    // Function to show messages
-    function showMessage(message, isError = false, messageId = 'message') {
-        const messageDiv = document.getElementById(messageId);
-        if (!messageDiv) {
-            console.error(`Element with id '${messageId}' not found.`);
-            return;
-        }
-
-        messageDiv.textContent = message;
-        messageDiv.style.display = 'block';
-        if (isError) {
-            messageDiv.classList.add('error');
-            messageDiv.classList.remove('success');
-        } else {
-            messageDiv.classList.add('success');
-            messageDiv.classList.remove('error');
-        }
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000); // Hide after 5 seconds
+// Function to show messages
+function showMessage(message, isError = false, messageId = 'loginMessage') {
+    const messageDiv = document.getElementById(messageId);
+    if (!messageDiv) {
+        console.error(`Element with id '${messageId}' not found.`);
+        return;
     }
+
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    if (isError) {
+        messageDiv.classList.add('error');
+        messageDiv.classList.remove('success');
+    } else {
+        messageDiv.classList.add('success');
+        messageDiv.classList.remove('error');
+    }
+
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000); // Hide after 5 seconds
+}
 
     // Register Form Submission
     const registerForm = document.getElementById('registerForm');
@@ -153,37 +154,40 @@ if (passwordInput && passwordFeedback && submitBtn) {
         });
     }
 
-    // Login Form Submission
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+// Login Form Submission
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-            try {
-                const response = await fetchWithAuth(`${apiUrl}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }),
-                });
+        try {
+            // Use fetch directly instead of fetchWithAuth
+            const response = await fetch(`${apiUrl}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Ensure cookies are included
+                body: JSON.stringify({ email, password }),
+            });
 
-                if (response.ok) {
-                    console.log('Login successful');
-                    window.location.href = '/income'; // Redirect to income.html after login
+            if (response.ok) {
+                console.log('Login successful');
+                window.location.href = '/income'; // Redirect to income.html after login
+            } else {
+                const errorText = await response.text();
+                if (response.status === 401) {
+                    showMessage('Please check your email and password.', true, 'loginMessage');
                 } else {
-                    const errorText = await response.text();
-                    if (response.status === 401) {
-                        showMessage('Please check your email and password.', true, 'loginMessage');
-                    } else {
-                        showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
-                    }
+                    showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
                 }
-            } catch (error) {
-                showMessage(`An error occurred: ${error.message}`, true, 'loginMessage');
             }
-        });
-    }
+        } catch (error) {
+            showMessage(`An error occurred: ${error.message}`, true, 'loginMessage');
+        }
+    });
+}
+
 
     // Request Password Reset Form Submission
     const requestResetForm = document.getElementById('requestResetForm');
