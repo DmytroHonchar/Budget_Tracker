@@ -529,7 +529,7 @@ app.post('/delete-account', authenticateToken, async (req, res) => {
 });
 
 // Password reset endpoints
-app.post('/request-reset', async (req, res) => {
+app.post('/request-reset', loginLimiter, async (req, res) => {
     console.log('/request-reset endpoint called');
     const { email } = req.body;
     try {
@@ -541,11 +541,15 @@ app.post('/request-reset', async (req, res) => {
 
         const userId = result.rows[0].id;
         const token = crypto.randomBytes(20).toString('hex');
-        const expiration = Date.now() + 3600000; // 1 hour from now
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+        const expiration = Date.now() + 15 * 60 * 1000; //  15 minutes
 
         console.log(`Generated token: ${token}, Expiration: ${expiration}`);
 
-        await pool.query('UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3', [token, expiration, userId]);
+        await pool.query(
+            'UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE id = $3',
+            [hashedToken, expiration, userId]
+        );
 
         // Construct the reset link using req.protocol and req.headers.host
         const resetLink = `${req.protocol}://${req.headers.host}/reset-password?token=${token}`;
@@ -580,11 +584,19 @@ The Pocket Team`
     }
 });
 
+// Password reset endpoint
 app.post('/reset-password', async (req, res) => {
     console.log('/reset-password endpoint called');
     const { token, newPassword } = req.body;
+    
     try {
-        const result = await pool.query('SELECT id, reset_password_expires FROM users WHERE reset_password_token = $1', [token]);
+        // Hash the received token to match it with the hashed token in the database
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        // Find the user with the matching hashed token
+        const result = await pool.query('SELECT id, reset_password_expires FROM users WHERE reset_password_token = $1', [hashedToken]);
+        
+        // If no user found or token expired
         if (result.rows.length === 0) {
             console.error('Invalid or expired password reset token');
             return res.status(400).send('Invalid or expired password reset token');
@@ -601,7 +613,10 @@ app.post('/reset-password', async (req, res) => {
             return res.status(400).send('Password does not meet security requirements.');
         }
 
+        // Hash the new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update user's password and remove the reset token and expiry
         await pool.query('UPDATE users SET password_hash = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2', [hashedPassword, user.id]);
 
         res.status(200).send('Password has been reset');
@@ -610,7 +625,6 @@ app.post('/reset-password', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 // Contact form endpoint
 app.post('/contact', async (req, res) => {
     const { name, email, message } = req.body;
