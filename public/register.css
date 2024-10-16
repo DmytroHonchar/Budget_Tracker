@@ -224,6 +224,7 @@ button[type="submit"]:hover {
 @media (max-width: 768px) {
     .register-container {
         padding: 30px;
+        width: 90%; /* Ensures the container scales properly on smaller screens */
     }
     .input-group input {
         padding: 10px 10px 10px 35px;
