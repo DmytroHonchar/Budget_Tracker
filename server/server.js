@@ -37,7 +37,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Pool } = require('pg');
-const url = require('url');
+const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -93,6 +93,22 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// CSRF Protection Middleware
+const csrfProtection = csrf({ cookie: true });
+
+// Remove global application of CSRF middleware
+// Do not use app.use(csrfProtection);
+
+// Create middleware to set CSRF token cookie
+function setCsrfTokenCookie(req, res, next) {
+    res.cookie('XSRF-TOKEN', req.csrfToken(), {
+        secure: process.env.NODE_ENV === 'production',  // Use secure cookies in production
+        sameSite: 'Strict',  // CSRF tokens are only sent to the same site
+        httpOnly: false      // Make it accessible by JavaScript
+    });
+    next();
+}
+
 // Determine if SSL should be enabled based on the environment
 const sslConfig = process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
 
@@ -134,11 +150,6 @@ app.use(cors({
     credentials: true
 }));
 
-// Middleware setup
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // Serve static files from 'public' and 'src' directories
 const staticPath = path.resolve(__dirname, '..', 'public');
 const srcPath = path.resolve(__dirname, '..', 'src');
@@ -155,11 +166,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes for clean URLs (without .html extensions) to serve specific HTML files
-app.get('/', (req, res) => {
-    res.sendFile(path.join(staticPath, 'welcome.html'));
-});
-
 // Initialize rate limiter store
 const MemoryStore = rateLimit.MemoryStore;
 const loginLimiterStore = new MemoryStore();
@@ -171,34 +177,6 @@ const loginLimiter = rateLimit({
     message: 'Too many login attempts, please try again later.',
     store: loginLimiterStore, // Use memory store
     keyGenerator: (req) => req.ip // Track attempts per IP address
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(staticPath, 'login.html'));
-});
-
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(staticPath, 'register.html'));
-});
-
-app.get('/income', (req, res) => {
-    res.sendFile(path.join(staticPath, 'income.html'));
-});
-
-app.get('/contact', (req, res) => {
-    res.sendFile(path.join(staticPath, 'contact.html'));
-});
-
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(staticPath, 'about.html'));
-});
-
-app.get('/request-reset', (req, res) => {
-    res.sendFile(path.join(staticPath, 'request-reset.html'));
-});
-
-app.get('/reset-password', (req, res) => {
-    res.sendFile(path.join(staticPath, 'reset-password.html'));
 });
 
 // Middleware to protect routes
@@ -227,8 +205,41 @@ schema
     .has().digits(1)                                // Must have at least one digit
     .has().not().spaces();                          // Should not contain spaces
 
+// Routes for clean URLs (without .html extensions) to serve specific HTML files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(staticPath, 'welcome.html'));
+});
+
+app.get('/login', csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'login.html'));
+});
+
+app.get('/register', csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'register.html'));
+});
+
+app.get('/income', authenticateToken, csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'income.html'));
+});
+
+app.get('/contact', csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'contact.html'));
+});
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(staticPath, 'about.html'));
+});
+
+app.get('/request-reset', csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'request-reset.html'));
+});
+
+app.get('/reset-password', csrfProtection, setCsrfTokenCookie, (req, res) => {
+    res.sendFile(path.join(staticPath, 'reset-password.html'));
+});
+
 // Registration endpoint
-app.post('/register', async (req, res) => {
+app.post('/register', csrfProtection, async (req, res) => {
     console.log('/register endpoint called');
     const { username, email, password } = req.body;
 
@@ -293,7 +304,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/login',loginLimiter, async (req, res) => {
+app.post('/login', loginLimiter, csrfProtection, async (req, res) => {
     console.log('/login endpoint called');
     const { email, password } = req.body;
 
@@ -414,7 +425,7 @@ app.post('/logout', async (req, res) => {
     }
 });
 
-// Endpoint to get totals
+// Endpoint to get totals (no CSRF protection needed)
 app.get('/totals', authenticateToken, async (req, res) => {
     console.log('/totals endpoint called');
     try {
@@ -427,7 +438,7 @@ app.get('/totals', authenticateToken, async (req, res) => {
 });
 
 // Endpoint to update the totals
-app.post('/updateTotals', authenticateToken, async (req, res) => {
+app.post('/updateTotals', authenticateToken, csrfProtection, async (req, res) => {
     console.log('/updateTotals endpoint called');
     const { totalCardPounds, totalCardEuro, totalCashPounds, totalCashEuro } = req.body;
     const userId = req.user.userId;
@@ -445,7 +456,7 @@ app.post('/updateTotals', authenticateToken, async (req, res) => {
 });
 
 // Endpoint to delete the totals
-app.post('/deleteTotals', authenticateToken, async (req, res) => {
+app.post('/deleteTotals', authenticateToken, csrfProtection, async (req, res) => {
     console.log('/deleteTotals endpoint called');
     const userId = req.user.userId;
 
@@ -462,7 +473,7 @@ app.post('/deleteTotals', authenticateToken, async (req, res) => {
 });
 
 // Update email endpoint
-app.post('/update-email', authenticateToken, async (req, res) => {
+app.post('/update-email', authenticateToken, csrfProtection, async (req, res) => {
     const { newEmail } = req.body;
     const userId = req.user.userId;
     try {
@@ -475,7 +486,7 @@ app.post('/update-email', authenticateToken, async (req, res) => {
 });
 
 // Change password endpoint
-app.post('/change-password', authenticateToken, async (req, res) => {
+app.post('/change-password', authenticateToken, csrfProtection, async (req, res) => {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.userId;
     try {
@@ -495,7 +506,7 @@ app.post('/change-password', authenticateToken, async (req, res) => {
 });
 
 // Delete account endpoint
-app.post('/delete-account', authenticateToken, async (req, res) => {
+app.post('/delete-account', authenticateToken, csrfProtection, async (req, res) => {
     const userId = req.user.userId;
     console.log(`Attempting to delete account with user ID: ${userId}`);
     try {
@@ -529,7 +540,7 @@ app.post('/delete-account', authenticateToken, async (req, res) => {
 });
 
 // Password reset endpoints
-app.post('/request-reset', loginLimiter, async (req, res) => {
+app.post('/request-reset', loginLimiter, csrfProtection, async (req, res) => {
     console.log('/request-reset endpoint called');
     const { email } = req.body;
     try {
@@ -542,7 +553,7 @@ app.post('/request-reset', loginLimiter, async (req, res) => {
         const userId = result.rows[0].id;
         const token = crypto.randomBytes(20).toString('hex');
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-        const expiration = Date.now() + 15 * 60 * 1000; //  15 minutes
+        const expiration = Date.now() + 15 * 60 * 1000; // 15 minutes
 
         console.log(`Generated token: ${token}, Expiration: ${expiration}`);
 
@@ -568,7 +579,7 @@ If you initiated this request, please click the link below or copy and paste it 
 
 Reset your password: ${resetLink}
 
-For security reasons, this link will expire in 1 hour. If you did not request a password reset, no action is needed. You can safely ignore this email, and your password will remain unchanged.
+For security reasons, this link will expire in 15 minutes. If you did not request a password reset, no action is needed. You can safely ignore this email, and your password will remain unchanged.
 
 Thank you for using Pocket!
 
@@ -585,17 +596,17 @@ The Pocket Team`
 });
 
 // Password reset endpoint
-app.post('/reset-password', async (req, res) => {
+app.post('/reset-password', csrfProtection, async (req, res) => {
     console.log('/reset-password endpoint called');
     const { token, newPassword } = req.body;
-    
+
     try {
         // Hash the received token to match it with the hashed token in the database
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
         // Find the user with the matching hashed token
         const result = await pool.query('SELECT id, reset_password_expires FROM users WHERE reset_password_token = $1', [hashedToken]);
-        
+
         // If no user found or token expired
         if (result.rows.length === 0) {
             console.error('Invalid or expired password reset token');
@@ -625,8 +636,9 @@ app.post('/reset-password', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 // Contact form endpoint
-app.post('/contact', async (req, res) => {
+app.post('/contact', csrfProtection, async (req, res) => {
     const { name, email, message } = req.body;
 
     if (!name || !email || !message) {

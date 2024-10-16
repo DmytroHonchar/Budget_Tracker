@@ -686,3 +686,18 @@ footer {
     font-family: 'Montserrat';
     src: url('/font-family/Montserrat-VariableFont_wght.ttf') format('truetype');
 }
+
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
+}

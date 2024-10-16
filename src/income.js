@@ -1,3 +1,5 @@
+// income.js
+
 let income = {};
 let totalPound = 0;
 let totalEuro = 0;
@@ -16,8 +18,14 @@ let initialTotals = {
 // Set the API URL based on the environment (localhost or production)
 const apiUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:8080'    // Local development
-    : 'https://gopocket.co.uk';     // Production (AWS EC2 Public IP)
+    : 'https://gopocket.co.uk';   // Production
 
+// Function to read a cookie value
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 // Function to format numbers with commas
 function formatNumberWithCommas(number) {
@@ -32,10 +40,6 @@ function showModalMessage(message) {
     messageModal.style.display = 'block';
 }
 
-// Function to close modal messages
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
 
 // Function to add amount to income object
 function addAmount(category, amount) {
@@ -226,12 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to fetch and display totals from the database
 async function fetchAndDisplayTotals() {
     try {
-        const token = localStorage.getItem('token');
         const response = await fetch(`${apiUrl}/totals`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include' // Include cookies in the request
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -261,13 +262,14 @@ function displayCurrentTotals() {
 // Function to save the totals to the database
 async function saveTotalsToDatabase() {
     try {
-        const token = localStorage.getItem('token');
+        const csrfToken = getCookie('XSRF-TOKEN'); // Get the CSRF token from the cookie
         const response = await fetch(`${apiUrl}/updateTotals`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'X-CSRF-Token': csrfToken // Include the CSRF token in the header
             },
+            credentials: 'include', // Include cookies in the request
             body: JSON.stringify({
                 totalCardPounds: initialTotals.total_card_pounds,
                 totalCardEuro: initialTotals.total_card_euro,
@@ -294,12 +296,10 @@ function updateOverallTotal() {
     document.getElementById('totalEuroOutput').textContent = `€${formatNumberWithCommas(totalEuro)}`;
 }
 
-
 // Function to convert totals to pounds
 function convertToPounds() {
     grandTotalPound = totalPound + (totalEuro * parseFloat(document.getElementById('exchangeRateEuros').value));
-    document.getElementById('outputTotal2').querySelector('p:nth-child(2)').textContent = `£${formatNumberWithCommas(grandTotalPound)}
-    `;
+    document.getElementById('outputTotal2').querySelector('p:nth-child(2)').textContent = `£${formatNumberWithCommas(grandTotalPound)}`;
     console.log('Grand Total in Pounds updated:', { grandTotalPound });
 }
 
@@ -321,7 +321,6 @@ document.getElementById('convertToEuros').addEventListener('click', function(eve
     event.preventDefault(); // Prevent form submission
     convertToEuros();
 });
-
 
 // Helper function to parse total from the formatted string
 function parseTotal(id, currencySymbol) {
@@ -359,16 +358,21 @@ function updateTotal(category) {
     document.getElementById(`total${category}`).textContent = `${currencySymbol}${formatNumberWithCommas(total)}`;
 }
 
-
 // Event listener for logout
 document.getElementById('logout').addEventListener('click', function(event) {
     event.preventDefault();
-    localStorage.removeItem('token'); // Remove token
-    fetch('/logout', { method: 'POST' }) // Call the logout API
-        .then(() => {
-            window.location.href = '/login'; // Redirect after logout
-        })
-        .catch(err => console.error('Error during logout:', err));
+    const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-Token': csrfToken // Include CSRF token
+        },
+        credentials: 'include' // Include cookies in the request
+    })
+    .then(() => {
+        window.location.href = '/login'; // Redirect after logout
+    })
+    .catch(err => console.error('Error during logout:', err));
 });
 
 // JavaScript for account actions
@@ -404,9 +408,20 @@ function openModal(modalId) {
     document.getElementById(modalId).style.display = 'block';
 }
 
+// Function to close modals
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
+
+// Add event listeners to modal close buttons
+document.querySelectorAll('.modal .close').forEach(function(closeButton) {
+    closeButton.addEventListener('click', function() {
+        const modal = this.closest('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
 
 window.onclick = function(event) {
     const modals = ['updateEmailModal', 'changePasswordModal', 'deleteAccountModal'];
@@ -421,14 +436,16 @@ window.onclick = function(event) {
 // Handle form submissions
 document.getElementById('updateEmailForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token
     const newEmail = document.getElementById('newEmail').value;
     try {
         const response = await fetch(`${apiUrl}/update-email`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'X-CSRF-Token': csrfToken // Include CSRF token
             },
+            credentials: 'include', // Include cookies
             body: JSON.stringify({ newEmail })
         });
         if (response.ok) {
@@ -445,6 +462,7 @@ document.getElementById('updateEmailForm').addEventListener('submit', async func
 
 document.getElementById('changePasswordForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     try {
@@ -452,8 +470,9 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'X-CSRF-Token': csrfToken // Include CSRF token
             },
+            credentials: 'include', // Include cookies
             body: JSON.stringify({ currentPassword, newPassword })
         });
         if (response.ok) {
@@ -470,19 +489,20 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
 
 document.getElementById('deleteAccountForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token
     console.log('Delete account form submitted');
     try {
         const response = await fetch(`${apiUrl}/delete-account`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+                'X-CSRF-Token': csrfToken // Include CSRF token
+            },
+            credentials: 'include' // Include cookies
         });
         if (response.ok) {
             showModalMessage('Account deleted successfully');
             closeModal('deleteAccountModal');
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         } else {
             const errorText = await response.text();
             console.error('Error deleting account:', errorText);

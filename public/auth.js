@@ -1,10 +1,19 @@
+// auth.js
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("auth.js loaded");
 
-    // Relative API URL (browser automatically uses the same host and port)
+    // Determine the API URL based on the environment
     const apiUrl = window.location.hostname === 'localhost'
-        ? 'http://localhost:8080'
-        : 'https://gopocket.co.uk';
+        ? 'http://localhost:8080'    // Local development
+        : 'https://gopocket.co.uk';  // Production
+
+    // Function to read a cookie value
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
     // Function to make a fetch request with credentials included (for cookies)
     async function fetchWithAuth(url, options = {}) {
@@ -17,18 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return response;
     }
 
-    // Show Password Toggle
-    const showPasswordCheckbox = document.getElementById('show-password');
-    if (showPasswordCheckbox) {
-        showPasswordCheckbox.addEventListener('change', function () {
-            const passwordField = document.getElementById('password');
-            if (this.checked) {
-                passwordField.type = 'text';
+ // Select checkboxes that start with the id show-password
+const showPasswordCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="show-password"]');
+
+// Iterate over each checkbox to attach an event listener
+showPasswordCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+        console.log('Checkbox clicked');
+        
+        // Find the closest form and toggle password visibility
+        const form = this.closest('form');
+        
+        // Specifically select only the password fields by their IDs
+        const passwordFields = form.querySelectorAll('#password, #newPassword');
+
+        // Toggle each password field in the related form
+        passwordFields.forEach((passwordField) => {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Show password
             } else {
-                passwordField.type = 'password';
+                passwordField.type = 'password'; // Hide password
             }
         });
-    }
+    });
+});
 
     // Password validation rules
     const passwordSchema = {
@@ -76,9 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return { isValid, feedback };
     }
 
-    // Password input validation listener
-const passwordInput = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
+// Handle password input for both register and reset password forms
+const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
+const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
 const passwordFeedback = document.getElementById('passwordFeedback');
 
 if (passwordInput && passwordFeedback && submitBtn) {
@@ -92,7 +113,7 @@ if (passwordInput && passwordFeedback && submitBtn) {
             passwordFeedback.classList.add('show');
             submitBtn.disabled = false;
         } else {
-            passwordFeedback.innerHTML = feedback;  // Use innerHTML to display feedback with <br> tags
+            passwordFeedback.innerHTML = feedback;
             passwordFeedback.classList.remove('valid');
             passwordFeedback.classList.add('show');
             submitBtn.disabled = true;
@@ -100,49 +121,55 @@ if (passwordInput && passwordFeedback && submitBtn) {
     });
 }
 
-// Function to show messages
-function showMessage(message, isError = false, messageId = 'loginMessage') {
-    const messageDiv = document.getElementById(messageId);
-    if (!messageDiv) {
-        console.error(`Element with id '${messageId}' not found.`);
-        return;
-    }
 
-    messageDiv.textContent = message;
-    messageDiv.style.display = 'block';
-    if (isError) {
-        messageDiv.classList.add('error');
-        messageDiv.classList.remove('success');
-    } else {
-        messageDiv.classList.add('success');
-        messageDiv.classList.remove('error');
-    }
+    // Function to show messages
+    function showMessage(message, isError = false, messageId = 'loginMessage') {
+        const messageDiv = document.getElementById(messageId);
+        if (!messageDiv) {
+            console.error(`Element with id '${messageId}' not found.`);
+            return;
+        }
 
-    setTimeout(() => {
-        messageDiv.style.display = 'none';
-    }, 5000); // Hide after 5 seconds
-}
+        messageDiv.innerHTML = message; // Use innerHTML to allow HTML content
+        messageDiv.style.display = 'block';
+        if (isError) {
+            messageDiv.classList.add('error');
+            messageDiv.classList.remove('success');
+        } else {
+            messageDiv.classList.add('success');
+            messageDiv.classList.remove('error');
+        }
+
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000); // Hide after 5 seconds
+    }
 
     // Register Form Submission
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const csrfToken = getCookie('XSRF-TOKEN');  // Get CSRF token from cookie
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetchWithAuth(`${apiUrl}/register`, {
+                const response = await fetch(`${apiUrl}/register`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password }),
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken  // Include CSRF token in header
+                    },
+                    credentials: 'include', // Include cookies in the request
+                    body: JSON.stringify({ username, email, password })
                 });
 
                 if (response.ok) {
                     showMessage('Registration successful!', false, 'registerMessage');
                     setTimeout(() => {
-                        window.location.href = '/income';  // Redirect after successful registration
+                        window.location.href = '/income'; // Redirect after successful registration
                     }, 2000);
                 } else {
                     const errorText = await response.text();
@@ -154,53 +181,60 @@ function showMessage(message, isError = false, messageId = 'loginMessage') {
         });
     }
 
-// Login Form Submission
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    // Login Form Submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token from cookie
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        try {
-            // Use fetch directly instead of fetchWithAuth
-            const response = await fetch(`${apiUrl}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', // Ensure cookies are included
-                body: JSON.stringify({ email, password }),
-            });
+            try {
+                const response = await fetch(`${apiUrl}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken  // Include CSRF token in header
+                    },
+                    credentials: 'include', // Include cookies in the request
+                    body: JSON.stringify({ email, password })
+                });
 
-            if (response.ok) {
-                console.log('Login successful');
-                window.location.href = '/income'; // Redirect to income.html after login
-            } else {
-                const errorText = await response.text();
-                if (response.status === 401) {
-                    showMessage('Please check your email and password.', true, 'loginMessage');
+                if (response.ok) {
+                    console.log('Login successful');
+                    window.location.href = '/income'; // Redirect to income.html after login
                 } else {
-                    showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
+                    const errorText = await response.text();
+                    if (response.status === 401) {
+                        showMessage('Please check your email and password.', true, 'loginMessage');
+                    } else {
+                        showMessage(`Login failed: ${errorText}`, true, 'loginMessage');
+                    }
                 }
+            } catch (error) {
+                showMessage(`An error occurred: ${error.message}`, true, 'loginMessage');
             }
-        } catch (error) {
-            showMessage(`An error occurred: ${error.message}`, true, 'loginMessage');
-        }
-    });
-}
-
+        });
+    }
 
     // Request Password Reset Form Submission
     const requestResetForm = document.getElementById('requestResetForm');
     if (requestResetForm) {
         requestResetForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token from cookie
             const email = document.getElementById('email').value;
 
             try {
-                const response = await fetchWithAuth(`${apiUrl}/request-reset`, {
+                const response = await fetch(`${apiUrl}/request-reset`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email }),
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken // Include CSRF token in header
+                    },
+                    credentials: 'include', // Include cookies in the request
+                    body: JSON.stringify({ email })
                 });
 
                 if (response.ok) {
@@ -220,15 +254,20 @@ if (loginForm) {
     if (resetPasswordForm) {
         resetPasswordForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token from cookie
             const newPassword = document.getElementById('newPassword').value;
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
 
             try {
-                const response = await fetchWithAuth(`${apiUrl}/reset-password`, {
+                const response = await fetch(`${apiUrl}/reset-password`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token, newPassword }),
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken // Include CSRF token in header
+                    },
+                    credentials: 'include', // Include cookies in the request
+                    body: JSON.stringify({ token, newPassword })
                 });
 
                 if (response.ok) {
@@ -251,14 +290,19 @@ if (loginForm) {
     if (contactForm) {
         contactForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const csrfToken = getCookie('XSRF-TOKEN'); // Get CSRF token from cookie
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
 
             try {
-                const response = await fetchWithAuth(`${apiUrl}/contact`, {
+                const response = await fetch(`${apiUrl}/contact`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken // Include CSRF token in header
+                    },
+                    credentials: 'include', // Include cookies in the request
                     body: JSON.stringify({ name, email, message })
                 });
 

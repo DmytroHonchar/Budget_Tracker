@@ -6,10 +6,9 @@
     <link rel="stylesheet" href="/income2.css">
     <title>How much I have?</title>
     <!-- Favicon setup for standard browsers, modern browsers, and iOS devices -->
-<link rel="icon" href="/pics/favicon.ico" type="image/x-icon">
-<link rel="icon" type="image/png" sizes="32x32" href="/pics/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/pics/apple-touch-icon.png">
-
+    <link rel="icon" href="/pics/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="/pics/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pics/apple-touch-icon.png">
 </head>
 <body>
     <div class="back-link">
@@ -204,9 +203,9 @@
     <!-- Update Email Modal -->
     <div id="updateEmailModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('updateEmailModal')">&times;</span>
+            <span class="close">&times;</span>
             <h2>Update Email</h2>
-            <form id="updateEmailForm">
+            <form id="updateEmailForm" method="POST">
                 <label for="newEmail">New Email:</label>
                 <div class="input-group">
                     <span class="input-icon">
@@ -219,31 +218,36 @@
         </div>
     </div>
 
-    <!-- Change Password Modal -->
-    <div id="changePasswordModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('changePasswordModal')">&times;</span>
-            <h2>Change Password</h2>
-            <form id="changePasswordForm">
-                <div class="input-group">
-                    <label for="currentPassword">Current Password:</label>
-                    <input type="password" id="currentPassword" name="currentPassword" required>
-                </div>
-                <div class="input-group">
-                    <label for="newPassword">New Password:</label>
-                    <input type="password" id="newPassword" name="newPassword" required>
-                </div>
-                <button type="submit">Change Password</button>
-            </form>
-        </div>
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Change Password</h2>
+        <form id="changePasswordForm" method="POST">
+            <div class="input-group">
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" name="currentPassword" required class="password-field">
+            </div>
+            <div class="input-group">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" required class="password-field">
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="show-password-toggle" class="show-password-checkbox">
+                <label for="show-password-toggle">Show Password</label>
+            </div>
+            <button type="submit">Change Password</button>
+        </form>
     </div>
+</div>
+
 
     <!-- Delete Account Modal -->
     <div id="deleteAccountModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('deleteAccountModal')">&times;</span>
+            <span class="close">&times;</span>
             <h2>Delete Account</h2>
-            <form id="deleteAccountForm">
+            <form id="deleteAccountForm" method="POST">
                 <p>Are you sure you want to delete your account?</p>
                 <button type="submit">Delete Account</button>
             </form>
@@ -272,5 +276,6 @@
     </footer>
 
     <script src="/src/income.js"></script>
+    <script src="/auth.js"></script>
 </body>
 </html>
