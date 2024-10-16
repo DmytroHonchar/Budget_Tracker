@@ -170,14 +170,6 @@ button[type="submit"]:hover {
     src: url(/font-family/Montserrat-VariableFont_wght.ttf) format('truetype');
 }
 
-@media (max-width: 768px) {
-    .register-container {
-        padding: 30px;
-    }
-    .input-group input {
-        padding: 10px 10px 10px 35px;
-    }
-}
 
 /* Existing CSS */
 
@@ -227,4 +219,13 @@ button[type="submit"]:hover {
 
 .hidden {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        padding: 30px;
+    }
+    .input-group input {
+        padding: 10px 10px 10px 35px;
+    }
 }
