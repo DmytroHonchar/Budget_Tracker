@@ -182,14 +182,7 @@ button[type="submit"]:hover {
     src: url(/font-family/Montserrat-VariableFont_wght.ttf) format('truetype');
 }
 
-@media (max-width: 768px) {
-    .login-container {
-        padding: 30px;
-    }
-    .input-group input {
-        padding: 10px 10px 10px 35px;
-    }
-}
+
 
 #message {
     padding: 10px; 

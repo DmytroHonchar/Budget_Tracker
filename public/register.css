@@ -9,7 +9,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100vh; /* Ensure consistent height */
+    overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 button, input, select {
@@ -61,6 +62,7 @@ button, input, select {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .logo {
@@ -92,7 +94,7 @@ button, input, select {
     white-space: pre-line;
     font-size: 12px;
     color: white;
-    display: none; /* Initially hidden */
+    display: none;
     width: 100%;
     text-align: center;
     white-space: normal;
@@ -171,16 +173,15 @@ button[type="submit"]:hover {
 }
 
 
-/* Existing CSS */
-
+/* Message and error handling styles */
 #message {
-    padding: 10px; 
+    padding: 10px;
     border-radius: 5px;
-    margin-top: 20px; /* Increased margin for better spacing */
+    margin-top: 20px;
     text-align: center;
     width: 100%;
-    max-width: 300px; /* Increased max-width for larger message box */
-    display: none; /* Initially hidden */
+    max-width: 300px;
+    display: none;
 }
 
 #message.success {
@@ -219,14 +220,4 @@ button[type="submit"]:hover {
 
 .hidden {
     display: none;
-}
-
-@media (max-width: 768px) {
-    .register-container {
-        padding: 30px;
-        width: 90%; /* Ensures the container scales properly on smaller screens */
-    }
-    .input-group input {
-        padding: 10px 10px 10px 35px;
-    }
 }
