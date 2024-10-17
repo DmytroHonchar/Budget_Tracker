@@ -260,12 +260,13 @@ app.post('/register', csrfProtection, async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const lowerCaseEmail = email.toLowerCase();  // Convert email to lowercase
 
     try {
         // Insert the new user into the database
         const result = await pool.query(
             'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id',
-            [username, email, hashedPassword]
+            [username, lowerCaseEmail, hashedPassword]  // Store the email in lowercase
         );
         const userId = result.rows[0].id;
 
@@ -314,13 +315,15 @@ app.post('/register', csrfProtection, async (req, res) => {
     }
 });
 
+
 // Login endpoint
 app.post('/login', loginLimiter, csrfProtection, async (req, res) => {
     console.log('/login endpoint called');
     const { email, password } = req.body;
+    const lowerCaseEmail = email.toLowerCase();  // Convert email to lowercase
 
     try {
-        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [lowerCaseEmail]);  // Query with lowercase email
         const user = result.rows[0];
 
         if (user && await bcrypt.compare(password, user.password_hash)) {
@@ -359,6 +362,7 @@ app.post('/login', loginLimiter, csrfProtection, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 // Refresh token endpoint
 app.post('/refresh-token', async (req, res) => {
