@@ -53,9 +53,12 @@ p {
     align-items: center;
     margin-top: 20px;
     width: 100%;
+    max-width: 250px;
 }
 
 .nav-link {
+    display: flex;
+    flex-direction: column;
     background-color: #E91E63;
     color: white;
     border: none;
@@ -64,16 +67,31 @@ p {
     border-radius: 15px;
     font-size: 1em;
     transition: background-color 0.3s, transform 0.3s;
-    margin-bottom: 10px;
     text-decoration: none;
     width: 100%;
-    max-width: 200px;
-    text-align: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
 }
 
 .nav-link:hover {
     background-color: #c20047;
     transform: scale(1.05);
+}
+
+.links-under {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 103%;
+}
+
+.links-under .nav-link {
+    flex: 1; /* Each button will take equal space */
+    margin: 0 5px; /* Space between the buttons */
+}
+
+#guest-link{
+    padding: 10px 0px;
 }
 
 @font-face {

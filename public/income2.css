@@ -701,3 +701,36 @@ footer {
     height: 12px;
     margin-right: 10px;
 }
+
+.disclaimer {
+    font-size: 0.9rem;
+    color: #E0E0E0;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.disclaimer a {
+    color: #e91e63;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.disclaimer a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px; /* Slightly below the text */
+    left: 0;
+    background-color: #e91e63;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.disclaimer a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}

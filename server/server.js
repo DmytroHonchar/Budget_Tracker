@@ -238,6 +238,12 @@ app.get('/reset-password', csrfProtection, setCsrfTokenCookie, (req, res) => {
     res.sendFile(path.join(staticPath, 'reset-password.html'));
 });
 
+// Route for guest income page
+app.get('/income-guest', (req, res) => {
+    res.sendFile(path.join(staticPath, 'income_guest.html'));
+});
+
+
 // Registration endpoint
 app.post('/register', csrfProtection, async (req, res) => {
     console.log('/register endpoint called');

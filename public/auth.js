@@ -15,6 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
+    // Function to check if the user is authenticated
+    function isAuthenticated() {
+        return !!getCookie('jwt'); // Adjust 'jwt' if your authentication cookie has a different name
+    }
+
+    // Adjust the Back to Pocket page link dynamically
+    const backLink = document.getElementById('backToPocket');
+    if (backLink) {
+        if (isAuthenticated()) {
+            backLink.setAttribute('href', '/income'); // Authenticated users
+        } else {
+            backLink.setAttribute('href', '/income-guest'); // Guest users
+        }
+    }
+
     // Function to make a fetch request with credentials included (for cookies)
     async function fetchWithAuth(url, options = {}) {
         options.credentials = 'include'; // Ensure cookies are included
@@ -26,30 +41,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return response;
     }
 
- // Select checkboxes that start with the id show-password
-const showPasswordCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="show-password"]');
+    // Select checkboxes that start with the id show-password
+    const showPasswordCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="show-password"]');
 
-// Iterate over each checkbox to attach an event listener
-showPasswordCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', function () {
-        console.log('Checkbox clicked');
-        
-        // Find the closest form and toggle password visibility
-        const form = this.closest('form');
-        
-        // Specifically select only the password fields by their IDs
-        const passwordFields = form.querySelectorAll('#password, #newPassword');
+    // Iterate over each checkbox to attach an event listener
+    showPasswordCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function () {
+            console.log('Checkbox clicked');
 
-        // Toggle each password field in the related form
-        passwordFields.forEach((passwordField) => {
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Show password
-            } else {
-                passwordField.type = 'password'; // Hide password
-            }
+            // Find the closest form and toggle password visibility
+            const form = this.closest('form');
+
+            // Specifically select only the password fields by their IDs
+            const passwordFields = form.querySelectorAll('#password, #newPassword');
+
+            // Toggle each password field in the related form
+            passwordFields.forEach((passwordField) => {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text'; // Show password
+                } else {
+                    passwordField.type = 'password'; // Hide password
+                }
+            });
         });
     });
-});
 
     // Password validation rules
     const passwordSchema = {
@@ -97,30 +112,29 @@ showPasswordCheckboxes.forEach((checkbox) => {
         return { isValid, feedback };
     }
 
-// Handle password input for both register and reset password forms
-const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
-const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
-const passwordFeedback = document.getElementById('passwordFeedback');
+    // Handle password input for both register and reset password forms
+    const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
+    const submitBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+    const passwordFeedback = document.getElementById('passwordFeedback');
 
-if (passwordInput && passwordFeedback && submitBtn) {
-    passwordInput.addEventListener('input', (event) => {
-        const password = event.target.value;
-        const { isValid, feedback } = checkPasswordStrength(password);
+    if (passwordInput && passwordFeedback && submitBtn) {
+        passwordInput.addEventListener('input', (event) => {
+            const password = event.target.value;
+            const { isValid, feedback } = checkPasswordStrength(password);
 
-        if (isValid) {
-            passwordFeedback.innerHTML = 'Password looks good!';
-            passwordFeedback.classList.add('valid');
-            passwordFeedback.classList.add('show');
-            submitBtn.disabled = false;
-        } else {
-            passwordFeedback.innerHTML = feedback;
-            passwordFeedback.classList.remove('valid');
-            passwordFeedback.classList.add('show');
-            submitBtn.disabled = true;
-        }
-    });
-}
-
+            if (isValid) {
+                passwordFeedback.innerHTML = 'Password looks good!';
+                passwordFeedback.classList.add('valid');
+                passwordFeedback.classList.add('show');
+                submitBtn.disabled = false;
+            } else {
+                passwordFeedback.innerHTML = feedback;
+                passwordFeedback.classList.remove('valid');
+                passwordFeedback.classList.add('show');
+                submitBtn.disabled = true;
+            }
+        });
+    }
 
     // Function to show messages
     function showMessage(message, isError = false, messageId = 'loginMessage') {
