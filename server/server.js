@@ -53,16 +53,7 @@ if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.JWT_SECRET)
     process.exit(1); // Exit the application
 }
 
-// // Log environment variables for debugging (only in development)
-// if (process.env.NODE_ENV !== 'production') {
-//     console.log("DB_USER:", process.env.DB_USER);
-//     console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-//     console.log("DB_HOST:", process.env.DB_HOST);
-//     console.log("DB_DATABASE:", process.env.DB_DATABASE);
-//     console.log("DB_PORT:", process.env.DB_PORT);
-//     console.log("EMAIL_USER:", process.env.EMAIL_USER);
-//     console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
-// }
+// 
 
 app.use(helmet());
 
