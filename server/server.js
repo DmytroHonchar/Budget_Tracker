@@ -243,6 +243,11 @@ app.get('/income-guest', (req, res) => {
     res.sendFile(path.join(staticPath, 'income_guest.html'));
 });
 
+app.get('/is-authenticated', authenticateToken, (req, res) => {
+    res.status(200).json({ authenticated: true });
+});
+
+
 
 // Registration endpoint
 app.post('/register', csrfProtection, async (req, res) => {

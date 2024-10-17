@@ -16,19 +16,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to check if the user is authenticated
-    function isAuthenticated() {
-        return !!getCookie('jwt'); // Adjust 'jwt' if your authentication cookie has a different name
+async function isAuthenticated() {
+    try {
+        const response = await fetch('/is-authenticated', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        return response.ok;
+    } catch (error) {
+        console.error('Error checking authentication:', error);
+        return false;
     }
+}
 
-    // Adjust the Back to Pocket page link dynamically
-    const backLink = document.getElementById('backToPocket');
-    if (backLink) {
-        if (isAuthenticated()) {
-            backLink.setAttribute('href', '/income'); // Authenticated users
+
+   // Adjust the Back to Pocket page link dynamically
+const backLink = document.getElementById('backToPocket');
+if (backLink) {
+    isAuthenticated().then(authenticated => {
+        console.log('User authenticated:', authenticated);
+        if (authenticated) {
+            backLink.setAttribute('href', '/income'); // Authenticated users go to income page
         } else {
-            backLink.setAttribute('href', '/income-guest'); // Guest users
+            backLink.setAttribute('href', '/income-guest'); // Guest users go to guest income page
         }
-    }
+    });
+}
 
     // Function to make a fetch request with credentials included (for cookies)
     async function fetchWithAuth(url, options = {}) {
