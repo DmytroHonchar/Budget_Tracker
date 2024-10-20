@@ -43,6 +43,47 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const app = express();
 
+
+// Block requests for sensitive files
+const blockSensitiveFiles = (req, res, next) => {
+    const blockedPaths = [
+        '.env', 'wp-config', '.git', 'App_Config', 'jenkinsFile', 'ftp-sync.json',
+        'ConnectionStrings.config', 'server.xml', 'api-config.ini', 'laravel.log',
+        '.vscode', 'authorized_keys', 'remote-sync.json', 'config.yaml'
+    ];
+
+    const fileExtensionPattern = /\.(php|config|xml|json|ini|log|yaml|env)$/i;
+
+    if (blockedPaths.some(path => req.url.includes(path)) || req.url.match(fileExtensionPattern)) {
+        return res.status(403).send('Forbidden');
+    }
+    next();
+};
+
+app.use(blockSensitiveFiles); // Add the middleware here to block sensitive file requests
+
+// General rate limiting for all routes
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per window
+    message: 'Too many requests, please try again later.'
+});
+
+app.use(generalLimiter); // Apply the general rate limiter to all routes
+
+const blockWpPaths = (req, res, next) => {
+    const wpPatterns = [
+        '/wp-admin', '/wp-config', '/wp-content', '/wp-includes'
+    ];
+    if (wpPatterns.some(pattern => req.url.includes(pattern))) {
+        return res.status(403).send('Forbidden');
+    }
+    next();
+};
+
+app.use(blockWpPaths);
+
+
 // Use appropriate port for production and local environments
 const port = process.env.PORT || 8080;
 const jwtSecret = process.env.JWT_SECRET;
@@ -86,9 +127,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // CSRF Protection Middleware
 const csrfProtection = csrf({ cookie: true });
-
-// Remove global application of CSRF middleware
-// Do not use app.use(csrfProtection);
 
 // Create middleware to set CSRF token cookie
 function setCsrfTokenCookie(req, res, next) {
