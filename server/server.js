@@ -60,16 +60,17 @@ const blockSensitiveFiles = (req, res, next) => {
     next();
 };
 
-app.use(blockSensitiveFiles); // Add the middleware here to block sensitive file requests
+app.use(blockSensitiveFiles); 
 
 // General rate limiting for all routes
-const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per window
-    message: 'Too many requests, please try again later.'
-});
 
-app.use(generalLimiter); // Apply the general rate limiter to all routes
+// const generalLimiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, 
+//     max: 100, 
+//     message: 'Too many requests, please try again later.'
+// });
+
+// app.use(generalLimiter); 
 
 const blockWpPaths = (req, res, next) => {
     const wpPatterns = [
