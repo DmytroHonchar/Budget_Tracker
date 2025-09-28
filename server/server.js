@@ -23,7 +23,10 @@ if (process.env.NODE_ENV === 'production') {
     loadEnvFile(envFilePath);
 } else {
     console.log("Running in development mode");
-    const envFilePath = path.resolve('C:/Users/dmytr/Documents/Budget_Tracker/server/.env');
+    // Check if running on Windows or macOS/Linux
+    const envFilePath = process.platform === 'win32'
+        ? path.resolve('C:/Users/dmytr/Documents/Budget_Tracker/server/.env')
+        : path.resolve(__dirname, '.env');
     loadEnvFile(envFilePath);
 }
 
